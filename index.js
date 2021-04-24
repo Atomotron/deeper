@@ -44,7 +44,6 @@ load({
         },
         fragment:{
             blit: new URL("shader/blit.frag", document.baseURI),
-            sigmoid_stretch: new URL("shader/sigmoid_stretch.frag", document.baseURI),
         },
         programs: {
             sprite:['sprite','blit'],
