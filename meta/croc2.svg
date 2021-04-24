@@ -1,4 +1,4 @@
-<svg id="_2" data-name="2" xmlns="http://www.w3.org/2000/svg" width="950" height="264" viewBox="0 0 950 264">
+<svg id="_1" data-name="1" xmlns="http://www.w3.org/2000/svg" width="950" height="264" viewBox="0 0 950 264">
   <defs>
     <style>
       .cls-1 {
@@ -10,6 +10,6 @@
       }
     </style>
   </defs>
-  <ellipse id="Head_copy" data-name="Head copy" class="cls-1" cx="257.156" cy="176.406" rx="8.25" ry="8.25"/>
-  <circle id="CoM_copy" data-name="CoM copy" class="cls-2" cx="322" cy="154" r="1"/>
+  <ellipse id="Head" class="cls-1" cx="104.156" cy="176.406" rx="8.25" ry="8.25"/>
+  <circle id="CoM" class="cls-2" cx="169" cy="154" r="1"/>
 </svg>
