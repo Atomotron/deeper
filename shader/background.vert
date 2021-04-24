@@ -23,5 +23,7 @@ void main() {
     vec2 worldCoordinate = cameraPos + (camera * vertex);
     // Next, find out where that is in background texture coordinates.
     uv = bgModelInv * (worldCoordinate - bgPos);
+    // Flip Y
+    uv.y = 1.0-uv.y;
     gl_Position = vec4(vertex,0.5,1.0);
 }

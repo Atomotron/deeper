@@ -51,7 +51,7 @@ load({
         },
     },
     images: {
-        test_level: new URL("image/test_level.png", document.baseURI),
+        test_level: new URL("image/test_level_2.png", document.baseURI),
     },
     imageSettings: {
         test_level: {
@@ -59,7 +59,7 @@ load({
             magFilter: 'LINEAR',
             wrapS: 'REPEAT',
             wrapT: 'CLAMP_TO_EDGE',
-            stretch: true,
+            stretch: false,
         }
     },
     sounds: {
@@ -89,11 +89,14 @@ const gl = res.gl;
 // CAMERA
 const camera = Mat2.Id();
 const cameraPos = Vec2.From(0.50-0.13,0.5);
-let cameraSize = 100;
+let cameraSize = 128;
 const cameraInv = Mat2.Inverse(camera);
 window.camera = camera;
 window.cameraPos = cameraPos;
 window.cameraInv = cameraInv;
+
+// MOUSE
+const cursor = Vec2.From(0.0,0.0);
 
 // BACKGROUND
 const bgLayer = new Quad(gl,
@@ -103,7 +106,7 @@ const bgLayer = new Quad(gl,
 const bgModel = res.images.test_level.sheet.model.all;
 const bgModelInv = res.images.test_level.sheet.model.all.inverse();
 const bgPos = Vec2.From(0,-bgModel.a11);
-
+console.log(''+bgModel);
 // TIME
 const time = Vec1.From(0);
 
@@ -134,11 +137,18 @@ const [render,env] = compileRenderer(sequence);
 
 
 const CAM_VEL = 3.0;
-class SpriteEngine extends Engine {
+class DeeperEngine extends Engine {
+    constructor(res,render,env) {
+        super(res,render,env);
+        this.cursor = cursor
+    }
     stepSimulation(dt,t) {
         cameraPos.x += CAM_VEL*dt;
     }
     updateLogic(t) {
+        // Mouse pos in world coordinates
+        this.cursor.eqTransform(this.res.io.cursor,camera);
+        this.cursor.addEq(cameraPos);
         // Camera
         camera.eq(res.io.aspectInv);
         camera.mulEq(cameraSize);
@@ -147,7 +157,7 @@ class SpriteEngine extends Engine {
         time.eqFrom(t);
     }
 }
-const e = new SpriteEngine(res,render,env);
+const e = new DeeperEngine(res,render,env);
 window.e = e;
 e.start();
 }).catch(

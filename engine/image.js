@@ -119,7 +119,7 @@ export class Texture {
                             true : settings.stretch;  
         // Figure out what we have, and what we need
         const mipmapsNeeded = !(this.minFilter === gl.NEAREST || 
-                                this.minFilter === gl.LINEAR)
+                                this.minFilter === gl.LINEAR);
         const canBeNPoT = 
             !mipmapsNeeded &&
             this.wrapS === gl.CLAMP_TO_EDGE &&
@@ -179,6 +179,7 @@ export class Texture {
         this.maxV = this.stretch ? 1.0 : sourceHeight / targetHeight;
         // Set up spritesheet
         this.sheet = new Spritesheet(this,sheet);
+        console.log(this);
     }
     destroy(gl) {
         gl.deleteTexture(this.texture);    
