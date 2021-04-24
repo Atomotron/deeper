@@ -1,0 +1,15 @@
+<svg id="_1" data-name="1" xmlns="http://www.w3.org/2000/svg" width="950" height="264" viewBox="0 0 950 264">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #ed1c24;
+      }
+
+      .cls-2 {
+        fill: lime;
+      }
+    </style>
+  </defs>
+  <ellipse id="Head" class="cls-1" cx="104.156" cy="176.406" rx="8.25" ry="8.25"/>
+  <circle id="CoM" class="cls-2" cx="169" cy="154" r="1"/>
+</svg>
