@@ -169,7 +169,7 @@ class DeeperEngine extends Engine {
     stepSimulation(dt,t) {
         //cameraPos.x += CAM_VEL*dt;
         super.stepSimulation(dt,t);
-        this.sprite.struct.pos.eq(this.cursor);
+        this.sprite.moveTo(this.cursor);
     }
     updateLogic(t) {
         // Mouse pos in world coordinates

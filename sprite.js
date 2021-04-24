@@ -81,16 +81,18 @@ export class Sprites extends Quad {
 
 // One particular sprite
 export class Sprite {
-    ANIM_FPS = 1
-    constructor(sprites,engine,folder='croc',action='rotate') {
+    ANIM_MPF = 24
+    IDLE_VELOCITY = 10
+    constructor(sprites,engine,folder='croc',action='move') {
         this.sprites = sprites;
         this.engine = engine;
         this.folder = folder;
         this.action = action;
         this.frameIndex = 0;
         this.frameDirection = 1;
-        this.frameTimer = 0;
-        this.center = Vec2.From(0.0,0.0);
+        this.frameDistanceTraveled = 0;
+        this.pos = Vec2.From(0.0,0.0);
+        this.posDelta = Vec2.From(0.0,0.0);
         this.destroyed = false;
         // Set up animation frames
         this.update(0);
@@ -108,18 +110,18 @@ export class Sprite {
     }
     // Advance
     step(dt,t) {
-        this.frameTimer += dt;
+        this.frameDistanceTraveled += dt*this.IDLE_VELOCITY;
     }
     // Update
     update(t) {
         this.frames = this.sprites.animations[this.folder][this.action];
         const nframes = this.frames.frame.length;
-        if (this.frameTimer > 1/this.ANIM_FPS) {
+        if (this.frameDistanceTraveled > this.ANIM_MPF) {
             this.frameIndex += this.frameDirection;
             if (this.frameIndex === nframes-1 || this.frameIndex === 0) {
                 this.frameDirection = -this.frameDirection;
             }
-            this.frameTimer = 0;
+            this.frameDistanceTraveled = 0;
         }
         // Safety
         this.frameIndex = this.frameIndex % nframes;
@@ -128,8 +130,16 @@ export class Sprite {
     sync() {
         const com = this.frames.control[this.frameIndex].CoM.pos;
         //console.log(com+'');
+        this.struct.pos.eq(this.pos);
         this.struct.pos.subEq(com);
         this.struct.model.eq(this.frames.model[this.frameIndex]);
         this.struct.frame.eq(this.frames.frame[this.frameIndex]);
+    }
+    // Move, keeping track for animation.
+    moveTo(newPos) {
+        this.posDelta.eqSub(this.pos,newPos);
+        const distance = this.posDelta.mag();
+        this.frameDistanceTraveled += distance;
+        this.pos.eq(newPos);
     }
 }
