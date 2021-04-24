@@ -85,21 +85,27 @@ window.res = res;
 // Disable click to start message / loading screen
 document.getElementById('overlay').style.display = 'none';
 const gl = res.gl;
-// Set up globals
-const camera = Mat2.Id();
-const cameraPos = Vec2.From(0.5,0.5);
-let cameraSize = 1;
-const cameraInv = Mat2.Inverse(camera);
 
+// CAMERA
+const camera = Mat2.Id();
+const cameraPos = Vec2.From(0.50-0.13,0.5);
+let cameraSize = 100;
+const cameraInv = Mat2.Inverse(camera);
 window.camera = camera;
 window.cameraPos = cameraPos;
 window.cameraInv = cameraInv;
-console.log(res.shaders.background+'');
-// Sprites
+
+// BACKGROUND
 const bgLayer = new Quad(gl,
     res.shaders.background.schema({vertex:{divisor:0,stream:false}}),
     1,
 );
+const bgModel = res.images.test_level.sheet.model.all;
+const bgModelInv = res.images.test_level.sheet.model.all.inverse();
+const bgPos = Vec2.From(0,-bgModel.a11);
+
+// TIME
+const time = Vec1.From(0);
 
 // Make an instance
 /*
@@ -115,18 +121,30 @@ const sequence = [
     SUM(DrawPass,{
         name: "Draw Background",
         shader: res.shaders.background,
-        uniforms: {cameraPos:cameraPos,camera:camera},
+        uniforms: {
+            cameraPos:cameraPos,
+            camera:camera,
+            bgModelInv:bgModelInv,
+            bgPos:bgPos},
         samplers: {source: res.images.test_level},
         draw: (gl) => bgLayer.draw(gl),
     }),
 ];
 const [render,env] = compileRenderer(sequence);
 
+
+const CAM_VEL = 3.0;
 class SpriteEngine extends Engine {
+    stepSimulation(dt,t) {
+        cameraPos.x += CAM_VEL*dt;
+    }
     updateLogic(t) {
+        // Camera
         camera.eq(res.io.aspectInv);
         camera.mulEq(cameraSize);
         cameraInv.eqInverse(camera);
+        // Time
+        time.eqFrom(t);
     }
 }
 const e = new SpriteEngine(res,render,env);
