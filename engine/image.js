@@ -111,10 +111,10 @@ export class Texture {
         this.hasTexture = true;
         this.hasFramebuffer = false;
         // Read settings
-        this.minFilter = settings.minFilter  || gl.LINEAR_MIPMAP_LINEAR;
-        this.magFilter = settings.magFilter  || gl.LINEAR;
-        this.wrapS =     settings.wrapS      || gl.CLAMP_TO_EDGE;
-        this.wrapT =     settings.wrapT      || gl.CLAMP_TO_EDGE;
+        this.minFilter = gl[settings.minFilter  || 'LINEAR_MIPMAP_LINEAR'];
+        this.magFilter = gl[settings.magFilter  || 'LINEAR'];
+        this.wrapS =     gl[settings.wrapS      || 'CLAMP_TO_EDGE'];
+        this.wrapT =     gl[settings.wrapT      || 'CLAMP_TO_EDGE'];
         this.stretch =   typeof settings.stretch === 'undefined' ?
                             true : settings.stretch;  
         // Figure out what we have, and what we need

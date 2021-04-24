@@ -200,8 +200,8 @@ export class Shader {
                 divisors.set(name,isDefined(info.divisor) ? info.divisor : 1);
                 stream.set(name,isDefined(info.stream)    ? info.stream : true);
             } else {
-                divisors.set(1); // Default: instance variable
-                stream.set(true); // Better to send too often than too rarely 
+                divisors.set(name,1); // Default: instance variable
+                stream.set(name,true); // Better to send too often than too rarely 
             }
         }
         return new VertexArraySchema(

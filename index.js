@@ -12,6 +12,8 @@ import {
     Engine,
 } from './engine/archimedes.js';
 
+import {Quad} from './quad.js';
+
 function setLoaderBarWidth(id,complete,total) {
     const e = document.getElementById(id);
     let width = 100;
@@ -38,12 +40,14 @@ load({
     shaders: {
         vertex: {
             sprite: new URL("shader/sprite.vert", document.baseURI),
+            background: new URL("shader/background.vert", document.baseURI),
         },
         fragment:{
             blit: new URL("shader/blit.frag", document.baseURI),
         },
         programs: {
             sprite:['sprite','blit'],
+            background:['background','blit'],
         },
     },
     images: {
@@ -51,7 +55,11 @@ load({
     },
     imageSettings: {
         test_level: {
-            
+            minFilter: 'LINEAR',
+            magFilter: 'LINEAR',
+            wrapS: 'REPEAT',
+            wrapT: 'CLAMP_TO_EDGE',
+            stretch: true,
         }
     },
     sounds: {
@@ -59,7 +67,7 @@ load({
     streams: {
     },
     spritesheets: {},
-    skipAudioWait: false,
+    skipAudioWait: true,
 },{
     vertex : (loaded,total) => setLoaderBarWidth('vertex',loaded,total),
     fragment : (loaded,total) => setLoaderBarWidth('fragment',loaded,total),
@@ -73,70 +81,75 @@ load({
         document.getElementById('clicktostart').style.display = 'block';
     },
 }).then( (res) => {
+window.res = res;
 // Disable click to start message / loading screen
 document.getElementById('overlay').style.display = 'none';
+const gl = res.gl;
 
-window.res = res;
-/*// Set up globals
+// CAMERA
 const camera = Mat2.Id();
-const cameraPos = Vec2.From(0.0,0.0);
+const cameraPos = Vec2.From(0.50-0.13,0.5);
+let cameraSize = 100;
 const cameraInv = Mat2.Inverse(camera);
-
 window.camera = camera;
 window.cameraPos = cameraPos;
 window.cameraInv = cameraInv;
 
-// Sprites
-const layer = new Geometry(
-    res.gl,
-    res.shaders.sprite.schema({
-        vertex:{divisor:0,stream:false},
-        pos   :{divisor:1,stream:true},
-        model :{divisor:1,stream:true},
-        frame :{divisor:1,stream:true},
-    }),
-    4, // 4 vertices
-    10, // a lot of instances
+// BACKGROUND
+const bgLayer = new Quad(gl,
+    res.shaders.background.schema({vertex:{divisor:0,stream:false}}),
+    1,
 );
-console.log(layer.sch.toString());
-layer.vert.acquire().vertex.eqFrom(-1.0,-1.0);
-layer.vert.acquire().vertex.eqFrom( 1.0,-1.0);
-layer.vert.acquire().vertex.eqFrom(-1.0, 1.0,);
-layer.vert.acquire().vertex.eqFrom( 1.0, 1.0,);
-layer.sync(res.gl);
+const bgModel = res.images.test_level.sheet.model.all;
+const bgModelInv = res.images.test_level.sheet.model.all.inverse();
+const bgPos = Vec2.From(0,-bgModel.a11);
+
+// TIME
+const time = Vec1.From(0);
 
 // Make an instance
+/*
 window.sprite = layer.inst.acquire();
 window.sprite.pos.eqFrom(0.0,0.0);
 window.sprite.model.eq(res.images.sprites.sheet.model['floor.png']);
 window.sprite.frame.eq(res.images.sprites.sheet.frame['floor.png']);
-layer.sync(res.gl);
+layer.sync(res.gl);*/
 
 // Set up render sequence
 const sequence = [
     ClearPass,
     SUM(DrawPass,{
-        name: "Draw Sprites",
-        shader: res.shaders.sprite,
-        uniforms: {cameraPos:cameraPos,cameraInv:camera},
-        samplers: {spritesheet: res.images.sprites},
-        draw: (gl) => {
-            layer.draw(gl,gl.TRIANGLE_STRIP);
-        },
+        name: "Draw Background",
+        shader: res.shaders.background,
+        uniforms: {
+            cameraPos:cameraPos,
+            camera:camera,
+            bgModelInv:bgModelInv,
+            bgPos:bgPos},
+        samplers: {source: res.images.test_level},
+        draw: (gl) => bgLayer.draw(gl),
     }),
 ];
 const [render,env] = compileRenderer(sequence);
 
+
+const CAM_VEL = 3.0;
 class SpriteEngine extends Engine {
+    stepSimulation(dt,t) {
+        cameraPos.x += CAM_VEL*dt;
+    }
     updateLogic(t) {
-        camera.eq(res.io.aspect);
-        camera.mulEq(1/256);
+        // Camera
+        camera.eq(res.io.aspectInv);
+        camera.mulEq(cameraSize);
         cameraInv.eqInverse(camera);
+        // Time
+        time.eqFrom(t);
     }
 }
 const e = new SpriteEngine(res,render,env);
 window.e = e;
-e.start();*/
+e.start();
 }).catch(
     (error) => {
         console.error(error);
