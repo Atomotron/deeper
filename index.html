@@ -6,21 +6,99 @@
     <link rel="shortcut icon" href="./favicon.png" type="image/x-icon">
     <script type="module" src="./index.js"></script>
     
-    <style>
-      html, body {
-        height: 100%;
-        margin: 0;
-      }
-      /* make the canvas fill its container */
-      #canvas {
-        width: 100%;
-        height: 100%;
-        display: block;
-      }
-    </style>
+<style>
+html, body {
+    height: 100%;
+    margin: 0;
+}
+/* make the canvas fill its container */
+#canvas {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
+}
+/*Message Overlay*/
+#overlay {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255,255,255,0.04);
+    /* Flexbox for centering message */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column;
+}
+#loader {
+  color: #f0f0f0;
+  padding: 3vw;
+}
+#clicktostart {
+    color: #f0f0f0;
+    font-size: 3vw;
+    display: none;
+}
+.bigmessage {
+  font-size: 6vw;
+  display: block;
+}
+.loader {
+    font-family: Sans-Serif;
+    display: block;
+    overflow: hidden;
+    white-space:nowrap;
+    font-size: 1vw;
+    padding: 0.2vw;
+    padding-right: 0vw;
+    background: #0f5c40;
+    color: #0c0c0c;
+    width: 0%;
+}
+#vertex{        background: #f1e7ff;}
+#fragment{      background: #2b8cfd;}
+#spritesheet{   background: #fff24a;}
+#stream{        background: #3a396e;}
+#image{         background: #ac977a;}
+#sound{         background: #dab2c0;}
+
+#errordisplay {
+    display: none;
+    font-size: 1vw;
+    overflow: scroll;
+    font-family: monospace;
+    color: #f0f0f0;
+}
+#errordisplay-content {
+    color: #ffc0c0;
+}
+
+</style>
 </head>
 <body>
+
 <canvas id='canvas' width=512 height=512></canvas>
+
+<div id='overlay'>
+    <div id='loader'>
+        <span class='bigmessage'>Loading</span>
+        <span id='vertex' class='loader'>Vertex Shaders</span>
+        <span id='fragment' class='loader'>Fragment Shaders</span>
+        <span id='spritesheet' class='loader'>Spritesheets</span>
+        <span id='stream' class='loader'>Audio Streams</span>
+        <span id='image' class='loader'>Images</span>
+        <span id='sound' class='loader'>Sounds</span>
+    </div>
+    <div id='clicktostart'>
+        Click anywhere to start.
+    </div>
+    <div id='errordisplay'>
+        An error occurred. We only tested on Chrome and Firefox. <br>
+        <code id='errordisplay-content'>
+            The error goes here.
+        </code> 
+    </div>
+</div>
 
 </body>
 </html>

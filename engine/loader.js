@@ -79,8 +79,14 @@ function asyncXMLHttpRequest(url,type) {
         const request = new XMLHttpRequest();
         request.open('GET',url,true);
         request.responseType = type;
-        request.onload = () => resolve(request.response);
-        request.error = () => reject(request.statusText);
+        request.onload = () => {
+            if (request.status === 200) {
+                resolve(request.response)
+            } else {
+                reject(request.response);
+            }            
+        };
+        request.onerror = (e) => {reject(e);};
         request.send();
     })
 }
@@ -349,7 +355,6 @@ export async function load(settings,customProgressCallbacks={}) {
     } else {
         errors.set("settings",`missing attribute "streams"`);
     }
-    
     // Sort promises into errors and results
     for (const [name,promise] of promises) {
         try {
@@ -358,7 +363,6 @@ export async function load(settings,customProgressCallbacks={}) {
             errors.set(name,e);
         }
     }
-    
     // Loading stage 2: Resource processing.
     // Shaders
     let shaders = null;
@@ -387,7 +391,6 @@ export async function load(settings,customProgressCallbacks={}) {
             }
             let sheetJson = null;
             if (results.has('spritesheets')) {
-                console.log(results.get('spritesheets'));
                 if (results.get('spritesheets').has(name)) {
                     sheetJson = results.get('spritesheets').get(name);
                 }
@@ -416,7 +419,7 @@ export async function load(settings,customProgressCallbacks={}) {
     if (!alreadyUnstuck && !settings.skipAudioWait) {
         progressCallbacks.waitingForInteraction();
     }
-    if (!settings.skipAudioWait) await unstuck;
+    if (!settings.skipAudioWait && errors.size === 0) await unstuck;
     
     // If there are any errors, format them into a tree and return the message.
     if (errors.size > 0) {

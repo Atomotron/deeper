@@ -12,30 +12,70 @@ import {
     Engine,
 } from './engine/archimedes.js';
 
+function setLoaderBarWidth(id,complete,total) {
+    const e = document.getElementById(id);
+    let width = 100;
+    if (total > 0) {
+        width = 100 * complete / total;
+    }
+    e.style.width = `${width}%`;
+}
+
+function escapeMonospaceHtml(unsafe) {
+    return unsafe
+         .replace(/&/g, "&amp;")
+         .replace(/ /g, "&nbsp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;")
+         .replace(/\n/g, "<br>");
+}
+let failed = false;
+
 load({
     canvas:document.querySelector("canvas"),
     shaders: {
         vertex: {
-            //sprite: new URL("sprite.vert", document.baseURI),
+            sprite: new URL("shader/sprite.vert", document.baseURI),
         },
         fragment:{
-            //sprite:new URL("sprite.frag", document.baseURI),
+            blit: new URL("shader/blit.frag", document.baseURI),
         },
-        programs: {}//sprite:['sprite','sprite']},
+        programs: {
+            sprite:['sprite','blit'],
+        },
     },
     images: {
-        //sprites: new URL("texture.png", document.baseURI),
+        test_level: new URL("image/test_level.png", document.baseURI),
     },
     imageSettings: {
-    
+        test_level: {
+            
+        }
     },
     sounds: {
     },
     streams: {
     },
     spritesheets: {},
-    skipAudioWait: true,
+    skipAudioWait: false,
+},{
+    vertex : (loaded,total) => setLoaderBarWidth('vertex',loaded,total),
+    fragment : (loaded,total) => setLoaderBarWidth('fragment',loaded,total),
+    image : (loaded,total) => setLoaderBarWidth('image',loaded,total),
+    sound : (loaded,total) => setLoaderBarWidth('sound',loaded,total),
+    stream: (loaded,total) => setLoaderBarWidth('stream',loaded,total),
+    spritesheet: (loaded,total) => setLoaderBarWidth('spritesheet',loaded,total),
+    waitingForInteraction : () => {
+        if (failed) return;
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('clicktostart').style.display = 'block';
+    },
 }).then( (res) => {
+// Disable click to start message / loading screen
+document.getElementById('overlay').style.display = 'none';
+
 window.res = res;
 /*// Set up globals
 const camera = Mat2.Id();
@@ -97,4 +137,14 @@ class SpriteEngine extends Engine {
 const e = new SpriteEngine(res,render,env);
 window.e = e;
 e.start();*/
-});
+}).catch(
+    (error) => {
+        console.error(error);
+        failed = true;
+        const message = escapeMonospaceHtml(error.toString());
+        document.getElementById('errordisplay').style.display = 'block';
+        document.getElementById('clicktostart').style.display = 'none';
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('errordisplay-content').innerHTML = message;
+    }
+);
