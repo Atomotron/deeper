@@ -13,6 +13,7 @@ import {
 } from './engine/archimedes.js';
 
 import {Quad} from './quad.js';
+import {Sprites,Sprite} from './sprite.js';
 
 function setLoaderBarWidth(id,complete,total) {
     const e = document.getElementById(id);
@@ -52,6 +53,7 @@ load({
     },
     images: {
         test_level: new URL("image/test_level_2.png", document.baseURI),
+        sprites: new URL("image/texture.png", document.baseURI),
     },
     imageSettings: {
         test_level: {
@@ -66,7 +68,9 @@ load({
     },
     streams: {
     },
-    spritesheets: {},
+    spritesheets: {
+        sprites: new URL("image/texture.json", document.baseURI),
+    },
     skipAudioWait: true,
 },{
     vertex : (loaded,total) => setLoaderBarWidth('vertex',loaded,total),
@@ -106,9 +110,11 @@ const bgLayer = new Quad(gl,
 const bgModel = res.images.test_level.sheet.model.all;
 const bgModelInv = res.images.test_level.sheet.model.all.inverse();
 const bgPos = Vec2.From(0,-bgModel.a11);
-console.log(''+bgModel);
 // TIME
 const time = Vec1.From(0);
+
+// SPRITE LAYER
+const sprites = new Sprites(res);
 
 // Make an instance
 /*
@@ -119,6 +125,7 @@ window.sprite.frame.eq(res.images.sprites.sheet.frame['floor.png']);
 layer.sync(res.gl);*/
 
 // Set up render sequence
+
 const sequence = [
     ClearPass,
     SUM(DrawPass,{
@@ -131,6 +138,18 @@ const sequence = [
             bgPos:bgPos},
         samplers: {source: res.images.test_level},
         draw: (gl) => bgLayer.draw(gl),
+    }),
+    SUM(DrawPass,{
+        name: "Draw Sprites",
+        shader: sprites.shader,
+        uniforms: {
+            cameraInv: camera,
+            cameraPos: cameraPos,   
+        },
+        samplers: {
+            source: sprites.texture,
+        },
+        draw: (gl) => sprites.draw(gl),
     }),
 ];
 const [render,env] = compileRenderer(sequence);

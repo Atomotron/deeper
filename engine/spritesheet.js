@@ -88,8 +88,8 @@ export class Spritesheet {
                 for (const cname in spriteData.circles) {
                     // Convert circle pos to center-relative.
                     const circle = spriteData.circles[cname];
-                    const frameCenterX = spriteData.frame.x - spriteData.frame.w/2;
-                    const frameCenterY = spriteData.frame.y - spriteData.frame.h/2;
+                    const frameCenterX = spriteData.sourceSize.x - spriteData.sourceSize.w/2;
+                    const frameCenterY = spriteData.sourceSize.y - spriteData.sourceSize.h/2;
                     const cx = circle.cx-frameCenterX;
                     const cy = circle.cy-frameCenterX;
                     this.control[name] = new ControlPoint(
