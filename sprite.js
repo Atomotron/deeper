@@ -10,6 +10,7 @@ import {
 import {Quad} from './quad.js';
 
 const NUMBER_POSTFIX_REGEX = /\d+\.png$/;
+const ANIM_FRAME_FOLDER_REGEX = /^.*\//;
 
 // A layer of sprites, all of the same type.
 export class Sprites extends Quad {
@@ -32,43 +33,76 @@ export class Sprites extends Quad {
         super(res.gl,schema,instances);
         this.texture = texture;
         this.shader = shader;
+        this.res = res;
         
-        // Just for the croc
-        this.animations = {};
-        
+        // Load animations
         const animations = new Map();
         for (name in this.texture.sheet.frame) {
             const result = name.match(NUMBER_POSTFIX_REGEX);
             if (result.length === 0) continue;
             const postfix = result[result.length-1];
             const index = parseInt(postfix.slice(0, - ('.png'.length)),10);
-            let animation = 'move';
+            let action = 'move';
             if (name.slice(0, -postfix.length).endsWith('rotate')) {
-                animation = 'rotate';
+                action = 'rotate';
             }
-            console.log(name,index,animation);
-        } 
+            const folder = name.match(ANIM_FRAME_FOLDER_REGEX)[0].slice(0,-1);
+            console.log(folder,action,index,name);
+            const actions = animations.get(folder) || new Map();
+            const frames = actions.get(action) || new Map();
+            frames.set(index,name);
+            actions.set(action,frames);
+            animations.set(folder,actions);
+        }
+        // Convert to packed format
+        this.animations = {};
+        for (const [folder,actions] of animations) {
+            for (const [action,frameMap] of actions) {
+                const indices = Array.from(frameMap.keys());
+                indices.sort();
+                const names = [];
+                for (const index of indices) {
+                    names.push(frameMap.get(index));
+                }
+                // Map names to spritesheets
+                const frames = {frame:[],model:[],control:[]};
+                for (const name of names) {
+                    frames.frame.push(this.texture.sheet.frame[name]);
+                    frames.model.push(this.texture.sheet.model[name]);
+                    frames.control.push(this.texture.sheet.control[name]);
+                }
+                // Write to animation object
+                if (!this.animations[folder]) this.animations[folder] = {};
+                this.animations[folder][action] = frames;
+            }
+        }
     }
 }
 
 // One particular sprite
 export class Sprite {
-    ANIM_FPS = 12
-    constructor(sprites,engine) {
+    ANIM_FPS = 1
+    constructor(sprites,engine,folder='croc',action='rotate') {
         this.sprites = sprites;
         this.engine = engine;
+        this.folder = folder;
+        this.action = action;
         this.frameIndex = 0;
+        this.frameDirection = 1;
         this.frameTimer = 0;
+        this.center = Vec2.From(0.0,0.0);
         this.destroyed = false;
+        // Set up animation frames
+        this.update(0);
         // Acquire an instance
-        this.struct = sprites.acquire();
+        this.struct = sprites.inst.acquire();
         // Register for synchronization
         this.engine.register(this);
         this.sync();
     }
     destroy() {
         if (this.destroyed) return;
-        this.sprites.relenquish(this.struct);
+        this.sprites.inst.relenquish(this.struct);
         this.engine.unregister(this);
         this.destroyed = true;
     }
@@ -78,15 +112,24 @@ export class Sprite {
     }
     // Update
     update(t) {
+        this.frames = this.sprites.animations[this.folder][this.action];
+        const nframes = this.frames.frame.length;
         if (this.frameTimer > 1/this.ANIM_FPS) {
-            this.frameIndex = (this.frameIndex+1) % this.sprites.frames.length;
+            this.frameIndex += this.frameDirection;
+            if (this.frameIndex === nframes-1 || this.frameIndex === 0) {
+                this.frameDirection = -this.frameDirection;
+            }
             this.frameTimer = 0;
         }
+        // Safety
+        this.frameIndex = this.frameIndex % nframes;
     }
     // Synchronize 
     sync() {
-        const frame = this.sprites.frames[this.frameIndex];
-        this.struct.model.eq(frame.model);
-        this.struct.frame.eq(frame.frame);
+        const com = this.frames.control[this.frameIndex].CoM.pos;
+        //console.log(com+'');
+        this.struct.pos.subEq(com);
+        this.struct.model.eq(this.frames.model[this.frameIndex]);
+        this.struct.frame.eq(this.frames.frame[this.frameIndex]);
     }
 }

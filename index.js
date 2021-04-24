@@ -69,7 +69,7 @@ load({
     streams: {
     },
     spritesheets: {
-        sprites: new URL("image/texture.json", document.baseURI),
+        sprites: new URL("image/texture.geom.json", document.baseURI),
     },
     skipAudioWait: true,
 },{
@@ -92,8 +92,8 @@ const gl = res.gl;
 
 // CAMERA
 const camera = Mat2.Id();
-const cameraPos = Vec2.From(0.50-0.13,0.5);
-let cameraSize = 128;
+const cameraPos = Vec2.From(0,0);
+let cameraSize = 256;
 const cameraInv = Mat2.Inverse(camera);
 window.camera = camera;
 window.cameraPos = cameraPos;
@@ -143,7 +143,7 @@ const sequence = [
         name: "Draw Sprites",
         shader: sprites.shader,
         uniforms: {
-            cameraInv: camera,
+            cameraInv: cameraInv,
             cameraPos: cameraPos,   
         },
         samplers: {
@@ -157,12 +157,19 @@ const [render,env] = compileRenderer(sequence);
 
 const CAM_VEL = 3.0;
 class DeeperEngine extends Engine {
-    constructor(res,render,env) {
-        super(res,render,env);
-        this.cursor = cursor
+    constructor(res,render,env,streams) {
+        super(res,render,env,streams);
+        this.cursor = cursor;
+        this.sprite = new Sprite(
+            sprites,this,
+        );
+        sprites.sync(res.gl);
+        window.s = this.sprite;
     }
     stepSimulation(dt,t) {
-        cameraPos.x += CAM_VEL*dt;
+        //cameraPos.x += CAM_VEL*dt;
+        super.stepSimulation(dt,t);
+        this.sprite.struct.pos.eq(this.cursor);
     }
     updateLogic(t) {
         // Mouse pos in world coordinates
@@ -174,9 +181,10 @@ class DeeperEngine extends Engine {
         cameraInv.eqInverse(camera);
         // Time
         time.eqFrom(t);
+        super.updateLogic(t);
     }
 }
-const e = new DeeperEngine(res,render,env);
+const e = new DeeperEngine(res,render,env,[sprites]);
 window.e = e;
 e.start();
 }).catch(

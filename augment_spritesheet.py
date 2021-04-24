@@ -34,7 +34,7 @@ def augment(frame,iname):
     tree = ET.parse(iname)
     root = tree.getroot()
     circles = {}
-    for elem in tree.iter('circle'):
+    for elem in tree.iter('{http://www.w3.org/2000/svg}circle'):
         name,circle = circulate(elem)
         circles[name] = circle
     for elem in tree.iter('{http://www.w3.org/2000/svg}ellipse'):
@@ -51,7 +51,7 @@ for iname in manifests:
     # Iterate over data
     frames = data['frames']
     for frame in frames:
-        svg_name = os.path.splitext(frame)[0] + '.svg'
+        svg_name = os.path.splitext(os.path.basename(frame))[0] + '.svg'
         if svg_name in svgs:
             augment(frames[frame],svgs[svg_name])
             augmented_sprites += 1
