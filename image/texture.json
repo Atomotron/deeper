@@ -1,71 +1,191 @@
 {
   "frames": {
-    "croc/croc5.png": {
+    "balloon/balloonrotate3.png": {
       "frame": {
         "x": 0,
         "y": 0,
-        "w": 202,
-        "h": 135
+        "w": 52,
+        "h": 254
       },
       "rotated": false,
       "trimmed": true,
       "spriteSourceSize": {
-        "x": 701,
-        "y": 70,
-        "w": 202,
-        "h": 135
+        "x": 179,
+        "y": 142,
+        "w": 52,
+        "h": 254
       },
       "sourceSize": {
-        "w": 950,
-        "h": 264
+        "w": 667,
+        "h": 548
       },
       "pivot": {
         "x": 0.5,
         "y": 0.5
       }
     },
-    "croc/croc2.png": {
+    "balloon/balloonrotate2.png": {
       "frame": {
-        "x": 202,
-        "y": 0,
-        "w": 197,
-        "h": 153
+        "x": 0,
+        "y": 254,
+        "w": 38,
+        "h": 250
       },
       "rotated": false,
       "trimmed": true,
       "spriteSourceSize": {
-        "x": 219,
-        "y": 60,
-        "w": 197,
-        "h": 153
+        "x": 196,
+        "y": 142,
+        "w": 38,
+        "h": 250
       },
       "sourceSize": {
-        "w": 950,
-        "h": 264
+        "w": 667,
+        "h": 548
       },
       "pivot": {
         "x": 0.5,
         "y": 0.5
       }
     },
-    "croc/croc1.png": {
+    "balloon/balloonrotate1.png": {
       "frame": {
         "x": 0,
-        "y": 135,
-        "w": 193,
-        "h": 127
+        "y": 504,
+        "w": 89,
+        "h": 243
       },
       "rotated": false,
       "trimmed": true,
       "spriteSourceSize": {
-        "x": 66,
-        "y": 78,
-        "w": 193,
-        "h": 127
+        "x": 192,
+        "y": 143,
+        "w": 89,
+        "h": 243
       },
       "sourceSize": {
-        "w": 950,
-        "h": 264
+        "w": 667,
+        "h": 548
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "balloon/balloon1.png": {
+      "frame": {
+        "x": 38,
+        "y": 254,
+        "w": 148,
+        "h": 217
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 197,
+        "y": 143,
+        "w": 148,
+        "h": 217
+      },
+      "sourceSize": {
+        "w": 667,
+        "h": 548
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "balloon/balloon2.png": {
+      "frame": {
+        "x": 52,
+        "y": 0,
+        "w": 169,
+        "h": 202
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 197,
+        "y": 143,
+        "w": 169,
+        "h": 202
+      },
+      "sourceSize": {
+        "w": 667,
+        "h": 548
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "balloon/balloon3.png": {
+      "frame": {
+        "x": 186,
+        "y": 202,
+        "w": 167,
+        "h": 193
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 197,
+        "y": 143,
+        "w": 167,
+        "h": 193
+      },
+      "sourceSize": {
+        "w": 667,
+        "h": 548
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "balloon/balloon4.png": {
+      "frame": {
+        "x": 221,
+        "y": 0,
+        "w": 183,
+        "h": 171
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 197,
+        "y": 143,
+        "w": 183,
+        "h": 171
+      },
+      "sourceSize": {
+        "w": 667,
+        "h": 548
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "balloon/balloon5.png": {
+      "frame": {
+        "x": 0,
+        "y": 747,
+        "w": 178,
+        "h": 165
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 197,
+        "y": 143,
+        "w": 178,
+        "h": 165
+      },
+      "sourceSize": {
+        "w": 667,
+        "h": 548
       },
       "pivot": {
         "x": 0.5,
@@ -74,8 +194,8 @@
     },
     "croc/croc3.png": {
       "frame": {
-        "x": 399,
-        "y": 0,
+        "x": 89,
+        "y": 471,
         "w": 187,
         "h": 162
       },
@@ -96,10 +216,58 @@
         "y": 0.5
       }
     },
+    "croc/croc2.png": {
+      "frame": {
+        "x": 0,
+        "y": 912,
+        "w": 197,
+        "h": 153
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 219,
+        "y": 60,
+        "w": 197,
+        "h": 153
+      },
+      "sourceSize": {
+        "w": 950,
+        "h": 264
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "croc/crocrotate2.png": {
+      "frame": {
+        "x": 178,
+        "y": 633,
+        "w": 73,
+        "h": 153
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 135,
+        "y": 51,
+        "w": 73,
+        "h": 153
+      },
+      "sourceSize": {
+        "w": 950,
+        "h": 264
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
     "croc/croc4.png": {
       "frame": {
-        "x": 193,
-        "y": 153,
+        "x": 0,
+        "y": 1065,
         "w": 185,
         "h": 150
       },
@@ -120,38 +288,14 @@
         "y": 0.5
       }
     },
-    "croc/crocrotate2.png": {
-      "frame": {
-        "x": 0,
-        "y": 262,
-        "w": 73,
-        "h": 153
-      },
-      "rotated": true,
-      "trimmed": true,
-      "spriteSourceSize": {
-        "x": 135,
-        "y": 51,
-        "w": 73,
-        "h": 153
-      },
-      "sourceSize": {
-        "w": 950,
-        "h": 264
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
     "croc/crocrotate1.png": {
       "frame": {
-        "x": 586,
-        "y": 0,
+        "x": 0,
+        "y": 1215,
         "w": 119,
         "h": 147
       },
-      "rotated": true,
+      "rotated": false,
       "trimmed": true,
       "spriteSourceSize": {
         "x": 111,
@@ -170,18 +314,66 @@
     },
     "croc/crocrotate3.png": {
       "frame": {
-        "x": 733,
-        "y": 0,
+        "x": 0,
+        "y": 1362,
         "w": 55,
         "h": 145
       },
-      "rotated": true,
+      "rotated": false,
       "trimmed": true,
       "spriteSourceSize": {
         "x": 138,
         "y": 65,
         "w": 55,
         "h": 145
+      },
+      "sourceSize": {
+        "w": 950,
+        "h": 264
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "croc/croc5.png": {
+      "frame": {
+        "x": 0,
+        "y": 1507,
+        "w": 202,
+        "h": 135
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 701,
+        "y": 70,
+        "w": 202,
+        "h": 135
+      },
+      "sourceSize": {
+        "w": 950,
+        "h": 264
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "croc/croc1.png": {
+      "frame": {
+        "x": 55,
+        "y": 1362,
+        "w": 193,
+        "h": 127
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 66,
+        "y": 78,
+        "w": 193,
+        "h": 127
       },
       "sourceSize": {
         "w": 950,
@@ -199,8 +391,8 @@
     "image": "texture.png",
     "format": "RGBA8888",
     "size": {
-      "w": 878,
-      "h": 335
+      "w": 404,
+      "h": 1642
     },
     "scale": 1
   }
