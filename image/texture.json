@@ -119,6 +119,78 @@
         "x": 0.5,
         "y": 0.5
       }
+    },
+    "croc/crocrotate2.png": {
+      "frame": {
+        "x": 0,
+        "y": 262,
+        "w": 73,
+        "h": 153
+      },
+      "rotated": true,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 135,
+        "y": 51,
+        "w": 73,
+        "h": 153
+      },
+      "sourceSize": {
+        "w": 950,
+        "h": 264
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "croc/crocrotate1.png": {
+      "frame": {
+        "x": 586,
+        "y": 0,
+        "w": 119,
+        "h": 147
+      },
+      "rotated": true,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 111,
+        "y": 60,
+        "w": 119,
+        "h": 147
+      },
+      "sourceSize": {
+        "w": 950,
+        "h": 264
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "croc/crocrotate3.png": {
+      "frame": {
+        "x": 733,
+        "y": 0,
+        "w": 55,
+        "h": 145
+      },
+      "rotated": true,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 138,
+        "y": 65,
+        "w": 55,
+        "h": 145
+      },
+      "sourceSize": {
+        "w": 950,
+        "h": 264
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
     }
   },
   "meta": {
@@ -127,8 +199,8 @@
     "image": "texture.png",
     "format": "RGBA8888",
     "size": {
-      "w": 586,
-      "h": 303
+      "w": 878,
+      "h": 335
     },
     "scale": 1
   }
