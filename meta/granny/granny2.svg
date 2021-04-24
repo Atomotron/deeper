@@ -1,0 +1,22 @@
+<svg id="gma2" xmlns="http://www.w3.org/2000/svg" width="775" height="376" viewBox="0 0 775 376">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: blue;
+      }
+
+      .cls-2 {
+        fill: red;
+      }
+
+      .cls-3 {
+        fill: lime;
+      }
+    </style>
+  </defs>
+  <circle id="Collision1_copy" data-name="Collision1 copy" class="cls-1" cx="269.5" cy="229.5" r="38.5"/>
+  <circle id="Collision2_copy" data-name="Collision2 copy" class="cls-1" cx="256.5" cy="164.5" r="38.5"/>
+  <circle id="Collision3_copy" data-name="Collision3 copy" class="cls-1" cx="259" cy="108" r="20"/>
+  <circle id="Head" class="cls-2" cx="255.078" cy="112.703" r="8.078"/>
+  <circle id="CoM" class="cls-3" cx="262.5" cy="176.5" r="2.5"/>
+</svg>
