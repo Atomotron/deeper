@@ -57,7 +57,7 @@ load({
         test_level: {
             minFilter: 'LINEAR',
             magFilter: 'LINEAR',
-            wrapS: 'WRAP',
+            wrapS: 'REPEAT',
             wrapT: 'CLAMP_TO_EDGE',
             stretch: true,
         }
