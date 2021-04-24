@@ -5,7 +5,7 @@ export class Engine {
     // frames_behind: keep this many frames behind real time to
     //                smooth out fps variations
     MAX_DT = 1/15; // Don't take steps bigger than 1/15th of a second.
-    constructor(res,render,env,frames_behind=10) {
+    constructor(res,render,env,streams,frames_behind=10) {
         this.res = res;
         this.render = render;
         this.env = env;
@@ -14,6 +14,8 @@ export class Engine {
         this.time_reached = 0; 
         this.fps = 0; // Smoothed based on goal mechanism.
         this.last_real_timestamp = null;
+        this.sprites = new Set();
+        this.streams = streams;
     }
     // Starts requestanimframe to this.runFrame
     start() {
@@ -48,14 +50,35 @@ export class Engine {
         this.stepSimulation(dt,t);
         // The following will run with a simulated world at time t
         this.updateLogic(t);
+        // Send new data for rendering
+        for (const stream of this.streams) {
+            stream.sync(this.res.gl);
+        }
         this.updateAudio(dt,t); // Play audio before render for latency reasons
         // The following will run with consistent logic.
         this.render(this.res.gl,this.env);
     }
+    register(sprite) {
+        this.sprites.add(sprite);
+    }
+    unregister(sprite) {
+        this.sprites.delete(sprite);
+    }
     // Override to advance physics simulation
-    stepSimulation(dt,t) {}
+    stepSimulation(dt,t) {
+        for (const sprite of this.sprites) {
+            sprite.step(dt,t);
+        }
+    }
     // Override to advance post-physics logic
-    updateLogic(t) {}
+    updateLogic(t) {
+        for (const sprite of this.sprites) {
+            sprite.update(t);
+        }
+        for (const sprite of this.sprites) {
+            sprite.sync();
+        }
+    }
     // Override to update audio control stuff
     updateAudio(dt,t) {}
 }
