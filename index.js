@@ -69,7 +69,7 @@ load({
     streams: {
     },
     spritesheets: {
-        sprites: new URL("image/texture.json", document.baseURI),
+        sprites: new URL("image/texture.geom.json", document.baseURI),
     },
     skipAudioWait: true,
 },{

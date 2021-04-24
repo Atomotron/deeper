@@ -81,8 +81,8 @@ export class Sprites extends Quad {
 
 // One particular sprite
 export class Sprite {
-    ANIM_FPS = 2
-    constructor(sprites,engine,folder='croc',action='move') {
+    ANIM_FPS = 1
+    constructor(sprites,engine,folder='croc',action='rotate') {
         this.sprites = sprites;
         this.engine = engine;
         this.folder = folder;
@@ -126,8 +126,9 @@ export class Sprite {
     }
     // Synchronize 
     sync() {
-        console.log(this.frames.control[this.frameIndex]);
-        this.struct.pos.subEq(this.frames.control.CoM.pos);
+        const com = this.frames.control[this.frameIndex].CoM.pos;
+        //console.log(com+'');
+        this.struct.pos.subEq(com);
         this.struct.model.eq(this.frames.model[this.frameIndex]);
         this.struct.frame.eq(this.frames.frame[this.frameIndex]);
     }
