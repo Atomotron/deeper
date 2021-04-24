@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="667" height="548" viewBox="0 0 667 548">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: blue;
+      }
+
+      .cls-2 {
+        fill: red;
+      }
+
+      .cls-3 {
+        fill: lime;
+      }
+    </style>
+  </defs>
+  <circle id="Collision1" class="cls-1" cx="215" cy="164" r="25"/>
+  <circle id="Head" class="cls-2" cx="214.5" cy="162.5" r="13.5"/>
+  <circle id="CoM" class="cls-3" cx="213.5" cy="162.5" r="2.5"/>
+</svg>
