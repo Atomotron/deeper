@@ -1,0 +1,22 @@
+<svg id="tween2" xmlns="http://www.w3.org/2000/svg" width="950" height="264" viewBox="0 0 950 264">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: blue;
+      }
+
+      .cls-2 {
+        fill: #ed1c24;
+      }
+
+      .cls-3 {
+        fill: lime;
+      }
+    </style>
+  </defs>
+  <circle id="Collision1" class="cls-1" cx="156.844" cy="185.156" r="23.469"/>
+  <ellipse id="Collision2" class="cls-1" cx="179.094" cy="140.406" rx="32.219" ry="32.218"/>
+  <ellipse id="Collision3" class="cls-1" cx="181" cy="99" rx="24" ry="22"/>
+  <ellipse id="Head" class="cls-2" cx="157.844" cy="180.406" rx="8.25" ry="8.25"/>
+  <circle id="CoM" class="cls-3" cx="170" cy="150" r="1"/>
+</svg>

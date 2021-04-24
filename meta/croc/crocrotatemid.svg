@@ -1,0 +1,22 @@
+<svg id="mid" xmlns="http://www.w3.org/2000/svg" width="950" height="264" viewBox="0 0 950 264">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: blue;
+      }
+
+      .cls-2 {
+        fill: #ed1c24;
+      }
+
+      .cls-3 {
+        fill: lime;
+      }
+    </style>
+  </defs>
+  <circle id="Collision1" class="cls-1" cx="161.844" cy="178.406" r="30.469"/>
+  <circle id="Collision2" class="cls-1" cx="165.844" cy="137.406" r="27.969"/>
+  <ellipse id="Collision3" class="cls-1" cx="169.469" cy="100.781" rx="18.594" ry="18.594"/>
+  <ellipse id="Head" class="cls-2" cx="162.156" cy="184.406" rx="8.25" ry="8.25"/>
+  <circle id="CoM" class="cls-3" cx="164" cy="152" r="1"/>
+</svg>
