@@ -66,7 +66,7 @@ load({
             stretch: false,
         },
         sprites: {
-            minFilter: 'LINEAR_MIPMAP_LINEAR',
+            minFilter: 'LINEAR',
             magFilter: 'LINEAR',
             wrapS: 'CLAMP_TO_EDGE',
             wrapT: 'CLAMP_TO_EDGE',
@@ -110,6 +110,12 @@ res.streams.ambience.play();
 const camera = Mat2.Id();
 const cameraPos = Vec2.From(0,0);
 let cameraSize = 512;
+res.io.canvas.addEventListener('wheel',
+    (e) => {
+        cameraSize *= Math.exp(Math.sign(event.deltaY));
+    }
+);
+
 const cameraInv = Mat2.Inverse(camera);
 window.camera = camera;
 window.cameraPos = cameraPos;
