@@ -42,7 +42,6 @@ export class Brushes extends Sprites {
 export class Brush extends Sprite {
     constructor(sprites,engine,spritename,pos=Vec2.Zero(),facing=1,angle=0,scale=1) {
         super(sprites,engine,spritename,pos,facing,angle,scale);
-        console.log(sprites);
         this.struct2 = sprites.inst.acquire();
     }
     destroy() {
@@ -54,16 +53,17 @@ export class Brush extends Sprite {
         this.struct2.model.eq(this.struct.model);
         this.struct2.frame.eq(this.struct.frame);
         this.struct2.color.eq(this.struct.color);
-        this.struct2.pos.eq(this.struct.pos);
         // Wrap pos
         this.struct.pos.x = (
             wrap(this.struct.pos.x, -this.sprites.wrapX, this.sprites.wrapX)
         );      
         // Wrap pos2
-        this.struct2.pos.x = (
-            wrap(this.struct.pos.x+1*this.sprites.wrapX,
-                 -this.sprites.wrapX, this.sprites.wrapX)
-        );
+        this.struct2.pos.eq(this.struct.pos);
+        if (this.struct.pos.x > 0) {
+            this.struct2.pos.x -= 2*this.sprites.wrapX;
+        } else {
+            this.struct2.pos.x += 2*this.sprites.wrapX;
+        }
     }
 }
 
