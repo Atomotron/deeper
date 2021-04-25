@@ -1,0 +1,87 @@
+{
+  "frames": {
+    "testguy1.png": {
+      "frame": {
+        "h": 78,
+        "w": 65,
+        "x": 94,
+        "y": 0
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "rotated": true,
+      "sourceSize": {
+        "h": 78,
+        "w": 65
+      },
+      "spriteSourceSize": {
+        "h": 78,
+        "w": 65,
+        "x": 0,
+        "y": 0
+      },
+      "trimmed": false
+    },
+    "testguy2.png": {
+      "frame": {
+        "h": 65,
+        "w": 94,
+        "x": 0,
+        "y": 0
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "rotated": false,
+      "sourceSize": {
+        "h": 65,
+        "w": 94
+      },
+      "spriteSourceSize": {
+        "h": 65,
+        "w": 94,
+        "x": 0,
+        "y": 0
+      },
+      "trimmed": false
+    },
+    "testguy3.png": {
+      "frame": {
+        "h": 76,
+        "w": 64,
+        "x": 172,
+        "y": 0
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "rotated": true,
+      "sourceSize": {
+        "h": 76,
+        "w": 64
+      },
+      "spriteSourceSize": {
+        "h": 76,
+        "w": 64,
+        "x": 0,
+        "y": 0
+      },
+      "trimmed": false
+    }
+  },
+  "meta": {
+    "app": "http://free-tex-packer.com",
+    "format": "RGBA8888",
+    "image": "TESTGUYS.png",
+    "scale": 1,
+    "size": {
+      "h": 65,
+      "w": 248
+    },
+    "version": "0.6.6"
+  }
+}
