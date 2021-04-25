@@ -84,7 +84,7 @@ export class Sprites extends Quad {
 // One particular sprite
 export class Sprite extends Collider{
     ANIM_MPF = 24
-    IDLE_VELOCITY = 0
+    IDLE_VELOCITY = 12
     constructor(sprites,engine,folder='granny',action='move',sends=false,receives=true) {
         super(sends,receives);
         this.sprites = sprites;
@@ -108,7 +108,7 @@ export class Sprite extends Collider{
         this.frameDistanceTraveled = this.ANIM_MPF;
         this.frameDirection = 1;
         // Set up animation frames
-        this.update(0);
+        this.update(0,Math.random()*this.ANIM_MPF);
         // Acquire an instance
         this.struct = sprites.inst.acquire();
         this.struct.color.eqFrom(1.0,1.0,0.0,1.0);
@@ -143,11 +143,11 @@ export class Sprite extends Collider{
         return this.frames.collision[this.frameIndex];
     }
     // Update
-    update(t) {
+    update(t,wrapBackTo=0) {
         if (this.frameDistanceTraveled < this.ANIM_MPF) {
             return;
         } else {
-            this.frameDistanceTraveled = 0;
+            this.frameDistanceTraveled = wrapBackTo;
         }
         this.frames = this.sprites.animations[this.folder][this.action];
         const nframes = this.frames.frame.length;
