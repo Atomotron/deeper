@@ -15,7 +15,7 @@ import {Sprites,Sprite} from './sprite.js';
 export class Brushes extends Sprites {
     constructor(res,
         shadername="sprite",
-        texturename="brush",
+        texturename="sprites",
         instances=1,
         configuration={}
         ) {

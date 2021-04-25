@@ -16,7 +16,7 @@ import * as Settings from "./settings.js";
 import {Quad} from './quad.js';
 import {Sprites,AnimatedSprites,AnimatedSprite,TargetSprite} from './sprite.js';
 import {collisions} from './collider.js';
-import {Field,Brushes} from './field.js';
+import {Field,Brushes,Brush} from './field.js';
 
 function setLoaderBarWidth(id,complete,total) {
     const e = document.getElementById(id);
@@ -238,10 +238,12 @@ class DeeperEngine extends Engine {
                 Math.random() * Math.PI * 2, // target angle
             );
         }
-        sprites.sync(res.gl);
     }
     stepSimulation(dt,t) {
         field.read(this.cursor);
+        // Draw
+        const b = new Brush(brushes,this,'balloon/balloonrotate1.png',cursor.clone());
+        
         if (this.res.io.pressed.has('Mouse0')) {
             this.sprite.target.eq(this.cursor);
             this.sprite.targetPower = 3000;
@@ -286,7 +288,7 @@ class DeeperEngine extends Engine {
         this.newColliders.push(collider);
     }
 }
-const e = new DeeperEngine(res,render,env,[sprites]);
+const e = new DeeperEngine(res,render,env,[sprites,brushes]);
 window.e = e;
 e.start();
 }).catch(
