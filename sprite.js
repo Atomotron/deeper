@@ -8,6 +8,7 @@ import {
 } from './engine/archimedes.js';
 
 import {Quad} from './quad.js';
+import {Collider} from './collider.js';
 
 const NUMBER_POSTFIX_REGEX = /\d+\.png$/;
 const ANIM_FRAME_FOLDER_REGEX = /^.*\//;
@@ -65,11 +66,12 @@ export class Sprites extends Quad {
                     names.push(frameMap.get(index));
                 }
                 // Map names to spritesheets
-                const frames = {frame:[],model:[],control:[]};
+                const frames = {frame:[],model:[],control:[],collision:[]};
                 for (const name of names) {
                     frames.frame.push(this.texture.sheet.frame[name]);
                     frames.model.push(this.texture.sheet.model[name]);
                     frames.control.push(this.texture.sheet.control[name]);
+                    frames.collision.push(this.texture.sheet.collision[name]);
                 }
                 // Write to animation object
                 if (!this.animations[folder]) this.animations[folder] = {};
@@ -80,20 +82,31 @@ export class Sprites extends Quad {
 }
 
 // One particular sprite
-export class Sprite {
+export class Sprite extends Collider{
     ANIM_MPF = 24
     IDLE_VELOCITY = 10
-    constructor(sprites,engine,folder='croc',action='move') {
+    constructor(sprites,engine,folder='granny',action='move') {
+        super();
         this.sprites = sprites;
         this.engine = engine;
         this.folder = folder;
         this.action = action;
-        this.frameIndex = 0;
-        this.frameDirection = 1;
-        this.frameDistanceTraveled = 0;
-        this.pos = Vec2.From(0.0,0.0);
-        this.posDelta = Vec2.From(0.0,0.0);
         this.destroyed = false;
+        // GEOMETRY
+        // High-level
+        this.pos = Vec2.From(0.0,0.0);
+        this.facing = -1;
+        // Low-level - determined by high-level.
+        this.translate = this.pos.clone();
+        this.transform = Mat2.Id();
+        
+        // ANIMATION STATE
+        this.posDelta = Vec2.From(0.0,0.0);
+        this.nextAction = action;
+        this.frameIndex = 0;
+        this.trueFrameIndex = 0;
+        this.frameDistanceTraveled = this.ANIM_MPF;
+        this.frameDirection = 1;
         // Set up animation frames
         this.update(0);
         // Acquire an instance
@@ -112,32 +125,64 @@ export class Sprite {
     step(dt,t) {
         this.frameDistanceTraveled += dt*this.IDLE_VELOCITY;
     }
+    startAction(action) {
+        this.frameIndex = 0; // Frame 0 is the connection point
+        this.frameDirection = 1;
+        this.nextAction = action;
+    }
+    // Returns a list of circles that collide.
+    get colliders() {
+        return this.frame.collision;
+    }
     // Update
     update(t) {
-        this.frames = this.sprites.animations[this.folder][this.action];
-        const nframes = this.frames.frame.length;
-        if (this.frameDistanceTraveled > this.ANIM_MPF) {
-            this.frameIndex += this.frameDirection;
-            if (this.frameIndex === nframes-1 || this.frameIndex === 0) {
-                this.frameDirection = -this.frameDirection;
-            }
+        if (this.frameDistanceTraveled < this.ANIM_MPF) {
+            return;
+        } else {
             this.frameDistanceTraveled = 0;
         }
-        // Safety
-        this.frameIndex = this.frameIndex % nframes;
+        this.frames = this.sprites.animations[this.folder][this.action];
+        const nframes = this.frames.frame.length;
+        // Mirror if rotating
+        if (this.action === 'rotate') {
+            if (this.frameIndex === Math.floor(nframes/2)) {
+                this.facing = -this.facing;
+            }
+            if (this.frameIndex === nframes-1) {
+                this.startAction('move');
+            }
+        }
+        // Update frame index
+        this.frameIndex += this.frameDirection;
+        if (this.frameIndex >= nframes-1) {
+            this.frameDirection = -1;
+        } else if (this.frameIndex <= 0) {
+            this.frameDirection = 1;
+        }
+        // Set up next action
+        this.action = this.nextAction;
     }
     // Synchronize 
     sync() {
-        const com = this.frames.control[this.frameIndex].CoM.pos;
-        //console.log(com+'');
-        this.struct.pos.eq(this.pos);
-        this.struct.pos.subEq(com);
-        this.struct.model.eq(this.frames.model[this.frameIndex]);
+        // Map high-level to low-level
+        this.translate.eq(this.frames.control[this.frameIndex].CoM.pos);
+        this.translate.x *= this.facing;
+        this.translate.addEq(this.pos);
+        this.transform.eqId();
+        this.transform.a00 *= this.facing;
+        // Write to shader
+        this.struct.pos.eq(this.translate);
+        this.struct.model.eqCompose(this.transform,
+                                    this.frames.model[this.frameIndex]);
         this.struct.frame.eq(this.frames.frame[this.frameIndex]);
     }
     // Move, keeping track for animation.
     moveTo(newPos) {
         this.posDelta.eqSub(this.pos,newPos);
+        if (this.posDelta.x * this.facing < 0 &&
+            this.action !== 'rotate') {
+            this.startAction('rotate');
+        }
         const distance = this.posDelta.mag();
         this.frameDistanceTraveled += distance;
         this.pos.eq(newPos);

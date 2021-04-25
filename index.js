@@ -93,7 +93,7 @@ const gl = res.gl;
 // CAMERA
 const camera = Mat2.Id();
 const cameraPos = Vec2.From(0,0);
-let cameraSize = 256;
+let cameraSize = 128;
 const cameraInv = Mat2.Inverse(camera);
 window.camera = camera;
 window.cameraPos = cameraPos;

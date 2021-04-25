@@ -57,6 +57,7 @@ export class Spritesheet {
         this.frame = {};  // Sprite frame rects
         this.model = {};  // Sprite model matrices
         this.control = {}; // control points
+        this.collision = {}; // collision circles
         // Default sheet: one frame, 'all', that contains the texture.
         if (sheetJson === null) {
             sheetJson = {
@@ -92,15 +93,28 @@ export class Spritesheet {
                     const frameCenterY = spriteData.spriteSourceSize.y + spriteData.spriteSourceSize.h/2;
                     const cx = circle.cx-frameCenterX;
                     const cy = frameCenterY-circle.cy;
-                    if (!this.control[name]) this.control[name] = {};
-                    this.control[name][cname] = new ControlPoint(
+                    const controlPoint = new ControlPoint(
                         Vec2.From(cx,cy),   // pos
                         circle.r,           // r
                     );
+                    if (cname.startsWith("Collision")) {
+                        if (!this.collision[name]) this.collision[name] = [];
+                        this.collision[name].push(controlPoint);
+                    } else {
+                        if (!this.control[name]) this.control[name] = {};
+                        this.control[name][cname] = controlPoint;
+                    }
+                    
                 }
             } else {
                 this.control[name] = {}; // Empty control point set
+                this.collision[name] = []; // Empty collision points
             }
+            // Sort collision points from lowest bottom to highest bottom.
+            function bottomDifference(a,b) {
+                (a.pos.x-a.r) - (b.pos.x-b.r)
+            }
+            this.collision[name].sort(bottomDifference);
         }
     }
 }
