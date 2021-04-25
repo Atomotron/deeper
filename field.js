@@ -12,29 +12,58 @@ import {
 } from './engine/archimedes.js';
 import {Sprites,Sprite} from './sprite.js';
 
+function circularModuluo(x,m) {
+    let mod = x % m;
+    if (mod < 0) mod = m + mod;
+    //console.log(x,m,mod);
+    return mod;
+}
+
+function wrap(x,low,high) {
+    const shiftedX = x - low;
+    const shiftedHigh = high - low;
+    const shiftedMod = circularModuluo(shiftedX,shiftedHigh)
+    return low + shiftedMod;
+}
+
 export class Brushes extends Sprites {
     constructor(res,
         shadername="sprite",
         texturename="sprites",
         instances=1,
-        configuration={}
+        configuration={},
+        wrapX,
         ) {
         super(res,shadername,texturename,instances,configuration);
+        this.wrapX = wrapX;
     }
 }
 
 export class Brush extends Sprite {
     constructor(sprites,engine,spritename,pos=Vec2.Zero(),facing=1,angle=0,scale=1) {
         super(sprites,engine,spritename,pos,facing,angle,scale);
-        this.faded = false;
+        console.log(sprites);
+        this.struct2 = sprites.inst.acquire();
     }
-    update(t) {
-        super.update(t);
-        if (this.faded) {
-            this.destroy();
-        } else {
-            this.faded = true;
-        }
+    destroy() {
+        super.destroy();
+        this.sprites.inst.relenquish(this.struct2);
+    }
+    sync() {
+        super.sync();
+        this.struct2.model.eq(this.struct.model);
+        this.struct2.frame.eq(this.struct.frame);
+        this.struct2.color.eq(this.struct.color);
+        this.struct2.pos.eq(this.struct.pos);
+        // Wrap pos
+        this.struct.pos.x = (
+            wrap(this.struct.pos.x, -this.sprites.wrapX, this.sprites.wrapX)
+        );      
+        // Wrap pos2
+        this.struct2.pos.x = (
+            wrap(this.struct.pos.x+1*this.sprites.wrapX,
+                 -this.sprites.wrapX, this.sprites.wrapX)
+        );
     }
 }
 
@@ -59,13 +88,16 @@ export class Field {
     }
     read(pos) {
         const gl = this.res.gl;
-        // Compute source point 
+        // Compute source point in viewport coords
         this.readPos.eqSub(pos,this.bgPos);
         this.readPos.transformEq(this.bgModelInv);
+        // Convert to uv coordinates
         this.readPos.mulEq(0.5);
+        this.readPos.x += 0.5;
+        this.readPos.y += 0.5;
         // Convert to texture coordinates
         let x = Math.floor(this.fb.width * this.readPos.x   );
-        let y = Math.floor(this.fb.height* (1.0-this.readPos.y));
+        let y = Math.floor(this.fb.height* this.readPos.y   );
         // Cut Y
         if (y >= this.fb.height-1 || y < 0) {
             this.f.eqZero();

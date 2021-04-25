@@ -14,7 +14,7 @@ import {
 
 import * as Settings from "./settings.js";
 import {Quad} from './quad.js';
-import {Sprites,AnimatedSprites,AnimatedSprite,TargetSprite} from './sprite.js';
+import {Sprites,AnimatedSprites,Sprite,AnimatedSprite,TargetSprite} from './sprite.js';
 import {collisions} from './collider.js';
 import {Field,Brushes,Brush} from './field.js';
 
@@ -134,7 +134,11 @@ const bgLayer = new Quad(gl,
 const bgModel = res.images.level.sheet.model.all.clone();
 bgModel.mulEq(8);
 const bgModelInv = bgModel.inverse();
-const bgPos = Vec2.From(bgModel.a00,-bgModel.a11*2);
+const bgPos = Vec2.From(0,-bgModel.a11);
+
+// PHYSICS FIELD
+const field = new Field(res,res.images.level,bgModelInv,bgPos);
+
 // TIME
 const time = Vec1.From(0);
 
@@ -142,10 +146,8 @@ const time = Vec1.From(0);
 const sprites = new AnimatedSprites(res);
 
 // BRUSH LAYER
-const brushes = new Brushes(res);
+const brushes = new Brushes(res,"sprite",'sprites',1,{},bgModel.a00);
 
-// PHYSICS FIELD
-const field = new Field(res,res.images.level,bgModelInv,bgPos);
 
 // Make an instance
 /*
@@ -157,8 +159,20 @@ layer.sync(res.gl);*/
 
 // Set up render sequence
 
-const sequence = [
-    ClearPass,
+const sequence = [    
+    SUM(DrawPass,{
+        framebuffer: field.fb,
+        name: "Paint on Field",
+        shader: brushes.shader,
+        uniforms: {
+            cameraInv: bgModelInv,
+            cameraPos: bgPos,  
+        },
+        samplers: {
+            source: sprites.texture
+        },
+        draw: (gl) => brushes.draw(gl),
+    }),
     SUM(DrawPass,{
         name: "Draw Background",
         shader: res.shaders.background,
@@ -166,10 +180,12 @@ const sequence = [
             cameraPos:cameraPos,
             camera:camera,
             bgModelInv:bgModelInv,
-            bgPos:bgPos},
+            bgPos:bgPos
+        },
         samplers: {source: field.fb},
         draw: (gl) => bgLayer.draw(gl),
     }),
+    //ClearPass,
     SUM(DrawPass,{
         name: "Draw Sprites",
         shader: sprites.shader,
@@ -218,7 +234,7 @@ class DeeperEngine extends Engine {
         window.s = this.sprite;
         this.sprite.struct.color.z = 0.0;
         
-        for (let i=0; i<20; i++) {
+        for (let i=0; i<2; i++) {
             const s = new TargetSprite(
                 sprites,
                 this,
@@ -238,11 +254,11 @@ class DeeperEngine extends Engine {
                 Math.random() * Math.PI * 2, // target angle
             );
         }
+        // Draw
+        const b = new Brush(brushes,this,'balloon/balloon1.png',this.cursor,1,0,8);
     }
     stepSimulation(dt,t) {
         field.read(this.cursor);
-        // Draw
-        const b = new Brush(brushes,this,'balloon/balloonrotate1.png',cursor.clone());
         
         if (this.res.io.pressed.has('Mouse0')) {
             this.sprite.target.eq(this.cursor);
