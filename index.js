@@ -198,8 +198,7 @@ class DeeperEngine extends Engine {
             true,
             false,
         );
-        const names = ['croc','granny',
-                            'boat','butterfly','fish','balloon',];
+        const names = Array.from(Object.keys(sprites.animations));
         this.res.io.canvas.addEventListener('mousedown', (e) => {
             this.sprite.folder = names.shift();
             names.push(this.sprite.folder);
