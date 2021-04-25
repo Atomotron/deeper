@@ -17,6 +17,7 @@ attribute vec4 color;
 
 // Texture coordinate
 varying vec2 uv;
+varying vec2 vertexTail;
 varying vec4 vertexColor;
 
 void main() {

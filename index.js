@@ -13,7 +13,7 @@ import {
 } from './engine/archimedes.js';
 
 import {Quad} from './quad.js';
-import {Sprites,Sprite} from './sprite.js';
+import {Sprites,AnimatedSprites,AnimatedSprite,TargetSprite} from './sprite.js';
 import {collisions} from './collider.js';
 
 function setLoaderBarWidth(id,complete,total) {
@@ -117,9 +117,7 @@ res.io.canvas.addEventListener('wheel',
 );
 
 const cameraInv = Mat2.Inverse(camera);
-window.camera = camera;
-window.cameraPos = cameraPos;
-window.cameraInv = cameraInv;
+const cameraTarget = cameraPos.clone();
 
 // MOUSE
 const cursor = Vec2.From(0.0,0.0);
@@ -129,14 +127,15 @@ const bgLayer = new Quad(gl,
     res.shaders.background.schema({vertex:{divisor:0,stream:false}}),
     1,
 );
-const bgModel = res.images.test_level.sheet.model.all;
-const bgModelInv = res.images.test_level.sheet.model.all.inverse();
-const bgPos = Vec2.From(0,-bgModel.a11);
+const bgModel = res.images.test_level.sheet.model.all.clone();
+bgModel.mulEq(10);
+const bgModelInv = bgModel.inverse();
+const bgPos = Vec2.From(0,-bgModel.a11*2);
 // TIME
 const time = Vec1.From(0);
 
 // SPRITE LAYER
-const sprites = new Sprites(res);
+const sprites = new AnimatedSprites(res);
 
 // Make an instance
 /*
@@ -188,8 +187,16 @@ class DeeperEngine extends Engine {
         this.colliderBackBuffer = [];
         
         // Sprite creation
-        this.sprite = new Sprite(
-            sprites,this,'balloon','move',true,false,
+        this.sprite = new TargetSprite(
+            sprites,
+            this,
+            'granny','move', // These replace spritename!
+            Vec2.Zero(),
+            1,
+            0,
+            1,
+            true,
+            false,
         );
         const names = ['croc','granny',
                             'boat','butterfly','fish','balloon',];
@@ -198,20 +205,47 @@ class DeeperEngine extends Engine {
             names.push(this.sprite.folder);
         });
         window.s = this.sprite;
+        this.sprite.struct.color.z = 0.0;
         
-        for (let i=0; i<2000; i++) {
-            const s = new Sprite(
-                sprites,this,(names)[Math.floor(Math.random()*names.length)],
+        for (let i=0; i<20; i++) {
+            const s = new TargetSprite(
+                sprites,
+                this,
+                (names)[Math.floor(Math.random()*names.length)],
+                'move',
+                Vec2.From(Math.random()-0.5,Math.random()-0.5).mulEq(2048),
+                1,
+                0, // angle
+                1,
+                false,
+                true,
+                Vec2.From(Math.random()-0.5,Math.random()-0.5).mulEq(512), // velocity
+                1, //damping
+                this.sprite.pos,
+                1000, //target power
+                Math.random() * Math.PI * 2, // target angle
             );
-            s.pos.eqFrom(Math.random()-0.5,Math.random()-0.5);
-            s.pos.mulEq(2000*4);
         }
         sprites.sync(res.gl);
     }
     stepSimulation(dt,t) {
-        //cameraPos.x += CAM_VEL*dt;
+        if (this.res.io.pressed.has('Mouse0')) {
+            this.sprite.target.eq(this.cursor);
+            this.sprite.targetPower = 3000;
+        } else {
+            this.sprite.target.eq(this.sprite.pos);
+            this.sprite.targetPower = 0;
+        }
+        // Update camera pos
+        cameraTarget.zeroEq();
+        cameraTarget.addEq(this.sprite.target);
+        cameraTarget.addEq(this.sprite.pos);
+        cameraTarget.mulEq(0.5);
+        cameraTarget.subEq(cameraPos); // final minus initial
+        
+        cameraPos.scaledAddEq(cameraTarget,dt);
+        // Step the rest of the simulation
         super.stepSimulation(dt,t);
-        this.sprite.moveTo(this.cursor);
     }
     updateLogic(t) {
         // Compute collisions

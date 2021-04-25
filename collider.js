@@ -7,21 +7,21 @@ import {
 
 let counter = 0;
 
-export class Collider {
+export const colliderMixin = Base => class extends Base {
     NAME = 'collider'
-    constructor(sends=false,receives=true) {
+    colliderConstructor(sends=false,receives=true) {
         this.sends = sends;
         this.receives = receives;
         this.removeFromColliders = false;
-        this.translate = Vec2.From(0,0);
-        this.transform = Mat2.Id();
         
         this.ccAccs = [Vec2.From(0,0)];
         this.ccRadii2 = [0];
         this.nCcAccs = 1;
-        
         this.ccTop = 0;
         this.ccBottom = 0;
+        // Stuff that colliders always need to have
+        if (!this.translate) this.translate = Vec2.From(0,0);
+        if (!this.transform) this.transform = Mat2.Id();
     }
     getColliders() {
         return [];

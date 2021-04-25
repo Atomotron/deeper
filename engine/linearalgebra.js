@@ -214,7 +214,7 @@ class AbstractVecN extends IndirectArray {
         if (mag === 0.0) { // This is a safe function!
             return this.eqZero(); // f(0) always makes vec 0
         }
-        return this.eqMul(1.0 / mag);
+        return this.eqMul(self,1.0 / mag);
     }
     // R^n -> (R -> R) -> R^n
     // Calls `magnitude_function` on the magnitude of the input vector,
@@ -314,8 +314,8 @@ class Vec2 extends AbstractVecN {
     eqRotate(self,theta) {
         const out=this.a, a=self.a;
         const c=Math.cos(theta), s=Math.sin(theta);
-        const out0 = c*a[0] + s*a[1];
-        out[1]     = s*a[0] - c*a[1];
+        const out0 = c*a[0] - s*a[1];
+        out[1]     = s*a[0] + c*a[1];
         out[0] = out0;
         return this;
     }
@@ -346,6 +346,13 @@ class Vec2 extends AbstractVecN {
         const out=this.a, a=self.a, b=other.a;
         out[0] = a[0] + b[0];
         out[1] = a[1] + b[1];
+        return this;
+    }
+    // Scaled vector addition
+    eqScaledAdd(self,other,scale) {
+        const out=this.a, a=self.a, b=other.a;
+        out[0] = a[0] + b[0]*scale;
+        out[1] = a[1] + b[1]*scale;
         return this;
     }
     // Vector subtraction
