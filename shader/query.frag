@@ -4,9 +4,8 @@ precision highp float;
 
 uniform sampler2D source;
 
-varying vec2 uv;
-varying vec4 vertexColor;
+varying vec2 samplePoint;
 
 void main() {
-    gl_FragColor = texture2D(source, uv) * vertexColor;
+    gl_FragColor = texture2D(source, samplePoint);
 }

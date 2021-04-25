@@ -7,21 +7,21 @@ import {
 
 let counter = 0;
 
-export class Collider {
+export const colliderMixin = Base => class extends Base {
     NAME = 'collider'
-    constructor(sends=false,receives=true) {
+    colliderConstructor(sends=false,receives=true) {
         this.sends = sends;
         this.receives = receives;
         this.removeFromColliders = false;
-        this.translate = Vec2.From(0,0);
-        this.transform = Mat2.Id();
         
         this.ccAccs = [Vec2.From(0,0)];
         this.ccRadii2 = [0];
         this.nCcAccs = 1;
-        
         this.ccTop = 0;
         this.ccBottom = 0;
+        // Stuff that colliders always need to have
+        if (!this.translate) this.translate = Vec2.From(0,0);
+        if (!this.transform) this.transform = Mat2.Id();
     }
     getColliders() {
         return [];
@@ -109,32 +109,31 @@ export function collisions(colliders,newColliders=[],remainingColliders=[]) {
     for (let i=0; i<remainingColliders.length; i++) {
         const collider = remainingColliders[i];
         const sweepPoint = collider.ccBottom;
-        if (collider.receives) {
-            // Check every interesting collider against this one
-            for (let j=0; j<interestingColliders.length; j++) {
-                const otherCollider = interestingColliders[j];
-                // Check to see if this collider is still potentially relevant.
-                if (otherCollider.ccTop < sweepPoint) {
-                    // We'll never see another collider that overlaps with otherCollider,
-                    // because they're sorted by bottoms, and this bottom is already too high.
-                } else {
-                    stillInterestingColliders.push(otherCollider);
-                    // Check for collision
-                    if (otherCollider.checkCollision(collider)) {
-                        otherCollider.collide(collider);
-                        collider.collide(otherCollider);
-                    }
+        // Check every interesting collider against this one
+        for (let j=0; j<interestingColliders.length; j++) {
+            const otherCollider = interestingColliders[j];
+            // Check to see if this collider is still potentially relevant.
+            if (otherCollider.ccTop < sweepPoint) {
+                // We'll never see another collider that overlaps with otherCollider,
+                // because they're sorted by bottoms, and this bottom is already too high.
+            } else {
+                stillInterestingColliders.push(otherCollider);
+                // Check for collision
+                const canConnect = (collider.sends && otherCollider.receives)
+                                 ||(otherCollider.sends && collider.receives);
+                if (canConnect && 
+                    otherCollider.checkCollision(collider)) {
+                    otherCollider.collide(collider);
+                    collider.collide(otherCollider);
                 }
             }
-            //if (counter % 60 === 0) console.log(i,stillInterestingColliders.length,sweepPoint);
-            // Swap stacks
-            const aux = interestingColliders;
-            interestingColliders = stillInterestingColliders;
-            stillInterestingColliders = aux;
-            stillInterestingColliders.length = 0; // Clear for next iteration
         }
-        if (collider.sends) {
-            interestingColliders.push(collider);
-        }
+        //if (counter % 60 === 0) console.log(i,stillInterestingColliders.length,sweepPoint);
+        // Swap stacks
+        const aux = interestingColliders;
+        interestingColliders = stillInterestingColliders;
+        stillInterestingColliders = aux;
+        stillInterestingColliders.length = 0; // Clear for next iteration
+        interestingColliders.push(collider);
     }
 }

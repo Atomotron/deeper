@@ -12,9 +12,11 @@ import {
     Engine,
 } from './engine/archimedes.js';
 
+import * as Settings from "./settings.js";
 import {Quad} from './quad.js';
-import {Sprites,Sprite} from './sprite.js';
+import {Sprites,AnimatedSprites,AnimatedSprite,TargetSprite} from './sprite.js';
 import {collisions} from './collider.js';
+import {Field} from './field.js';
 
 function setLoaderBarWidth(id,complete,total) {
     const e = document.getElementById(id);
@@ -43,6 +45,7 @@ load({
         vertex: {
             sprite: new URL("shader/sprite.vert", document.baseURI),
             background: new URL("shader/background.vert", document.baseURI),
+            //query: new URL("shader/query.vert", document.baseURI),
         },
         fragment:{
             blit: new URL("shader/blit.frag", document.baseURI),
@@ -56,6 +59,7 @@ load({
     images: {
         test_level: new URL("image/test_level_2.png", document.baseURI),
         sprites: new URL("image/texture.png", document.baseURI),
+        brush: new URL("image/brush.png", document.baseURI),
     },
     imageSettings: {
         test_level: {
@@ -66,7 +70,7 @@ load({
             stretch: false,
         },
         sprites: {
-            minFilter: 'LINEAR_MIPMAP_LINEAR',
+            minFilter: 'LINEAR',
             magFilter: 'LINEAR',
             wrapS: 'CLAMP_TO_EDGE',
             wrapT: 'CLAMP_TO_EDGE',
@@ -110,10 +114,14 @@ res.streams.ambience.play();
 const camera = Mat2.Id();
 const cameraPos = Vec2.From(0,0);
 let cameraSize = 512;
+res.io.canvas.addEventListener('wheel',
+    (e) => {
+        cameraSize *= Math.exp(Math.sign(event.deltaY));
+    }
+);
+
 const cameraInv = Mat2.Inverse(camera);
-window.camera = camera;
-window.cameraPos = cameraPos;
-window.cameraInv = cameraInv;
+const cameraTarget = cameraPos.clone();
 
 // MOUSE
 const cursor = Vec2.From(0.0,0.0);
@@ -123,14 +131,18 @@ const bgLayer = new Quad(gl,
     res.shaders.background.schema({vertex:{divisor:0,stream:false}}),
     1,
 );
-const bgModel = res.images.test_level.sheet.model.all;
-const bgModelInv = res.images.test_level.sheet.model.all.inverse();
-const bgPos = Vec2.From(0,-bgModel.a11);
+const bgModel = res.images.test_level.sheet.model.all.clone();
+bgModel.mulEq(8);
+const bgModelInv = bgModel.inverse();
+const bgPos = Vec2.From(bgModel.a00,-bgModel.a11*2);
 // TIME
 const time = Vec1.From(0);
 
 // SPRITE LAYER
-const sprites = new Sprites(res);
+const sprites = new AnimatedSprites(res);
+
+// PHYSICS FIELD
+const field = new Field(res,res.images.test_level,bgModelInv,bgPos);
 
 // Make an instance
 /*
@@ -152,7 +164,7 @@ const sequence = [
             camera:camera,
             bgModelInv:bgModelInv,
             bgPos:bgPos},
-        samplers: {source: res.images.test_level},
+        samplers: {source: field.fb},
         draw: (gl) => bgLayer.draw(gl),
     }),
     SUM(DrawPass,{
@@ -182,25 +194,68 @@ class DeeperEngine extends Engine {
         this.colliderBackBuffer = [];
         
         // Sprite creation
-        this.sprite = new Sprite(
-            sprites,this,'granny','move',true,false,
+        this.sprite = new TargetSprite(
+            sprites,
+            this,
+            field,
+            'granny','move', // These replace spritename!
+            Vec2.Zero(),
+            1,
+            0,
+            1,
+            true,
+            false,
         );
+        this.sprite.fieldSensitivity.z = 0.0;
+        const names = Array.from(Object.keys(sprites.animations));
+        this.res.io.canvas.addEventListener('mousedown', (e) => {
+            this.sprite.folder = names.shift();
+            names.push(this.sprite.folder);
+        });
         window.s = this.sprite;
+        this.sprite.struct.color.z = 0.0;
         
-        for (let i=0; i<2000; i++) {
-            const s = new Sprite(
-                sprites,this,(['balloon','croc','granny',
-                            'boat','butterfly','fish'])[Math.floor(Math.random()*6)],
+        for (let i=0; i<20; i++) {
+            const s = new TargetSprite(
+                sprites,
+                this,
+                field,
+                (names)[Math.floor(Math.random()*names.length)],
+                'move',
+                Vec2.From(Math.random()-0.5,Math.random()-0.5).mulEq(2048),
+                1,
+                0, // angle
+                1,
+                false,
+                true,
+                Vec2.From(Math.random()-0.5,Math.random()-0.5).mulEq(512), // velocity
+                1, //damping
+                this.sprite.pos,
+                1000, //target power
+                Math.random() * Math.PI * 2, // target angle
             );
-            s.pos.eqFrom(Math.random()-0.5,Math.random()-0.5);
-            s.pos.mulEq(4096*2);
         }
         sprites.sync(res.gl);
     }
     stepSimulation(dt,t) {
-        //cameraPos.x += CAM_VEL*dt;
+        field.read(this.cursor);
+        if (this.res.io.pressed.has('Mouse0')) {
+            this.sprite.target.eq(this.cursor);
+            this.sprite.targetPower = 3000;
+        } else {
+            this.sprite.target.eq(this.sprite.pos);
+            this.sprite.targetPower = 0;
+        }
+        // Update camera pos
+        cameraTarget.zeroEq();
+        cameraTarget.addEq(this.sprite.target);
+        cameraTarget.addEq(this.sprite.pos);
+        cameraTarget.mulEq(Settings.CAMERA_SPEED);
+        cameraTarget.subEq(cameraPos); // final minus initial
+        
+        cameraPos.scaledAddEq(cameraTarget,dt);
+        // Step the rest of the simulation
         super.stepSimulation(dt,t);
-        this.sprite.moveTo(this.cursor);
     }
     updateLogic(t) {
         // Compute collisions
