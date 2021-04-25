@@ -10,9 +10,9 @@ import {
     Vec1I,Vec2I,Vec3I,Vec4I,
     Mat2,Mat3,Mat4,
 } from './engine/archimedes.js';
-import {Sprites} from './sprite.js';
+import {Sprites,Sprite} from './sprite.js';
 
-export class Brushes extends Sprites{
+export class Brushes extends Sprites {
     constructor(res,
         shadername="sprite",
         texturename="sprites",
@@ -35,6 +35,12 @@ export class Brushes extends Sprites{
             this.relenquish(this.fadingSprites[i]);
         }
         this.fadingSprites.length = 0;
+    }
+}
+
+export class Brush extends Sprite {
+    constructor(sprites,engine,spritename,pos=Vec2.Zero(),facing=1,angle=0,scale=1) {
+        super(sprites,engine,spritename,pos,facing,angle,scale);
     }
 }
 
