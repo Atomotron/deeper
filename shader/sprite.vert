@@ -13,11 +13,14 @@ attribute vec2 vertex;
 attribute vec2 pos;
 attribute vec4 model;
 attribute vec4 frame;
+attribute vec4 color;
 
 // Texture coordinate
 varying vec2 uv;
+varying vec4 vertexColor;
 
 void main() {
+    vertexColor = color;
     uv = (frame.xy + (vertex * frame.zw));
     vec2 world_coordinate = mat2(model) * vertex + pos;
     gl_Position = vec4(cameraInv*(world_coordinate-cameraPos),0.5,1.0);

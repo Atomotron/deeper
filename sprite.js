@@ -84,9 +84,9 @@ export class Sprites extends Quad {
 // One particular sprite
 export class Sprite extends Collider{
     ANIM_MPF = 24
-    IDLE_VELOCITY = 10
-    constructor(sprites,engine,folder='granny',action='move') {
-        super();
+    IDLE_VELOCITY = 0
+    constructor(sprites,engine,folder='granny',action='move',sends=false,receives=true) {
+        super(sends,receives);
         this.sprites = sprites;
         this.engine = engine;
         this.folder = folder;
@@ -111,19 +111,27 @@ export class Sprite extends Collider{
         this.update(0);
         // Acquire an instance
         this.struct = sprites.inst.acquire();
+        this.struct.color.eqFrom(1.0,1.0,0.0,1.0);
         // Register for synchronization
         this.engine.register(this);
         this.sync();
+        // Register for collision detection
+        engine.addCollider(this);
+    }
+    collide(other) {
+        this.struct.color.eqFrom(1.0,0.0,1.0,1.0);
     }
     destroy() {
         if (this.destroyed) return;
         this.sprites.inst.relenquish(this.struct);
         this.engine.unregister(this);
         this.destroyed = true;
+        this.removeFromColliders = true;
     }
     // Advance
     step(dt,t) {
         this.frameDistanceTraveled += dt*this.IDLE_VELOCITY;
+        this.struct.color.y += dt*4;
     }
     startAction(action) {
         this.frameIndex = 0; // Frame 0 is the connection point
@@ -131,8 +139,8 @@ export class Sprite extends Collider{
         this.nextAction = action;
     }
     // Returns a list of circles that collide.
-    get colliders() {
-        return this.frame.collision;
+    getColliders() {
+        return this.frames.collision[this.frameIndex];
     }
     // Update
     update(t) {

@@ -348,7 +348,7 @@ class Vec2 extends AbstractVecN {
     }
     // Dot product
     dot(other) {
-        const a=this.a, b=other.a;;
+        const a=this.a, b=other.a;
         return Math.fround(a[0] * b[0]) +
                Math.fround(a[1] * b[1]);
     }
@@ -360,6 +360,12 @@ class Vec2 extends AbstractVecN {
         o[0] = a00*x0 + a01*x1;
         o[1] = a10*x0 + a11*x1;
         return this;
+    }
+    // Distance squared
+    distance2(other) {
+        const dx = this.a[0] - other.a[0];
+        const dy = this.a[1] - other.a[1];
+        return dx*dx + dy*dy;
     }
 });
 

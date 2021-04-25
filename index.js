@@ -14,6 +14,7 @@ import {
 
 import {Quad} from './quad.js';
 import {Sprites,Sprite} from './sprite.js';
+import {collisions} from './collider.js';
 
 function setLoaderBarWidth(id,complete,total) {
     const e = document.getElementById(id);
@@ -45,9 +46,10 @@ load({
         },
         fragment:{
             blit: new URL("shader/blit.frag", document.baseURI),
+            colorblit: new URL("shader/colorblit.frag", document.baseURI),
         },
         programs: {
-            sprite:['sprite','blit'],
+            sprite:['sprite','colorblit'],
             background:['background','blit'],
         },
     },
@@ -93,7 +95,7 @@ const gl = res.gl;
 // CAMERA
 const camera = Mat2.Id();
 const cameraPos = Vec2.From(0,0);
-let cameraSize = 128;
+let cameraSize = 256;
 const cameraInv = Mat2.Inverse(camera);
 window.camera = camera;
 window.cameraPos = cameraPos;
@@ -160,11 +162,25 @@ class DeeperEngine extends Engine {
     constructor(res,render,env,streams) {
         super(res,render,env,streams);
         this.cursor = cursor;
+        // Collider setup
+        this.colliders = [];
+        this.newColliders = [];
+        this.colliderBackBuffer = [];
+        
+        // Sprite creation
         this.sprite = new Sprite(
-            sprites,this,
+            sprites,this,'granny','move',true,false,
         );
-        sprites.sync(res.gl);
         window.s = this.sprite;
+        
+        for (let i=0; i<2000; i++) {
+            const s = new Sprite(
+                sprites,this,(['balloon','croc','granny'])[Math.floor(Math.random()*3)],
+            );
+            s.pos.eqFrom(Math.random()-0.5,Math.random()-0.5);
+            s.pos.mulEq(4096*2);
+        }
+        sprites.sync(res.gl);
     }
     stepSimulation(dt,t) {
         //cameraPos.x += CAM_VEL*dt;
@@ -172,6 +188,16 @@ class DeeperEngine extends Engine {
         this.sprite.moveTo(this.cursor);
     }
     updateLogic(t) {
+        // Compute collisions
+        collisions(
+            this.colliders,
+            this.newColliders,
+            this.colliderBackBuffer,
+        );
+        const aux = this.colliders;
+        this.colliders = this.colliderBackBuffer;
+        this.colliderBackBuffer = aux;
+        this.colliderBackBuffer.length = 0;
         // Mouse pos in world coordinates
         this.cursor.eqTransform(this.res.io.cursor,camera);
         this.cursor.addEq(cameraPos);
@@ -182,6 +208,9 @@ class DeeperEngine extends Engine {
         // Time
         time.eqFrom(t);
         super.updateLogic(t);
+    }
+    addCollider(collider) {
+        this.newColliders.push(collider);
     }
 }
 const e = new DeeperEngine(res,render,env,[sprites]);

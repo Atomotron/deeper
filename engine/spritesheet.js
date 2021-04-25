@@ -112,7 +112,7 @@ export class Spritesheet {
             }
             // Sort collision points from lowest bottom to highest bottom.
             function bottomDifference(a,b) {
-                (a.pos.x-a.r) - (b.pos.x-b.r)
+                (a.pos.y-a.r) - (b.pos.y-b.r)
             }
             this.collision[name].sort(bottomDifference);
         }
