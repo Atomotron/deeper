@@ -1,0 +1,22 @@
+<svg id="rotate1_copy_2" data-name="rotate1 copy 2" xmlns="http://www.w3.org/2000/svg" width="568" height="192" viewBox="0 0 568 192">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: blue;
+      }
+
+      .cls-2 {
+        fill: red;
+      }
+
+      .cls-3 {
+        fill: lime;
+      }
+    </style>
+  </defs>
+  <circle id="Collision1" class="cls-1" cx="126.391" cy="81.391" r="18.391"/>
+  <circle id="Collision2" class="cls-1" cx="126.063" cy="111.063" r="17.063"/>
+  <circle id="Collision3" class="cls-1" cx="127.75" cy="131.875" r="18.75"/>
+  <circle id="Head" class="cls-2" cx="127" cy="91" r="6"/>
+  <circle id="CoM" class="cls-3" cx="128" cy="106" r="2"/>
+</svg>

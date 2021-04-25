@@ -1,0 +1,22 @@
+<svg id="butterfly_copy_2" data-name="butterfly copy 2" xmlns="http://www.w3.org/2000/svg" width="568" height="192" viewBox="0 0 568 192">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: blue;
+      }
+
+      .cls-2 {
+        fill: red;
+      }
+
+      .cls-3 {
+        fill: lime;
+      }
+    </style>
+  </defs>
+  <ellipse id="Collision1" class="cls-1" cx="291.985" cy="81.5" rx="14.984" ry="15"/>
+  <circle id="Collision2" class="cls-1" cx="288" cy="99.5" r="15"/>
+  <circle id="Collision3" class="cls-1" cx="298.375" cy="113.375" r="11.375"/>
+  <circle id="Head" class="cls-2" cx="285" cy="93" r="6"/>
+  <circle id="CoM" class="cls-3" cx="292" cy="106" r="2"/>
+</svg>

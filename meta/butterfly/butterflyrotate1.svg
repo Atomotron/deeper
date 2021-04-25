@@ -1,0 +1,22 @@
+<svg id="rotate1" xmlns="http://www.w3.org/2000/svg" width="568" height="192" viewBox="0 0 568 192">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: blue;
+      }
+
+      .cls-2 {
+        fill: red;
+      }
+
+      .cls-3 {
+        fill: lime;
+      }
+    </style>
+  </defs>
+  <circle id="Collision1" class="cls-1" cx="143.5" cy="82.5" r="21.5"/>
+  <circle id="Collision2" class="cls-1" cx="101.5" cy="92.5" r="21.5"/>
+  <circle id="Collision3" class="cls-1" cx="129.875" cy="107.875" r="25.875"/>
+  <circle id="Head" class="cls-2" cx="123" cy="92" r="6"/>
+  <circle id="CoM" class="cls-3" cx="125" cy="105" r="2"/>
+</svg>
