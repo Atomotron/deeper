@@ -111,7 +111,7 @@ export class Sprite extends Collider{
         this.update(0,Math.random()*this.ANIM_MPF);
         // Acquire an instance
         this.struct = sprites.inst.acquire();
-        this.struct.color.eqFrom(1.0,1.0,0.0,1.0);
+        this.struct.color.eqFrom(1.0,1.0,1.0,1.0);
         // Register for synchronization
         this.engine.register(this);
         this.sync();
@@ -119,7 +119,7 @@ export class Sprite extends Collider{
         engine.addCollider(this);
     }
     collide(other) {
-        this.struct.color.eqFrom(1.0,0.0,1.0,1.0);
+        this.struct.color.eqFrom(1.0,0.1,1.0,1.0);
     }
     destroy() {
         if (this.destroyed) return;
@@ -131,7 +131,8 @@ export class Sprite extends Collider{
     // Advance
     step(dt,t) {
         this.frameDistanceTraveled += dt*this.IDLE_VELOCITY;
-        this.struct.color.y += dt*4;
+        this.struct.color.addEq(Vec4.From(1.0,1.0,1.0,0.0).mulEq(dt*3));
+        this.struct.color.clampEq();
     }
     startAction(action) {
         this.frameIndex = 0; // Frame 0 is the connection point
@@ -173,13 +174,17 @@ export class Sprite extends Collider{
     // Synchronize 
     sync() {
         // Map high-level to low-level
-        this.translate.eq(this.frames.control[this.frameIndex].CoM.pos);
+        this.translate.eqZero()
+        this.translate.subEq((
+            this.frames.control[this.frameIndex].CoM
+            ).pos);
         this.translate.x *= this.facing;
         this.translate.addEq(this.pos);
         this.transform.eqId();
         this.transform.a00 *= this.facing;
         // Write to shader
         this.struct.pos.eq(this.translate);
+        //this.struct.pos.y -= this.ccBottom;
         this.struct.model.eqCompose(this.transform,
                                     this.frames.model[this.frameIndex]);
         this.struct.frame.eq(this.frames.frame[this.frameIndex]);

@@ -154,6 +154,7 @@ export class Texture {
         // Now, create the texture.
         this.texture = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
+        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
         gl.texImage2D(
             gl.TEXTURE_2D,
             0, // start at mip 0

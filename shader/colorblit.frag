@@ -8,5 +8,7 @@ varying vec2 uv;
 varying vec4 vertexColor;
 
 void main() {
-    gl_FragColor = texture2D(source, uv)*vertexColor;
+    // Premultiply vertex color
+    vec3 pmc = vertexColor.xyz * vertexColor.w;
+    gl_FragColor = texture2D(source, uv) * vec4(pmc,vertexColor.w);
 }

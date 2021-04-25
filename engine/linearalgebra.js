@@ -150,7 +150,7 @@ class AbstractVecN extends IndirectArray {
     // due to inlining size limitations, you might not want to
     // bother overriding them in large-size vectors.
     eqFrom(...numbers) {
-        const count = Math.min(this.constructor.SIZE,numbers.length);
+        const count = Math.min(this.SIZE,numbers.length);
         for (let i=0; i<count; ++i) {
             this.a[i] = numbers[i];
         }
@@ -158,24 +158,33 @@ class AbstractVecN extends IndirectArray {
     }
     // Default n-ary vector addition
     eqAdd(self,other) {
-        for (let i=0; i<this.constructor.SIZE; ++i) {
+        for (let i=0; i<this.SIZE; ++i) {
             this.a[i] = self.a[i] + other.a[i];
         }
         return this;
     }
     // Default n-ary vector subtraction
     eqSub(self,other) {
-        for (let i=0; i<this.constructor.SIZE; ++i) {
+        for (let i=0; i<this.SIZE; ++i) {
             this.a[i] = self.a[i] - other.a[i];
         }
         return this;
     }
     // Default n-ary scalar multiplication
     eqMul(self,scalar) {
-        for (let i=0; i<this.constructor.SIZE; ++i) {
+        for (let i=0; i<this.SIZE; ++i) {
             this.a[i] = self.a[i] * scalar;
         }
         return this;
+    }
+    // Clamps between 0 and 1
+    eqClamp(self) {
+        for (let i=0; i<this.SIZE; ++i) {
+            let c = self.a[i];
+            if (c > 1) c = 1;
+            if (c < 0) c = 0;
+            this.a[i] = c;
+        }
     }
     // Default n-ary dot product
     dot(other) {

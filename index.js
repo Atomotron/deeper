@@ -189,17 +189,22 @@ class DeeperEngine extends Engine {
         
         // Sprite creation
         this.sprite = new Sprite(
-            sprites,this,'granny','move',true,false,
+            sprites,this,'balloon','move',true,false,
         );
+        const names = ['croc','granny',
+                            'boat','butterfly','fish','balloon',];
+        this.res.io.canvas.addEventListener('mousedown', (e) => {
+            this.sprite.folder = names.shift();
+            names.push(this.sprite.folder);
+        });
         window.s = this.sprite;
         
         for (let i=0; i<2000; i++) {
             const s = new Sprite(
-                sprites,this,(['balloon','croc','granny',
-                            'boat','butterfly','fish'])[Math.floor(Math.random()*6)],
+                sprites,this,(names)[Math.floor(Math.random()*names.length)],
             );
             s.pos.eqFrom(Math.random()-0.5,Math.random()-0.5);
-            s.pos.mulEq(4096*2);
+            s.pos.mulEq(2000*4);
         }
         sprites.sync(res.gl);
     }
