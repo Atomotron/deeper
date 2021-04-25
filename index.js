@@ -64,16 +64,24 @@ load({
             wrapS: 'REPEAT',
             wrapT: 'CLAMP_TO_EDGE',
             stretch: false,
+        },
+        sprites: {
+            minFilter: 'LINEAR_MIPMAP_LINEAR',
+            magFilter: 'LINEAR',
+            wrapS: 'CLAMP_TO_EDGE',
+            wrapT: 'CLAMP_TO_EDGE',
+            stretch: false,
         }
     },
     sounds: {
     },
     streams: {
+        ambience: new URL("sound/ambience.ogg", document.baseURI),
     },
     spritesheets: {
         sprites: new URL("image/texture.geom.json", document.baseURI),
     },
-    skipAudioWait: true,
+    skipAudioWait: false,
 },{
     vertex : (loaded,total) => setLoaderBarWidth('vertex',loaded,total),
     fragment : (loaded,total) => setLoaderBarWidth('fragment',loaded,total),
@@ -92,10 +100,16 @@ window.res = res;
 document.getElementById('overlay').style.display = 'none';
 const gl = res.gl;
 
+// AMBIENCE
+const ambienceNode = res.io.adc.createMediaElementSource(res.streams.ambience);
+ambienceNode.connect(res.io.mixer);
+window.node = ambienceNode;
+res.streams.ambience.play();
+
 // CAMERA
 const camera = Mat2.Id();
 const cameraPos = Vec2.From(0,0);
-let cameraSize = 256;
+let cameraSize = 512;
 const cameraInv = Mat2.Inverse(camera);
 window.camera = camera;
 window.cameraPos = cameraPos;
@@ -175,7 +189,8 @@ class DeeperEngine extends Engine {
         
         for (let i=0; i<2000; i++) {
             const s = new Sprite(
-                sprites,this,(['balloon','croc','granny'])[Math.floor(Math.random()*3)],
+                sprites,this,(['balloon','croc','granny',
+                            'boat','butterfly','fish'])[Math.floor(Math.random()*6)],
             );
             s.pos.eqFrom(Math.random()-0.5,Math.random()-0.5);
             s.pos.mulEq(4096*2);
