@@ -150,6 +150,7 @@ export class Texture {
         if (targetWidth !== sourceWidth || targetHeight !== sourceHeight) {
             source = resizeImage(targetWidth,targetHeight,source,this.stretch);
         }
+        this.source = source;
         //console.log(this.stretch,sourceWidth,sourceHeight,'->',targetWidth,targetHeight);
         // Now, create the texture.
         this.texture = gl.createTexture();
@@ -161,7 +162,7 @@ export class Texture {
             gl.RGBA, // Always use RGBA
             gl.RGBA, //must be the same as internalformat above
             gl.UNSIGNED_BYTE, // the only guaranteed supported type
-            source, // upload the scaled source
+            this.source, // upload the scaled source
         );
         // Set parameters
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, this.wrapS);
@@ -212,9 +213,11 @@ export class Framebuffer {
     // Makes a framebuffer. Arguments:
     //    size            : [width,height]
     //    has_depthstencil: whether or not want a DEPTH_STENCIL_ATTACHMENT
-    constructor(gl,width,height,hasDepthstencil=false) {
+    constructor(gl,width,height,hasDepthstencil=false,source=null,wrapS=false) {
         this.width = width;
         this.height = height;
+        this.source = source;
+        this.wrapS = wrapS;
         this.maxU = 1.0; // u coordinate ranges up to 1
         this.maxV = 1.0; // v coordinate ranges up to 1
         this.hasDepthstencil = hasDepthstencil;
@@ -257,20 +260,38 @@ export class Framebuffer {
     allocate(gl) {
         // TEXTURE
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
-        gl.texImage2D(
-            gl.TEXTURE_2D,
-            0, // framebuffers work on mip level 0
-            gl.RGBA, //Only RGBA framebuffer support is guaranteed
-            this.width,this.height,
-            0, // border, must be 0
-            gl.RGBA, //must be the same as internalformat above
-            gl.UNSIGNED_BYTE, // the only guaranteed supported type
-            null, // don't upload any pixels
-        );
+        let source = this.source;
+        if (source !== null) {
+            const [w,h] = trueDimensions(source);
+            if (w !== this.width || h !== this.height) {
+                source = resizeImage(this.width,this.height,source,true);
+            }        
+            gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+            gl.texImage2D(
+                gl.TEXTURE_2D,
+                0, // start at mip 0
+                gl.RGBA, // Always use RGBA
+                gl.RGBA, //must be the same as internalformat above
+                gl.UNSIGNED_BYTE, // the only guaranteed supported type
+                source, // upload the scaled source
+            );
+        } else {
+            gl.texImage2D(
+                gl.TEXTURE_2D,
+                0, // framebuffers work on mip level 0
+                gl.RGBA, //Only RGBA framebuffer support is guaranteed
+                this.width,this.height,
+                0, // border, must be 0
+                gl.RGBA, //must be the same as internalformat above
+                gl.UNSIGNED_BYTE, // the only guaranteed supported type
+                null, // don't upload any pixels
+            );
+        }
+
         // Disable all the stuff that doesn't work with non-power-of-two textures
         // (mipmapping is unsuppored for framebuffers anyway because they always
         //  draw to mip level 0, so the only remaining true loss is gl.REPEAT.)
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, this.wrapS ? gl.REPEAT : gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);

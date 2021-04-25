@@ -9,6 +9,7 @@ import {
 
 import {Quad} from './quad.js';
 import {colliderMixin} from './collider.js';
+import * as Settings from "./settings.js";
 
 const NUMBER_POSTFIX_REGEX = /\d+\.png$/;
 const ANIM_FRAME_FOLDER_REGEX = /^.*\//;
@@ -27,6 +28,7 @@ export class Sprites extends Quad {
             pos   :{divisor:1,stream:true},
             model :{divisor:1,stream:true},
             frame :{divisor:1,stream:true},
+            color :{divisor:1,stream:true},
         });
         const texture = res.images[texturename];
         const shader = res.shaders[shadername];
@@ -148,6 +150,7 @@ export class PhysicsSprite extends colliderMixin(Sprite) {
     constructor(
         sprites,
         engine,
+        field,
         spritename,
         pos=Vec2.Zero(),
         facing=1,
@@ -160,6 +163,10 @@ export class PhysicsSprite extends colliderMixin(Sprite) {
     ) {
         super(sprites,engine,spritename,pos,facing,angle,scale);
         this.vel = vel;
+        this.field = field;
+        this.fieldSensitivity = Vec4.From(1.0,1.0,1.0,0.0);
+        this.fieldForce = Vec2.Zero();
+        this.fieldDamping = 0;
         this.acc = Vec2.Zero(); // Acceleration accumulator
         this.damping = damping;
         this.colliderConstructor(sends,receives);
@@ -171,8 +178,21 @@ export class PhysicsSprite extends colliderMixin(Sprite) {
     getColliders() {
         return this.collision; // See Sprite.setSprite
     }
+    findFieldForce() {
+        this.field.read(this.pos);
+        this.fieldForce.eqFrom(
+            this.field.dfdx.dot(this.fieldSensitivity),
+           -this.field.dfdy.dot(this.fieldSensitivity)
+        );
+        this.fieldForce.mulEq(Settings.COLOR_FORCE_STRENGTH);
+        this.fieldDamping = this.field.f.dot(this.fieldSensitivity) * Settings.COLOR_FORCE_DAMPING;
+        this.acc.addEq(this.fieldForce);
+    }
     step(dt,t) {
-        const beta = -this.damping;
+        // Apply typical forces
+        this.findFieldForce();
+        // Simulate trajectory
+        const beta = -(this.damping + this.fieldDamping);
 		this.acc.mulEq(1/beta);
 		const dampingFactor = Math.exp(beta*dt);
 		// Compute v-alpha
@@ -196,6 +216,7 @@ export class AnimatedSprite extends PhysicsSprite {
     constructor(
         sprites,
         engine,
+        field,
         folder='granny',action='move', // These replace spritename!
         pos=Vec2.Zero(),
         facing=1,
@@ -207,7 +228,7 @@ export class AnimatedSprite extends PhysicsSprite {
         damping = 1,
         ) {
         const spritename = sprites.animations[folder][action][0];
-        super(sprites,engine,spritename,pos,facing,
+        super(sprites,engine,field,spritename,pos,facing,
               angle,scale,sends,receives,vel,damping);
         this.folder = folder;
         this.action = action;
@@ -222,20 +243,12 @@ export class AnimatedSprite extends PhysicsSprite {
         this.frameDirection = 1;
         // Set up animation frames
         this.update(0);
-        // Acquire an instance
-        this.struct.color.eqFrom(1.0,1.0,1.0,1.0);
         // Register for collision detection
         engine.addCollider(this);
-    }
-    collide(other) {
-        this.struct.color.x = 1.0;
     }
     // Advance
     step(dt,t) {
         super.step(dt,t);
-        // Color stuff
-        this.struct.color.x -= 0.1*dt;
-        this.struct.color.clampEq();
         // Tail, physics, odometer
         this.tail.eqSub(this.pos,this.oldPos);
         this.oldPos.eq(this.pos);
@@ -282,6 +295,11 @@ export class AnimatedSprite extends PhysicsSprite {
         this.action = this.nextAction;
         // Save frame name
         this.setSprite(this.frames[this.frameIndex]);
+        // Set color based on field sensitivity
+        this.struct.color.x = Math.exp(-this.fieldSensitivity.x);
+        this.struct.color.y = Math.exp(-this.fieldSensitivity.y);
+        this.struct.color.z = Math.exp(-this.fieldSensitivity.z);
+        this.struct.color.w = 1.0;
     }
     // Synchronize 
     sync() {
@@ -297,6 +315,7 @@ export class TargetSprite extends AnimatedSprite {
     constructor(
         sprites,
         engine,
+        field,
         folder='granny',action='move', // These replace spritename!
         pos=Vec2.Zero(),
         facing=1,
@@ -310,7 +329,7 @@ export class TargetSprite extends AnimatedSprite {
         targetPower = 1000,
         targetApproachAngle = 0, 
         ) {
-        super(sprites,engine,folder,action,pos,facing,
+        super(sprites,engine,field,folder,action,pos,facing,
               angle,scale,sends,receives,vel,damping);
         if (target === null) target = pos.clone();
         this.target = target;

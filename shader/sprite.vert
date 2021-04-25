@@ -21,7 +21,7 @@ varying vec2 vertexTail;
 varying vec4 vertexColor;
 
 void main() {
-    vertexColor = color;
+    vertexColor = vec4(color.xyz*color.w,color.w); // Premultiply
     uv = (frame.xy + (vertex * frame.zw));
     vec2 world_coordinate = mat2(model) * vertex + pos;
     gl_Position = vec4(cameraInv*(world_coordinate-cameraPos),0.5,1.0);
