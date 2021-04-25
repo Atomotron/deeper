@@ -16,7 +16,7 @@ import * as Settings from "./settings.js";
 import {Quad} from './quad.js';
 import {Sprites,AnimatedSprites,AnimatedSprite,TargetSprite} from './sprite.js';
 import {collisions} from './collider.js';
-import {Field} from './field.js';
+import {Field,Brushes} from './field.js';
 
 function setLoaderBarWidth(id,complete,total) {
     const e = document.getElementById(id);
@@ -140,6 +140,9 @@ const time = Vec1.From(0);
 
 // SPRITE LAYER
 const sprites = new AnimatedSprites(res);
+
+// BRUSH LAYER
+const brushes = new Brushes(res);
 
 // PHYSICS FIELD
 const field = new Field(res,res.images.test_level,bgModelInv,bgPos);

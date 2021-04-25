@@ -211,8 +211,6 @@ export class PhysicsSprite extends colliderMixin(Sprite) {
 
 // One particular sprite
 export class AnimatedSprite extends PhysicsSprite {
-    ANIM_MPF = 24
-    IDLE_VELOCITY = 12
     constructor(
         sprites,
         engine,
@@ -235,7 +233,7 @@ export class AnimatedSprite extends PhysicsSprite {
         // ANIMATION STATE
         this.oldPos = Vec2.Zero();
         this.tail = Vec2.Zero();
-        this.odometer = Math.random()*this.ANIM_MPF;
+        this.odometer = Math.random()*Settings.ANIM_MPF;
         this.nextAction = action;
         this.frameIndex = 0;
         this.frames = [];
@@ -252,7 +250,7 @@ export class AnimatedSprite extends PhysicsSprite {
         // Tail, physics, odometer
         this.tail.eqSub(this.pos,this.oldPos);
         this.oldPos.eq(this.pos);
-        this.odometer += this.tail.mag() + dt*this.IDLE_VELOCITY;
+        this.odometer += this.tail.mag() + dt*Settings.IDLE_VELOCITY;
     }
     startAction(action) {
         this.frameIndex = 0; // Frame 0 is the connection point
@@ -268,7 +266,7 @@ export class AnimatedSprite extends PhysicsSprite {
                 this.startAction('rotate');
             }
         }
-        if (this.odometer < this.ANIM_MPF) {
+        if (this.odometer < Settings.ANIM_MPF) {
             return;
         } else {
             this.odometer = 0;

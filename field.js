@@ -15,32 +15,26 @@ import {Sprites,Sprite} from './sprite.js';
 export class Brushes extends Sprites {
     constructor(res,
         shadername="sprite",
-        texturename="sprites",
+        texturename="brush",
         instances=1,
         configuration={}
         ) {
         super(res,shadername,texturename,instances,configuration);
-        this.fadingSprites = [];
-    }
-    acquireTemp() {
-        const s = this.acquire();
-        this.fadingSprites.push(s);
-        return s;   
-    }
-    sync(gl) {
-        // First, push everything to the GPU.
-        super.sync(gl);
-        // Then, return these sprites so that they don't get pushed next time.
-        for (let i=0; i<this.fadingSprites.length; i++) {
-            this.relenquish(this.fadingSprites[i]);
-        }
-        this.fadingSprites.length = 0;
     }
 }
 
 export class Brush extends Sprite {
     constructor(sprites,engine,spritename,pos=Vec2.Zero(),facing=1,angle=0,scale=1) {
         super(sprites,engine,spritename,pos,facing,angle,scale);
+        this.faded = false;
+    }
+    update(t) {
+        super.update(t);
+        if (this.faded) {
+            this.destroy();
+        } else {
+            this.faded = true;
+        }
     }
 }
 
