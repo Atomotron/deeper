@@ -1,0 +1,22 @@
+<svg id="rotate_copy" data-name="rotate copy" xmlns="http://www.w3.org/2000/svg" width="293" height="308" viewBox="0 0 293 308">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: blue;
+      }
+
+      .cls-2 {
+        fill: red;
+      }
+
+      .cls-3 {
+        fill: lime;
+      }
+    </style>
+  </defs>
+  <ellipse id="Collision1" class="cls-1" cx="140" cy="111.016" rx="39.969" ry="39.984"/>
+  <circle id="Collision2" class="cls-1" cx="143" cy="171.5" r="29.5"/>
+  <circle id="Collision3" class="cls-1" cx="140.5" cy="40.5" r="18.5"/>
+  <circle id="Head" class="cls-2" cx="141.438" cy="121.219" r="9.469"/>
+  <circle id="CoM" class="cls-3" cx="142.797" cy="157.937" r="2.359"/>
+</svg>

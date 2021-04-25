@@ -1,0 +1,26 @@
+<svg id="rotate" xmlns="http://www.w3.org/2000/svg" width="293" height="308" viewBox="0 0 293 308">
+  <defs>
+    <style>
+      .cls-1, .cls-2 {
+        fill: blue;
+      }
+
+      .cls-1 {
+        fill-rule: evenodd;
+      }
+
+      .cls-3 {
+        fill: red;
+      }
+
+      .cls-4 {
+        fill: lime;
+      }
+    </style>
+  </defs>
+  <path id="Collision1" class="cls-1" d="M140,41.043A54.979,54.979,0,1,1,85.022,96.022,54.979,54.979,0,0,1,140,41.043Z"/>
+  <circle id="Collision2" class="cls-2" cx="143" cy="167" r="25"/>
+  <circle id="Collision3" class="cls-2" cx="146.5" cy="208.5" r="18.5"/>
+  <circle id="Head" class="cls-3" cx="141.438" cy="121.219" r="9.469"/>
+  <circle id="CoM" class="cls-4" cx="142.797" cy="157.937" r="2.359"/>
+</svg>

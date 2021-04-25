@@ -1,0 +1,22 @@
+<svg id="kid_copy" data-name="kid copy" xmlns="http://www.w3.org/2000/svg" width="293" height="308" viewBox="0 0 293 308">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: blue;
+      }
+
+      .cls-2 {
+        fill: red;
+      }
+
+      .cls-3 {
+        fill: lime;
+      }
+    </style>
+  </defs>
+  <circle id="Collision1" class="cls-1" cx="142" cy="131" r="52"/>
+  <circle id="Collision2" class="cls-1" cx="149" cy="203" r="25"/>
+  <circle id="Collision3" class="cls-1" cx="124.5" cy="209.5" r="18.5"/>
+  <circle id="Head" class="cls-2" cx="139.438" cy="121.219" r="9.469"/>
+  <circle id="CoM" class="cls-3" cx="141.797" cy="157.937" r="2.359"/>
+</svg>
