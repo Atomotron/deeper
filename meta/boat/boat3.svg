@@ -1,0 +1,22 @@
+<svg id="boat" xmlns="http://www.w3.org/2000/svg" width="393" height="395" viewBox="0 0 393 395">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: blue;
+      }
+
+      .cls-2 {
+        fill: red;
+      }
+
+      .cls-3 {
+        fill: lime;
+      }
+    </style>
+  </defs>
+  <circle id="Collision1" class="cls-1" cx="212.344" cy="259.36" r="56.688"/>
+  <circle id="Collision2" class="cls-1" cx="172" cy="286.688" r="24"/>
+  <circle id="Collision3" class="cls-1" cx="214.344" cy="186.672" r="40"/>
+  <circle id="Head" class="cls-2" cx="168.328" cy="295.36" r="11.328"/>
+  <circle id="CoM" class="cls-3" cx="213.688" cy="290.031" r="2"/>
+</svg>

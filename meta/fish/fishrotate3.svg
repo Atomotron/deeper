@@ -1,0 +1,22 @@
+<svg id="feesh_mid" data-name="feesh mid" xmlns="http://www.w3.org/2000/svg" width="398" height="151" viewBox="0 0 398 151">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: blue;
+      }
+
+      .cls-2 {
+        fill: red;
+      }
+
+      .cls-3 {
+        fill: lime;
+      }
+    </style>
+  </defs>
+  <circle id="Collision1" class="cls-1" cx="89.5" cy="94.5" r="15.5"/>
+  <circle id="Collision2" class="cls-1" cx="89" cy="68" r="13"/>
+  <circle id="Collision3" class="cls-1" cx="90" cy="52.984" r="10.031"/>
+  <circle id="Head" class="cls-2" cx="91" cy="104" r="6"/>
+  <circle id="CoM" class="cls-3" cx="90.5" cy="82.5" r="1.5"/>
+</svg>

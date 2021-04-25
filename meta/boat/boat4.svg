@@ -1,0 +1,22 @@
+<svg id="boat_copy" data-name="boat copy" xmlns="http://www.w3.org/2000/svg" width="393" height="395" viewBox="0 0 393 395">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: blue;
+      }
+
+      .cls-2 {
+        fill: red;
+      }
+
+      .cls-3 {
+        fill: lime;
+      }
+    </style>
+  </defs>
+  <ellipse id="Collision1" class="cls-1" cx="220.844" cy="259.36" rx="48.188" ry="48.172"/>
+  <circle id="Collision2" class="cls-1" cx="188" cy="289.688" r="24"/>
+  <circle id="Collision3" class="cls-1" cx="221.844" cy="186.672" r="32.5"/>
+  <circle id="Head" class="cls-2" cx="184.328" cy="299.36" r="11.328"/>
+  <circle id="CoM" class="cls-3" cx="213.688" cy="290.031" r="2"/>
+</svg>
