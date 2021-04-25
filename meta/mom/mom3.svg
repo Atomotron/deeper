@@ -1,0 +1,22 @@
+<svg id="mom_copy" data-name="mom copy" xmlns="http://www.w3.org/2000/svg" width="736" height="355" viewBox="0 0 736 355">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: blue;
+      }
+
+      .cls-2 {
+        fill: red;
+      }
+
+      .cls-3 {
+        fill: lime;
+      }
+    </style>
+  </defs>
+  <ellipse id="Collision1" class="cls-1" cx="348.719" cy="114.281" rx="41.281" ry="41.281"/>
+  <ellipse id="Collision2" class="cls-1" cx="357.719" cy="181.281" rx="34.281" ry="34.281"/>
+  <ellipse id="Collision3" class="cls-1" cx="369.719" cy="231.281" rx="34.281" ry="34.281"/>
+  <circle id="Head" class="cls-2" cx="352.86" cy="96.891" r="15.328"/>
+  <circle id="CoM" class="cls-3" cx="353.64" cy="164.813" r="2.641"/>
+</svg>
