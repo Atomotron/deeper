@@ -57,12 +57,12 @@ load({
         },
     },
     images: {
-        test_level: new URL("image/test_level_2.png", document.baseURI),
+        level: new URL("image/testgauntlet.png", document.baseURI),
         sprites: new URL("image/texture.png", document.baseURI),
         brush: new URL("image/brush.png", document.baseURI),
     },
     imageSettings: {
-        test_level: {
+        level: {
             minFilter: 'LINEAR',
             magFilter: 'LINEAR',
             wrapS: 'REPEAT',
@@ -131,7 +131,7 @@ const bgLayer = new Quad(gl,
     res.shaders.background.schema({vertex:{divisor:0,stream:false}}),
     1,
 );
-const bgModel = res.images.test_level.sheet.model.all.clone();
+const bgModel = res.images.level.sheet.model.all.clone();
 bgModel.mulEq(8);
 const bgModelInv = bgModel.inverse();
 const bgPos = Vec2.From(bgModel.a00,-bgModel.a11*2);
@@ -145,7 +145,7 @@ const sprites = new AnimatedSprites(res);
 const brushes = new Brushes(res);
 
 // PHYSICS FIELD
-const field = new Field(res,res.images.test_level,bgModelInv,bgPos);
+const field = new Field(res,res.images.level,bgModelInv,bgPos);
 
 // Make an instance
 /*
