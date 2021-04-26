@@ -68,7 +68,9 @@ export class AnimatedSprites extends Sprites {
         }
         // Convert to packed format
         this.animations = {};
+        this.folders = [];
         for (const [folder,actions] of animations) {
+            this.folders.push(folder);
             for (const [action,frameMap] of actions) {
                 const indices = Array.from(frameMap.keys());
                 indices.sort();
@@ -92,6 +94,7 @@ export class AnimatedSprites extends Sprites {
 export class Sprite {
     constructor(sprites,engine,spritename,pos=Vec2.Zero(),facing=1,angle=0,scale=1) {
         this.destroyed = false;
+        this.sleeping = false;
         this.sprites = sprites;
         this.engine = engine;
         this.pos = pos;
@@ -154,7 +157,6 @@ export class PhysicsSprite extends colliderMixin(Sprite) {
     constructor(
         sprites,
         engine,
-        field,
         spritename,
         pos=Vec2.Zero(),
         facing=1,
@@ -167,7 +169,6 @@ export class PhysicsSprite extends colliderMixin(Sprite) {
     ) {
         super(sprites,engine,spritename,pos,facing,angle,scale);
         this.vel = vel;
-        this.field = field;
         this.fieldSensitivity = Vec4.From(1.0,1.0,1.0,0.0);
         this.fieldForce = Vec2.Zero();
         this.fieldDamping = 0;
@@ -182,19 +183,7 @@ export class PhysicsSprite extends colliderMixin(Sprite) {
     getColliders() {
         return this.collision; // See Sprite.setSprite
     }
-    findFieldForce() {
-        this.field.read(this.pos);
-        this.fieldForce.eqFrom(
-            this.field.dfdx.dot(this.fieldSensitivity),
-            this.field.dfdy.dot(this.fieldSensitivity)
-        );
-        this.fieldForce.mulEq(Settings.COLOR_FORCE_STRENGTH);
-        this.fieldDamping = this.field.f.dot(this.fieldSensitivity) * Settings.COLOR_FORCE_DAMPING;
-        this.acc.addEq(this.fieldForce);
-    }
     step(dt,t) {
-        // Apply typical forces
-        this.findFieldForce();
         // Simulate trajectory
         const beta = -(this.damping + this.fieldDamping);
 		this.acc.mulEq(1/beta);
@@ -218,7 +207,6 @@ export class AnimatedSprite extends PhysicsSprite {
     constructor(
         sprites,
         engine,
-        field,
         folder='granny',action='move', // These replace spritename!
         pos=Vec2.Zero(),
         facing=1,
@@ -230,7 +218,7 @@ export class AnimatedSprite extends PhysicsSprite {
         damping = 1,
         ) {
         const spritename = sprites.animations[folder][action][0];
-        super(sprites,engine,field,spritename,pos,facing,
+        super(sprites,engine,spritename,pos,facing,
               angle,scale,sends,receives,vel,damping);
         this.folder = folder;
         this.action = action;
@@ -244,7 +232,7 @@ export class AnimatedSprite extends PhysicsSprite {
         this.trueFrameIndex = 0;
         this.frameDirection = 1;
         // Set up animation frames
-        this.update(0);
+        //this.update(0);
         // Register for collision detection
         engine.addCollider(this);
     }
@@ -331,10 +319,11 @@ export class TargetSprite extends AnimatedSprite {
         targetPower = 1000,
         targetApproachAngle = 0, 
         ) {
-        super(sprites,engine,field,folder,action,pos,facing,
+        super(sprites,engine,folder,action,pos,facing,
               angle,scale,sends,receives,vel,damping);
         if (target === null) target = pos.clone();
         this.target = target;
+        this.field = field;
         this.targetDelta = Vec2.Zero();
         this.targetPower = targetPower;
         this.targetApproachAngle = targetApproachAngle;
@@ -344,6 +333,17 @@ export class TargetSprite extends AnimatedSprite {
         this.targetDelta.normEq();
         this.targetDelta.rotateEq(this.targetApproachAngle);
         this.acc.scaledAddEq(this.targetDelta,this.targetPower*dt);
+        if (this.field !== null) this.findFieldForce(this.field);
         super.step(dt,t);
+    }
+    findFieldForce(field) {
+        this.field.read(this.pos);
+        this.fieldForce.eqFrom(
+            this.field.dfdx.dot(this.fieldSensitivity),
+            this.field.dfdy.dot(this.fieldSensitivity)
+        );
+        this.fieldForce.mulEq(Settings.COLOR_FORCE_STRENGTH);
+        this.fieldDamping = this.field.f.dot(this.fieldSensitivity) * Settings.COLOR_FORCE_DAMPING;
+        this.acc.addEq(this.fieldForce);
     }
 }

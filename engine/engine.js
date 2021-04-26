@@ -67,7 +67,7 @@ export class Engine {
     // Override to advance physics simulation
     stepSimulation(dt,t) {
         for (const sprite of this.sprites) {
-            sprite.step(dt,t);
+            if (!sprite.sleeping) sprite.step(dt,t);
         }
     }
     // Override to advance post-physics logic
@@ -76,7 +76,7 @@ export class Engine {
             sprite.update(t);
         }
         for (const sprite of this.sprites) {
-            sprite.sync();
+            if (!sprite.sleeping) sprite.sync();
         }
     }
     // Override to update audio control stuff
