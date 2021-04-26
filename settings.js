@@ -187,7 +187,7 @@ export const ANIM_MPF = 24
 export const IDLE_VELOCITY = 24
 
 // Sprite effect padding
-export const SPRITE_MODEL_PADDING = 1.3;
+export const SPRITE_MODEL_PADDING = 1.4;
 
 // Squared constants
 export const ENTITY_FOLLOW_RADIUS2 = ENTITY_FOLLOW_RADIUS*ENTITY_FOLLOW_RADIUS;
