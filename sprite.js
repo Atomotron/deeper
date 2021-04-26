@@ -92,7 +92,7 @@ export class AnimatedSprites extends Sprites {
 }
 
 export class Sprite {
-    constructor(sprites,engine,spritename,pos=Vec2.Zero(),facing=1,angle=0,scale=1) {
+    constructor(sprites,engine,spritename,pos=Vec2.Zero(),facing=1,angle=0,scale=1,colorState='neutral') {
         this.destroyed = false;
         this.sleeping = false;
         this.sprites = sprites;
@@ -105,8 +105,9 @@ export class Sprite {
         // Low-level struct data - determined by high-level.
         this.translate = Vec2.Zero();
         this.transform = Mat2.Id();
-        this.color = Vec4.Zero();
-        this.color.w = 1.0; // alpha = 1
+        // Color state stuff
+        this.setColor(colorState);
+        this.colorState = colorState;
         // Acquire a struct from the sprite stack
         this.struct = sprites.inst.acquire();
         // Register for synchronization
@@ -120,6 +121,14 @@ export class Sprite {
         this.frame      = sheet.frame[spritename];
         this.control    = sheet.control[spritename];
         this.collision  = sheet.collision[spritename];
+    }
+    setColor(state) {        
+        if (!Settings.COLOR_STATES[state]) {
+            console.trace(color,"is not a valid color name");
+            state = 'neutral';
+        }
+        this.colorState = state;    
+        this.color = Settings.COLOR_STATES[this.colorState].color;
     }
     destroy() {
         if (this.destroyed) return;
@@ -162,12 +171,13 @@ export class PhysicsSprite extends colliderMixin(Sprite) {
         facing=1,
         angle=0,
         scale=1,
+        colorState='neutral',
         sends=false,
         receives=true,
         vel=Vec2.Zero(),
         damping = 1,
     ) {
-        super(sprites,engine,spritename,pos,facing,angle,scale);
+        super(sprites,engine,spritename,pos,facing,angle,scale,colorState);
         this.vel = vel;
         this.fieldSensitivity = Vec4.From(1.0,1.0,1.0,0.0);
         this.fieldForce = Vec2.Zero();
@@ -216,6 +226,7 @@ export class AnimatedSprite extends PhysicsSprite {
         facing=1,
         angle=0,
         scale=1,
+        colorState='neutral',
         sends=false,
         receives=true,
         vel=Vec2.Zero(),
@@ -223,7 +234,7 @@ export class AnimatedSprite extends PhysicsSprite {
         ) {
         const spritename = sprites.animations[folder][action][0];
         super(sprites,engine,spritename,pos,facing,
-              angle,scale,sends,receives,vel,damping);
+              angle,scale,colorState,sends,receives,vel,damping);
         this.folder = folder;
         this.action = action;
         // ANIMATION STATE
@@ -254,12 +265,7 @@ export class AnimatedSprite extends PhysicsSprite {
         this.nextAction = action;
     }
     // Update
-    update(t) {        
-        // Set color based on field sensitivity
-        this.color.x = Math.exp(-this.fieldSensitivity.x);
-        this.color.y = Math.exp(-this.fieldSensitivity.y);
-        this.color.z = Math.exp(-this.fieldSensitivity.z);
-        this.color.w = 1.0;
+    update(t) {
         // Start rotation if moving different direction from facing
         if (this.action !== 'rotate') {
             if (-this.tail.x * this.facing < 0) {
@@ -315,6 +321,7 @@ export class TargetSprite extends AnimatedSprite {
         facing=1,
         angle=0,
         scale=1,
+        colorState='neutral',
         sends=false,
         receives=true,
         vel=Vec2.Zero(),
@@ -324,7 +331,7 @@ export class TargetSprite extends AnimatedSprite {
         targetApproachAngle = 0, 
         ) {
         super(sprites,engine,folder,action,pos,facing,
-              angle,scale,sends,receives,vel,damping);
+              angle,scale,colorState,sends,receives,vel,damping);
         if (target === null) target = pos.clone();
         this.target = target;
         this.field = field;

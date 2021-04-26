@@ -6,10 +6,11 @@
 
 import * as Settings from "./settings.js";
 import {TargetSprite,PhysicsSprite} from './sprite.js'
+import {Brush,Splat} from './field.js';
 
 export class Player extends TargetSprite {
     NAME = 'player'
-    constructor(res,sprites,engine,field,pos=Vec2.Zero()) {
+    constructor(res,sprites,engine,field,pos=Vec2.Zero(),colorState='neutral') {
         super(
             sprites,
             engine,
@@ -19,6 +20,7 @@ export class Player extends TargetSprite {
             /*facing=*/1,
             /*angle=*/0,
             /*scale=*/1,
+            /*colorState=*/colorState,
             /*sends=*/true,
             /*receives=*/false,
             /*vel=*/Vec2.Zero(),
@@ -39,14 +41,14 @@ export class Player extends TargetSprite {
     }
     collide(other) {
         if (other.NAME === 'figment') {
-            other.destroy();
+            other.splat();
         }
     }
 }
 
 export class Figment extends TargetSprite {
     NAME = 'figment'
-    constructor(res,sprites,engine,pos=Vec2.Zero()) {
+    constructor(res,sprites,brushes,engine,pos=Vec2.Zero(),colorState='neutral') {
         super(
             sprites,
             engine,
@@ -57,6 +59,7 @@ export class Figment extends TargetSprite {
             /*facing=*/1,
             /*angle=*/0,
             /*scale=*/1,
+            /*colorState=*/colorState,
             /*sends=*/false,
             /*receives=*/true,
             /*vel=*/Vec2.Zero(),
@@ -65,8 +68,28 @@ export class Figment extends TargetSprite {
             /*targetPower = */Settings.FIGMENT_THRUST,
             /*targetApproachAngle = */Math.random()*Math.PI*2,
         );
+        this.brushes = brushes;
+        // Create a trail if needed
+        this.hasTrail = Settings.COLOR_STATES[this.colorState].trail;
+        this.trail = null;
+        if (this.hasTrail) {
+            this.trail = new Brush(
+                  this.brushes,
+                  this.engine,
+                  this.pos,
+                  this.colorState,
+            );
+        }
     }
     collide(other) {}
+    splat() {
+        new Splat(this.brushes,
+                  this.engine,
+                  this.pos,
+                  this.colorState,
+        );
+        this.destroy();
+    }
     update(t) {
         super.update(t);
         // Check player distance
