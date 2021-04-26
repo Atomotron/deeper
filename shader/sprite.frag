@@ -36,7 +36,7 @@ void main() {
     vec4 baseColor = vec4(glowColor*(1.0-solid)+solidColor,baseAlpha);
     // Distorted sample
     vec4 noiseTexture = texture2D(noise, DISTORTION_SCALE*locationInRect - vec2(0.0,time*DISTORTION_SPEED));
-    float noiseSample = dot(noiseTexture, vertexChannel) - 0.5;
+    float noiseSample = dot(noiseTexture, vertexChannel);
     vec2 distortion = DISTORTION*noiseSample;
     vec4 distortedSample = clampedTexture2D(source, uv + distortion);
     vec3 distortedGlow = vec3(distortedSample.y) * vertexDisplayColor.xyz;
