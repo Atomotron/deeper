@@ -179,7 +179,7 @@ export class PhysicsSprite extends colliderMixin(Sprite) {
     ) {
         super(sprites,engine,spritename,pos,facing,angle,scale,colorState);
         this.vel = vel;
-        this.fieldSensitivity = Vec4.From(1.0,1.0,1.0,0.0);
+        //this.fieldSensitivity = Vec4.From(1.0,1.0,1.0,0.0);
         this.fieldForce = Vec2.Zero();
         this.fieldDamping = 0;
         this.acc = Vec2.Zero(); // Acceleration accumulator
@@ -192,6 +192,10 @@ export class PhysicsSprite extends colliderMixin(Sprite) {
     }
     getColliders() {
         return this.collision; // See Sprite.setSprite
+    }
+    setColor(state) {
+        super.setColor(state);
+        this.fieldSensitivity = Settings.COLOR_STATES[state].fieldSensitivity;
     }
     step(dt,t) {
         // Simulate trajectory

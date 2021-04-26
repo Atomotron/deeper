@@ -41,14 +41,16 @@ export class Player extends TargetSprite {
     }
     collide(other) {
         if (other.NAME === 'figment') {
-            other.splat();
+            this.setColor(other.colorState);
         }
     }
 }
 
 export class Figment extends TargetSprite {
     NAME = 'figment'
-    constructor(res,sprites,brushes,engine,pos=Vec2.Zero(),colorState='neutral') {
+    constructor(res,sprites,brushes,engine,pos=Vec2.Zero(),
+        colorState=Settings.COLORS[Math.floor(Math.random()*Settings.COLORS.length)],
+        ) {
         super(
             sprites,
             engine,
@@ -81,14 +83,21 @@ export class Figment extends TargetSprite {
             );
         }
     }
-    collide(other) {}
-    splat() {
-        new Splat(this.brushes,
-                  this.engine,
-                  this.pos,
-                  this.colorState,
-        );
-        this.destroy();
+    destroy() {
+        super.destroy();
+        if (this.hasTrail) this.trail.destroy();
+    }
+    collide(other) {
+        if (other.NAME === 'player') {
+            if (Settings.COLOR_STATES[this.colorState].splat) {
+                new Splat(this.brushes,
+                          this.engine,
+                          this.pos,
+                          this.colorState,
+                );
+            }
+            this.destroy();
+        }
     }
     update(t) {
         super.update(t);

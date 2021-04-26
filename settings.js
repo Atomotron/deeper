@@ -58,6 +58,7 @@ export const COLOR_FORCE_STRENGTH = -30;
 export const COLOR_FORCE_DAMPING  = 0.02;
 
 // Splat/trail settings
+export const SPLAT_ALPHA = 1.0;
 export const TRAIL_ALPHA = 0.1;
 export const SPLAT_SCALE = 4;
 export const TRAIL_SCALE = 4;

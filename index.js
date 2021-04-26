@@ -212,8 +212,8 @@ const sequence = [
         },
         samplers: {
             source: field.fb,
-            rPattern: res.images.pattern_yellow,
-            gPattern: res.images.pattern_pink,
+            rPattern: res.images.pattern_pink,
+            gPattern: res.images.pattern_yellow,
             bPattern: res.images.pattern_blue,
             wPattern: res.images.pattern,
         },

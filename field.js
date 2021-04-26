@@ -62,12 +62,14 @@ export class Brush extends Sprite {
         facing=Math.floor(Math.random()*2)*2-1, // -1 or 1
         angle=Math.random()*Math.PI*2,
         scale=Settings.TRAIL_SCALE,
+        alpha=Settings.TRAIL_ALPHA,
         ) {
         if (spritename === null) {
             spritename = sprites.randomTrailName();
         }
-        super(sprites,engine,spritename,pos,facing,angle,scale);
+        super(sprites,engine,spritename,pos,facing,angle,scale,colorState);
         this.struct2 = sprites.inst.acquire();
+        this.alpha = alpha;
     }
     destroy() {
         super.destroy();
@@ -75,7 +77,7 @@ export class Brush extends Sprite {
     }
     sync() {
         super.sync();
-        this.struct.color.w = Settings.TRAIL_ALPHA;
+        this.struct.color.w = this.alpha;
         this.struct2.model.eq(this.struct.model);
         this.struct2.frame.eq(this.struct.frame);
         this.struct2.color.eq(this.struct.color);
@@ -98,11 +100,13 @@ export class Splat extends Brush {
         spritename=null,
         facing=Math.floor(Math.random()*2)*2-1, // -1 or 1
         angle=Math.random()*Math.PI*2,
-        scale=Settings.SPLAT_SCALE) {
+        scale=Settings.SPLAT_SCALE,
+        alpha=Settings.SPLAT_ALPHA,
+        ) {
         if (spritename === null) {
             spritename = sprites.randomSplatName();
         }
-        super(sprites,engine,pos,colorState,spritename,facing,angle,scale,);
+        super(sprites,engine,pos,colorState,spritename,facing,angle,scale,alpha);
         this.seen = false;
     }
     update(t) {
