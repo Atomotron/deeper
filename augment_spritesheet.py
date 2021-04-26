@@ -7,7 +7,13 @@ import json
 # Collect args
 svgs = {} # filename -> full path
 manifests = []
+pad = 0
 for a in sys.argv[1:]:
+    try:
+        pad = int(a)
+        continue
+    except TypeError:
+        pass
     if a.endswith('.svg'):
         name = os.path.basename(a)
         if name in svgs:
@@ -47,6 +53,13 @@ for iname in manifests:
     print(f'{iname} -> {oname}')
     with open(iname,'r') as src:
         data = json.loads(src.read())
+    # Pad
+    for frame in data['frames']:
+        f = frame['frame']
+        f['x'] -= pad
+        f['y'] -= pad
+        f['w'] += pad * 2
+        f['h'] += pad * 2
     augmented_sprites = 0
     # Iterate over data
     frames = data['frames']
