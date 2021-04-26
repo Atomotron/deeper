@@ -72,7 +72,7 @@ load({
     },
     images: {
         level: new URL("image/testgauntlet.png", document.baseURI),
-        sparkles: new URL("image/sparkle.png", document.baseURI),
+        sparkles: new URL("image/sparkles.png", document.baseURI),
         sprites: new URL("image/texture.png", document.baseURI),
         brushes: new URL("image/brushes.png", document.baseURI),
         pattern_yellow: new URL("image/pattern_yellow.png", document.baseURI),
