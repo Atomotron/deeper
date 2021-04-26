@@ -33,6 +33,7 @@ class Glyph extends TargetSprite {
             /*targetPower = */Settings.GLYPH_THRUST,
             /*targetApproachAngle = */0,
         );
+        this.res = res;
         this.shot = false;
         this.timeSinceKick = 0;
     }
@@ -65,6 +66,11 @@ class Glyph extends TargetSprite {
             this.target = other.pos;
             this.sends = false;
             this.receives = false;
+            // Play pickup sound
+            const source = this.res.io.adc.createBufferSource();
+            source.buffer = this.res.sounds.element_pickup;
+            source.connect(this.res.io.mixer);
+            source.start();
         }
     }
     step(dt,t) {
@@ -109,6 +115,7 @@ export class Player extends TargetSprite {
             /*targetPower = */Settings.PLAYER_THRUST,
             /*targetApproachAngle = */0,
         );
+        this.res = res;
         this.io = res.io;
         this.capturedGlyphs = [];
         // Fire!
@@ -117,8 +124,29 @@ export class Player extends TargetSprite {
             if (this.capturedGlyphs.length > 0) {
                 const g = this.capturedGlyphs.pop(); // FIFO
                 g.fire(this.pos,this.engine.cursor);
+                // Play shot
+                const source = this.res.io.adc.createBufferSource();
+                source.buffer = this.res.sounds.shot;
+                source.connect(this.res.io.mixer);
+                source.start();
             }
         });
+        this.bounceGain = res.io.adc.createGain();
+        this.bounceGain.gain.value = 0;
+        this.bounceGain.connect(res.io.mixer);
+        this.bounceGainTarget = 0;
+        this.bounceLoop = this.res.io.adc.createBufferSource();
+        this.bounceLoop.buffer = this.res.sounds.reject_loop;
+        this.bounceLoop.loop = true;
+        this.bounceLoop.loopEnd = this.bounceLoop.buffer.duration;
+        this.bounceLoop.connect(this.bounceGain);
+        this.bounceLoop.start();
+    }
+    step(dt,t) {
+        super.step(dt,t);
+        this.bounceGain.gain.value += Settings.BOUNCE_SOUND_SPEED*
+            dt*(this.bounceGainTarget-this.bounceGain.gain.value);
+        if (this.bounceGain.gain.value > 1.0) this.bounceGain.gain.value = 1.0;
     }
     update(t) {
         super.update(t);
@@ -127,6 +155,7 @@ export class Player extends TargetSprite {
         } else {
             this.target = this.pos;
         }
+        this.bounceGainTarget = Math.exp(this.fieldForce.mag()/256)-1;
     }
     collide(other) {
         if (other.NAME === 'figment') {
@@ -159,6 +188,7 @@ export class Figment extends TargetSprite {
             /*targetPower = */Settings.FIGMENT_THRUST,
             /*targetApproachAngle = */0,
         );
+        this.res = res;
         engine.figments.add(this);
         if (colorState === 'neutral') this.engine.nDarkFigments += 1;
         else this.engine.nFigments += 1;
@@ -187,6 +217,11 @@ export class Figment extends TargetSprite {
     }
     collide(other) {
         if (other.NAME === 'glyph') {
+            // Play figment death sound
+            const source = this.res.io.adc.createBufferSource();
+            source.buffer = this.res.sounds.chemical_cloud;
+            source.connect(this.res.io.mixer);
+            source.start();
             if (Settings.COLOR_STATES[this.colorState].splat) {
                 new Splat(this.brushes,
                           this.engine,
@@ -196,6 +231,11 @@ export class Figment extends TargetSprite {
             }
             this.destroy();
         } else if (other.NAME === 'player') {
+            // Play figment touch sound
+            const source = this.res.io.adc.createBufferSource();
+            source.buffer = this.res.sounds.chemical_absorb;
+            source.connect(this.res.io.mixer);
+            source.start();
             if (Settings.COLOR_STATES[this.colorState].glyph) {
                 for (let i=0; i<Settings.FIGMENT_GLYPH_REWARD; i++) {
                     const theta = Math.random()*2*Math.PI;

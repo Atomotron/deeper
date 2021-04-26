@@ -135,9 +135,10 @@ export const COLOR_STATES = {
 }
 
 // Player
-export const PLAYER_START = Vec2.From(0.0,-500);
+export const PLAYER_START = Vec2.From(-80,-170*8);
 export const PLAYER_DAMPING = 1;
 export const PLAYER_THRUST = 2000;
+export const BOUNCE_SOUND_SPEED = 2;
 
 // Spawning
 export const MAX_DARK_FIGMENTS = 3; // Dark figments will stop spawning once this many exist.
@@ -148,7 +149,7 @@ export const FIGMENT_SPAWN_PERIOD = 15;
 // Camera settings
 export const CAMERA_SPEED = 2.0;
 export const CAMERA_ZOOM_SPEED = 10;
-export const MAX_ZOOM = 512;
+export const MAX_ZOOM = 5120;
 export const MIN_ZOOM = 256;
 export const START_ZOOM = (MIN_ZOOM + MAX_ZOOM)*0.5;
 export const ZOOM_SPEED = 0.26; 
