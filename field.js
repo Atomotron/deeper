@@ -29,12 +29,13 @@ function wrap(x,low,high) {
 export class Brushes extends Sprites {
     constructor(res,
         shadername="sprite",
-        texturename="sprites",
+        texturename="brushes",
         instances=1,
         configuration={},
         wrapX,
         ) {
         super(res,shadername,texturename,instances,configuration);
+        console.log(this.texture);
         this.wrapX = wrapX;
     }
 }
@@ -63,6 +64,21 @@ export class Brush extends Sprite {
             this.struct2.pos.x -= 2*this.sprites.wrapX;
         } else {
             this.struct2.pos.x += 2*this.sprites.wrapX;
+        }
+    }
+}
+
+export class Splat extends Brush {
+    constructor(sprites,engine,spritename,pos=Vec2.Zero(),facing=1,angle=0,scale=1) {
+        super(sprites,engine,spritename,pos,facing,angle,scale);
+        this.seen = false;
+    }
+    update(t) {
+        super.update(t);
+        if (this.seen) {
+            this.destroy();
+        } else {
+            this.seen = true;
         }
     }
 }

@@ -16,7 +16,7 @@ import * as Settings from "./settings.js";
 import {Quad} from './quad.js';
 import {Sprites,AnimatedSprites,Sprite,AnimatedSprite,TargetSprite} from './sprite.js';
 import {collisions} from './collider.js';
-import {Field,Brushes,Brush} from './field.js';
+import {Field,Brushes,Brush,Splat} from './field.js';
 
 function setLoaderBarWidth(id,complete,total) {
     const e = document.getElementById(id);
@@ -59,7 +59,7 @@ load({
     images: {
         level: new URL("image/testgauntlet.png", document.baseURI),
         sprites: new URL("image/texture.png", document.baseURI),
-        brush: new URL("image/brush.png", document.baseURI),
+        brushes: new URL("image/brushes.png", document.baseURI),
     },
     imageSettings: {
         level: {
@@ -84,6 +84,7 @@ load({
     },
     spritesheets: {
         sprites: new URL("image/texture.geom.json", document.baseURI),
+        brushes: new URL("image/brushes.geom.json", document.baseURI),
     },
     skipAudioWait: false,
 },{
@@ -146,7 +147,7 @@ const time = Vec1.From(0);
 const sprites = new AnimatedSprites(res);
 
 // BRUSH LAYER
-const brushes = new Brushes(res,"sprite",'sprites',1,{},bgModel.a00);
+const brushes = new Brushes(res,"sprite",'brushes',1,{},bgModel.a00);
 
 
 // Make an instance
@@ -169,10 +170,11 @@ const sequence = [
             cameraPos: bgPos,  
         },
         samplers: {
-            source: sprites.texture
+            source: brushes.texture
         },
         draw: (gl) => brushes.draw(gl),
     }),
+    ClearPass,
     SUM(DrawPass,{
         name: "Draw Background",
         shader: res.shaders.background,
@@ -185,7 +187,6 @@ const sequence = [
         samplers: {source: field.fb},
         draw: (gl) => bgLayer.draw(gl),
     }),
-    //ClearPass,
     SUM(DrawPass,{
         name: "Draw Sprites",
         shader: sprites.shader,
@@ -255,7 +256,10 @@ class DeeperEngine extends Engine {
             );
         }
         // Draw
-        const b = new Brush(brushes,this,'balloon/balloon1.png',this.cursor,1,0,8);
+        this.res.io.canvas.addEventListener('mousedown', (e) => {
+            const b = new Splat(brushes,this,'pops/brush4.png',this.cursor,1,0,4);
+            b.color.eqFrom(0.0,0.0,1.0,1.0);
+        });
     }
     stepSimulation(dt,t) {
         field.read(this.cursor);

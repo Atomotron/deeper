@@ -106,10 +106,9 @@ export class Spritesheet {
                     }
                     
                 }
-            } else {
-                this.control[name] = {}; // Empty control point set
-                this.collision[name] = []; // Empty collision points
             }
+            if (!this.control[name]) this.control[name] = {}; // Empty control point set
+            if (!this.collision[name]) this.collision[name] = []; // Empty collision points
             // Sort collision points from lowest bottom to highest bottom.
             function bottomDifference(a,b) {
                 (a.pos.y-a.r) - (b.pos.y-b.r)

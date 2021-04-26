@@ -17,8 +17,8 @@ const ANIM_FRAME_FOLDER_REGEX = /^.*\//;
 // A layer of sprites, all of the same type.
 export class Sprites extends Quad {
     constructor(res,
-        shadername="sprite",
-        texturename="sprites",
+        shadername,
+        texturename,
         instances=1,
         configuration={}
         ) {
@@ -186,7 +186,7 @@ export class PhysicsSprite extends colliderMixin(Sprite) {
         this.field.read(this.pos);
         this.fieldForce.eqFrom(
             this.field.dfdx.dot(this.fieldSensitivity),
-           -this.field.dfdy.dot(this.fieldSensitivity)
+            this.field.dfdy.dot(this.fieldSensitivity)
         );
         this.fieldForce.mulEq(Settings.COLOR_FORCE_STRENGTH);
         this.fieldDamping = this.field.f.dot(this.fieldSensitivity) * Settings.COLOR_FORCE_DAMPING;
