@@ -274,18 +274,6 @@ class DeeperEngine extends Engine {
         this.player = new Player(res,sprites,this,field,Settings.PLAYER_START.clone());
         cameraPos.eq(this.player.pos);
         
-        // Generate a bunch of sprites
-        const names = Array.from(Object.keys(sprites.animations));
-        for (let i=0; i<200; i++) {
-            /*const s = new Figment(
-                res,
-                sprites,
-                brushes,
-                this,
-                Vec2.From(Math.random()-0.5,-Math.random()).mulEq(4096),
-                //'neutral',
-            );*/
-        }
         this.field = field;
         this.nDarkFigments = 0;
         this.nFigments = 0;
