@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="388" height="280" viewBox="0 0 388 280">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: lime;
+      }
+    </style>
+  </defs>
+  <circle id="CoM" class="cls-1" cx="235.172" cy="182.172" r="2.172"/>
+</svg>
