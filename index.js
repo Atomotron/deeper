@@ -60,16 +60,19 @@ load({
         },
         fragment:{
             blit: new URL("shader/blit.frag", document.baseURI),
+            sprite: new URL("shader/sprite.frag", document.baseURI),
             colorblit: new URL("shader/colorblit.frag", document.baseURI),
             background: new URL("shader/background.frag", document.baseURI),
         },
         programs: {
-            sprite:['sprite','colorblit'],
+            sprite:['sprite','sprite'],
+            brush:['sprite','colorblit'],
             background:['background','background'],
         },
     },
     images: {
         level: new URL("image/testgauntlet.png", document.baseURI),
+        sparkles: new URL("image/sparkles.png", document.baseURI),
         sprites: new URL("image/texture.png", document.baseURI),
         brushes: new URL("image/brushes.png", document.baseURI),
         pattern_yellow: new URL("image/pattern_yellow.png", document.baseURI),
@@ -96,6 +99,7 @@ load({
         pattern_pink:   tileMipSettings,
         pattern_blue:   tileMipSettings,
         pattern:  tileMipSettings,
+        sparkles:  tileMipSettings,
     },
     sounds: {
     },
@@ -167,7 +171,7 @@ const time = Vec1.From(0);
 const sprites = new AnimatedSprites(res);
 
 // BRUSH LAYER
-const brushes = new Brushes(res,"sprite",'brushes',1,{},bgModel.a00);
+const brushes = new Brushes(res,"brush",'brushes',1,{},bgModel.a00);
 
 
 // Make an instance
@@ -219,10 +223,12 @@ const sequence = [
         shader: sprites.shader,
         uniforms: {
             cameraInv: cameraInv,
-            cameraPos: cameraPos,   
+            cameraPos: cameraPos,  
+            time: time, 
         },
         samplers: {
             source: sprites.texture,
+            noise: res.images.sparkles,
         },
         draw: (gl) => sprites.draw(gl),
     }),
