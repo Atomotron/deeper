@@ -18,6 +18,9 @@ import {Sprites,AnimatedSprites,Sprite,AnimatedSprite,TargetSprite} from './spri
 import {collisions} from './collider.js';
 import {Field,Brushes,Brush,Splat} from './field.js';
 
+import {Player,Figment} from './entities.js';
+
+
 function setLoaderBarWidth(id,complete,total) {
     const e = document.getElementById(id);
     let width = 100;
@@ -214,49 +217,22 @@ class DeeperEngine extends Engine {
         this.colliderBackBuffer = [];
         
         // Sprite creation
-        this.sprite = new TargetSprite(
-            sprites,
-            this,
-            field,
-            'granny','move', // These replace spritename!
-            Vec2.Zero(),
-            1,
-            0,
-            1,
-            true,
-            false,
-        );
-        this.sprite.fieldSensitivity.z = 0.0;
-        const names = Array.from(Object.keys(sprites.animations));
-        this.res.io.canvas.addEventListener('mousedown', (e) => {
-            this.sprite.folder = names.shift();
-            names.push(this.sprite.folder);
-        });
-        window.s = this.sprite;
-        this.sprite.struct.color.z = 0.0;
+        this.player = new Player(res,sprites,this,field);
+        this.player.fieldSensitivity.z = 0.0;
         
-        for (let i=0; i<2; i++) {
-            const s = new TargetSprite(
+        // Generate a bunch of sprites
+        const names = Array.from(Object.keys(sprites.animations));
+        for (let i=0; i<20; i++) {
+            const s = new Figment(
+                res,
                 sprites,
                 this,
-                field,
-                (names)[Math.floor(Math.random()*names.length)],
-                'move',
                 Vec2.From(Math.random()-0.5,Math.random()-0.5).mulEq(2048),
-                1,
-                0, // angle
-                1,
-                false,
-                true,
-                Vec2.From(Math.random()-0.5,Math.random()-0.5).mulEq(512), // velocity
-                1, //damping
-                this.sprite.pos,
-                1000, //target power
-                Math.random() * Math.PI * 2, // target angle
             );
         }
-        // Draw
+        // Draw splats
         this.res.io.canvas.addEventListener('mousedown', (e) => {
+            if (e.button !== 2) return;
             const b = new Splat(brushes,this,'pops/brush4.png',this.cursor,1,0,4);
             b.color.eqFrom(0.0,0.0,1.0,1.0);
         });
@@ -264,17 +240,11 @@ class DeeperEngine extends Engine {
     stepSimulation(dt,t) {
         field.read(this.cursor);
         
-        if (this.res.io.pressed.has('Mouse0')) {
-            this.sprite.target.eq(this.cursor);
-            this.sprite.targetPower = 3000;
-        } else {
-            this.sprite.target.eq(this.sprite.pos);
-            this.sprite.targetPower = 0;
-        }
+
         // Update camera pos
         cameraTarget.zeroEq();
-        cameraTarget.addEq(this.sprite.target);
-        cameraTarget.addEq(this.sprite.pos);
+        cameraTarget.addEq(this.player.target);
+        cameraTarget.addEq(this.player.pos);
         cameraTarget.mulEq(Settings.CAMERA_SPEED);
         cameraTarget.subEq(cameraPos); // final minus initial
         

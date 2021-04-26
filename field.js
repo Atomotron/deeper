@@ -35,7 +35,6 @@ export class Brushes extends Sprites {
         wrapX,
         ) {
         super(res,shadername,texturename,instances,configuration);
-        console.log(this.texture);
         this.wrapX = wrapX;
     }
 }
@@ -69,7 +68,10 @@ export class Brush extends Sprite {
 }
 
 export class Splat extends Brush {
-    constructor(sprites,engine,spritename,pos=Vec2.Zero(),facing=1,angle=0,scale=1) {
+    constructor(sprites,engine,spritename,pos=Vec2.Zero(),
+        facing=Math.floor(Math.random()*2)*2-1, // -1 or 1
+        angle=Math.random()*Math.PI*2,
+        scale=Settings.SPLAT_SCALE) {
         super(sprites,engine,spritename,pos,facing,angle,scale);
         this.seen = false;
     }
