@@ -33,6 +33,7 @@ class Glyph extends TargetSprite {
             /*targetPower = */Settings.GLYPH_THRUST,
             /*targetApproachAngle = */0,
         );
+        this.res = res;
         this.shot = false;
         this.timeSinceKick = 0;
     }
@@ -65,6 +66,11 @@ class Glyph extends TargetSprite {
             this.target = other.pos;
             this.sends = false;
             this.receives = false;
+            // Play pickup sound
+            const source = this.res.io.adc.createBufferSource();
+            source.buffer = this.res.sounds.glyph_pickup;
+            source.connect(this.res.io.mixer);
+            source.start();
         }
     }
     step(dt,t) {
@@ -109,6 +115,7 @@ export class Player extends TargetSprite {
             /*targetPower = */Settings.PLAYER_THRUST,
             /*targetApproachAngle = */0,
         );
+        this.res = res;
         this.io = res.io;
         this.capturedGlyphs = [];
         // Fire!
@@ -117,6 +124,11 @@ export class Player extends TargetSprite {
             if (this.capturedGlyphs.length > 0) {
                 const g = this.capturedGlyphs.pop(); // FIFO
                 g.fire(this.pos,this.engine.cursor);
+                // Play shot
+                const source = this.res.io.adc.createBufferSource();
+                source.buffer = this.res.sounds.shot;
+                source.connect(this.res.io.mixer);
+                source.start();
             }
         });
     }
@@ -159,6 +171,7 @@ export class Figment extends TargetSprite {
             /*targetPower = */Settings.FIGMENT_THRUST,
             /*targetApproachAngle = */0,
         );
+        this.res = res;
         engine.figments.add(this);
         if (colorState === 'neutral') this.engine.nDarkFigments += 1;
         else this.engine.nFigments += 1;
@@ -187,6 +200,11 @@ export class Figment extends TargetSprite {
     }
     collide(other) {
         if (other.NAME === 'glyph') {
+            // Play figment death sound
+            const source = this.res.io.adc.createBufferSource();
+            source.buffer = this.res.sounds.chemical_cloud;
+            source.connect(this.res.io.mixer);
+            source.start();
             if (Settings.COLOR_STATES[this.colorState].splat) {
                 new Splat(this.brushes,
                           this.engine,
@@ -196,6 +214,11 @@ export class Figment extends TargetSprite {
             }
             this.destroy();
         } else if (other.NAME === 'player') {
+            // Play figment touch sound
+            const source = this.res.io.adc.createBufferSource();
+            source.buffer = this.res.sounds.chemical_absorb;
+            source.connect(this.res.io.mixer);
+            source.start();
             if (Settings.COLOR_STATES[this.colorState].glyph) {
                 for (let i=0; i<Settings.FIGMENT_GLYPH_REWARD; i++) {
                     const theta = Math.random()*2*Math.PI;

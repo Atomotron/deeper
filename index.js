@@ -104,6 +104,13 @@ load({
         sparkles:  tileMipSettings,
     },
     sounds: {
+        // chemical_absorb.ogg  chemical_cloud.ogg  happy_ding.ogg  reject_loop.ogg  sad_ding.ogg  shot.ogg
+        chemical_absorb: new URL("sound/chemical_absorb.ogg", document.baseURI),
+        chemical_cloud: new URL("sound/chemical_cloud.ogg", document.baseURI),
+        glyph_pickup: new URL("sound/happy_ding.ogg", document.baseURI),
+        sad_ding: new URL("sound/sad_ding.ogg", document.baseURI),
+        reject_loop: new URL("sound/reject_loop.ogg", document.baseURI),
+        shot: new URL("sound/shot.ogg", document.baseURI),
     },
     streams: {
         ambience: new URL("sound/ambience.ogg", document.baseURI),
