@@ -81,6 +81,7 @@ load({
         pattern_pink: new URL("image/pattern_pink.png", document.baseURI),
         pattern_blue: new URL("image/pattern_blue.png", document.baseURI),
         pattern: new URL("image/pattern.png", document.baseURI),
+        player: new URL("image/player.png", document.baseURI),
     },
     imageSettings: {
         level: {
@@ -91,6 +92,13 @@ load({
             stretch: false,
         },
         sprites: {
+            minFilter: 'LINEAR',
+            magFilter: 'LINEAR',
+            wrapS: 'CLAMP_TO_EDGE',
+            wrapT: 'CLAMP_TO_EDGE',
+            stretch: false,
+        },
+        player: {
             minFilter: 'LINEAR',
             magFilter: 'LINEAR',
             wrapS: 'CLAMP_TO_EDGE',
@@ -118,6 +126,7 @@ load({
     spritesheets: {
         sprites: new URL("image/texture.geom.json", document.baseURI),
         brushes: new URL("image/brushes.geom.json", document.baseURI),
+        player: new URL("image/player.geom.json", document.baseURI),
     },
     skipAudioWait: false,
 },{
@@ -190,6 +199,9 @@ const time = Vec1.From(0);
 const spriteModelPadding = Vec1.From(Settings.SPRITE_MODEL_PADDING);
 const sprites = new AnimatedSprites(res);
 
+// PLAYER SPRITE LAYER
+const playerSprites = new AnimatedSprites(res,"sprite","player");
+
 // BRUSH LAYER
 const brushes = new Brushes(res,"brush",'brushes',1,{},bgModel.a00);
 
@@ -208,6 +220,20 @@ layer.sync(res.gl);*/
 // Set up render sequence
 
 const IntermediatePass = {};//framebuffer: frame};
+
+const SpritePass = SUM(DrawPass,IntermediatePass,{
+    shader: sprites.shader,
+    uniforms: {
+        cameraInv: cameraInv,
+        cameraPos: cameraPos,  
+        time: time, 
+        displayColorMatrix: Settings.DISPLAY_COLOR_MATRIX,
+        spriteModelPadding: spriteModelPadding,
+    },
+    samplers: {
+        noise: res.images.sparkles,
+    },
+});
 
 const sequence = [    
     SUM(DrawPass,{
@@ -243,21 +269,19 @@ const sequence = [
         },
         draw: (gl) => bgLayer.draw(gl),
     }),
-    SUM(DrawPass,IntermediatePass,{
+    SUM(SpritePass,{
         name: "Draw Sprites",
-        shader: sprites.shader,
-        uniforms: {
-            cameraInv: cameraInv,
-            cameraPos: cameraPos,  
-            time: time, 
-            displayColorMatrix: Settings.DISPLAY_COLOR_MATRIX,
-            spriteModelPadding: spriteModelPadding,
-        },
+        draw: (gl) => sprites.draw(gl),
         samplers: {
             source: sprites.texture,
-            noise: res.images.sparkles,
-        },
-        draw: (gl) => sprites.draw(gl),
+        }
+    }),
+    SUM(SpritePass,{
+        name: "Draw Player",
+        draw: (gl) => playerSprites.draw(gl),
+        samplers: {
+            source: playerSprites.texture,
+        }
     }),
 ];
 const [render,env] = compileRenderer(sequence);
@@ -282,7 +306,7 @@ class DeeperEngine extends Engine {
         this.figments = new Set();
         
         // Sprite creation
-        this.player = new Player(res,sprites,this,field,Settings.PLAYER_START.clone());
+        this.player = new Player(res,playerSprites,this,field,Settings.PLAYER_START.clone());
         cameraPos.eq(this.player.pos);
         
         this.field = field;
@@ -411,7 +435,7 @@ class DeeperEngine extends Engine {
         this.newColliders.push(collider);
     }
 }
-const e = new DeeperEngine(res,render,env,[sprites,brushes]);
+const e = new DeeperEngine(res,render,env,[sprites,brushes,playerSprites]);
 window.e = e;
 e.start();
 }).catch(

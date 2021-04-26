@@ -1,0 +1,46 @@
+{
+  "frames": {
+    "player/player1.png": {
+      "circles": {
+        "Collision1": {
+          "cx": "31.375",
+          "cy": "31.313",
+          "r": "24"
+        }
+      },
+      "frame": {
+        "h": 64,
+        "w": 64,
+        "x": 0,
+        "y": 0
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "rotated": false,
+      "sourceSize": {
+        "h": 64,
+        "w": 64
+      },
+      "spriteSourceSize": {
+        "h": 64,
+        "w": 64,
+        "x": 0,
+        "y": 0
+      },
+      "trimmed": false
+    }
+  },
+  "meta": {
+    "app": "http://free-tex-packer.com",
+    "format": "RGBA8888",
+    "image": "player.png",
+    "scale": 1,
+    "size": {
+      "h": 64,
+      "w": 64
+    },
+    "version": "0.6.6"
+  }
+}

@@ -101,7 +101,7 @@ export class Player extends TargetSprite {
             sprites,
             engine,
             /*field=*/field,
-            'fish','move',
+            'player','move',
             /*pos=*/pos,
             /*facing=*/1,
             /*angle=*/0,
@@ -232,6 +232,11 @@ export class Figment extends TargetSprite {
             this.destroy();
         } else if (other.NAME === 'player') {
             // Play figment touch sound
+            const messages = Settings.MESSAGES[this.colorState];
+            this.engine.postMessage(
+                messages[Math.floor(Math.random()*messages.length)],
+                this.colorState,
+            );
             const source = this.res.io.adc.createBufferSource();
             source.buffer = this.res.sounds.chemical_absorb;
             source.connect(this.res.io.mixer);
