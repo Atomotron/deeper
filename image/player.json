@@ -1,23 +1,23 @@
 {
   "frames": {
-    "player.png": {
+    "player/player.png": {
       "frame": {
         "x": 0,
         "y": 0,
-        "w": 64,
-        "h": 64
+        "w": 73,
+        "h": 73
       },
       "rotated": false,
-      "trimmed": false,
+      "trimmed": true,
       "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 64,
-        "h": 64
+        "x": 43,
+        "y": 50,
+        "w": 73,
+        "h": 73
       },
       "sourceSize": {
-        "w": 64,
-        "h": 64
+        "w": 161,
+        "h": 179
       },
       "pivot": {
         "x": 0.5,
@@ -31,8 +31,8 @@
     "image": "player.png",
     "format": "RGBA8888",
     "size": {
-      "w": 64,
-      "h": 64
+      "w": 128,
+      "h": 128
     },
     "scale": 1
   }
