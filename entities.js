@@ -131,6 +131,21 @@ export class Player extends TargetSprite {
                 source.start();
             }
         });
+        this.bounceGain = res.io.adc.createGain();
+        this.bounceGain.gain.value = 0;
+        this.bounceGain.connect(res.io.mixer);
+        this.bounceGainTarget = 0;
+        this.bounceLoop = this.res.io.adc.createBufferSource();
+        this.bounceLoop.buffer = this.res.sounds.reject_loop;
+        this.bounceLoop.loop = true;
+        this.bounceLoop.loopEnd = this.bounceLoop.buffer.duration;
+        this.bounceLoop.connect(this.bounceGain);
+        this.bounceLoop.start();
+    }
+    step(dt,t) {
+        super.step(dt,t);
+        this.bounceGain.gain.value += Settings.BOUNCE_SOUND_SPEED*
+            dt*(this.bounceGainTarget-this.bounceGain.gain.value);
     }
     update(t) {
         super.update(t);
@@ -139,6 +154,7 @@ export class Player extends TargetSprite {
         } else {
             this.target = this.pos;
         }
+        this.bounceGainTarget = Math.exp(this.fieldForce.mag()/256)-1;
     }
     collide(other) {
         if (other.NAME === 'figment') {

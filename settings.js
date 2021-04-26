@@ -138,6 +138,7 @@ export const COLOR_STATES = {
 export const PLAYER_START = Vec2.From(0.0,-500);
 export const PLAYER_DAMPING = 1;
 export const PLAYER_THRUST = 2000;
+export const BOUNCE_SOUND_SPEED = 2;
 
 // Spawning
 export const MAX_DARK_FIGMENTS = 3; // Dark figments will stop spawning once this many exist.
