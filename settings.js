@@ -31,7 +31,7 @@ export const COLOR_STATES = {
                     priority: 10,
                     r   : 400,
                     thrust: 700,
-                    angle : AVOID,
+                    angle : AVOID + Math.PI/2 + 0.1,
                 },
             },
             figment:{
@@ -149,7 +149,7 @@ export const FIGMENT_SPAWN_PERIOD = 15;
 // Camera settings
 export const CAMERA_SPEED = 2.0;
 export const CAMERA_ZOOM_SPEED = 10;
-export const MAX_ZOOM = 5120;
+export const MAX_ZOOM = 512;
 export const MIN_ZOOM = 256;
 export const START_ZOOM = (MIN_ZOOM + MAX_ZOOM)*0.5;
 export const ZOOM_SPEED = 0.26; 
