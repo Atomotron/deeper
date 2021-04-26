@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+<svg xmlns="http://www.w3.org/2000/svg" width="161" height="179" viewBox="0 0 161 179">
   <defs>
     <style>
       .cls-1 {
@@ -7,10 +7,9 @@
 
       .cls-2 {
         fill: lime;
-        fill-rule: evenodd;
       }
     </style>
   </defs>
-  <circle id="Collision1" class="cls-1" cx="31.375" cy="31.313" r="24"/>
-  <path id="CoM" class="cls-2" d="M31.36,29.737a1.293,1.293,0,1,1-1.28,1.293A1.286,1.286,0,0,1,31.36,29.737Z"/>
+  <circle id="Collision1" class="cls-1" cx="79.375" cy="86.312" r="24"/>
+  <ellipse id="CoM" class="cls-2" cx="79.359" cy="86.031" rx="1.266" ry="1.281"/>
 </svg>
