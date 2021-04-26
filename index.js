@@ -14,9 +14,9 @@ import {
 
 import * as Settings from "./settings.js";
 import {Quad} from './quad.js';
-import {Sprites,AnimatedSprites,AnimatedSprite,TargetSprite} from './sprite.js';
+import {Sprites,AnimatedSprites,Sprite,AnimatedSprite,TargetSprite} from './sprite.js';
 import {collisions} from './collider.js';
-import {Field,Brushes} from './field.js';
+import {Field,Brushes,Brush,Splat} from './field.js';
 
 function setLoaderBarWidth(id,complete,total) {
     const e = document.getElementById(id);
@@ -59,7 +59,7 @@ load({
     images: {
         level: new URL("image/testgauntlet.png", document.baseURI),
         sprites: new URL("image/texture.png", document.baseURI),
-        brush: new URL("image/brush.png", document.baseURI),
+        brushes: new URL("image/brushes.png", document.baseURI),
     },
     imageSettings: {
         level: {
@@ -84,6 +84,7 @@ load({
     },
     spritesheets: {
         sprites: new URL("image/texture.geom.json", document.baseURI),
+        brushes: new URL("image/brushes.geom.json", document.baseURI),
     },
     skipAudioWait: false,
 },{
@@ -134,7 +135,11 @@ const bgLayer = new Quad(gl,
 const bgModel = res.images.level.sheet.model.all.clone();
 bgModel.mulEq(8);
 const bgModelInv = bgModel.inverse();
-const bgPos = Vec2.From(bgModel.a00,-bgModel.a11*2);
+const bgPos = Vec2.From(0,-bgModel.a11);
+
+// PHYSICS FIELD
+const field = new Field(res,res.images.level,bgModelInv,bgPos);
+
 // TIME
 const time = Vec1.From(0);
 
@@ -142,10 +147,8 @@ const time = Vec1.From(0);
 const sprites = new AnimatedSprites(res);
 
 // BRUSH LAYER
-const brushes = new Brushes(res);
+const brushes = new Brushes(res,"sprite",'brushes',1,{},bgModel.a00);
 
-// PHYSICS FIELD
-const field = new Field(res,res.images.level,bgModelInv,bgPos);
 
 // Make an instance
 /*
@@ -157,7 +160,20 @@ layer.sync(res.gl);*/
 
 // Set up render sequence
 
-const sequence = [
+const sequence = [    
+    SUM(DrawPass,{
+        framebuffer: field.fb,
+        name: "Paint on Field",
+        shader: brushes.shader,
+        uniforms: {
+            cameraInv: bgModelInv,
+            cameraPos: bgPos,  
+        },
+        samplers: {
+            source: brushes.texture
+        },
+        draw: (gl) => brushes.draw(gl),
+    }),
     ClearPass,
     SUM(DrawPass,{
         name: "Draw Background",
@@ -166,7 +182,8 @@ const sequence = [
             cameraPos:cameraPos,
             camera:camera,
             bgModelInv:bgModelInv,
-            bgPos:bgPos},
+            bgPos:bgPos
+        },
         samplers: {source: field.fb},
         draw: (gl) => bgLayer.draw(gl),
     }),
@@ -218,7 +235,7 @@ class DeeperEngine extends Engine {
         window.s = this.sprite;
         this.sprite.struct.color.z = 0.0;
         
-        for (let i=0; i<20; i++) {
+        for (let i=0; i<2; i++) {
             const s = new TargetSprite(
                 sprites,
                 this,
@@ -238,10 +255,15 @@ class DeeperEngine extends Engine {
                 Math.random() * Math.PI * 2, // target angle
             );
         }
-        sprites.sync(res.gl);
+        // Draw
+        this.res.io.canvas.addEventListener('mousedown', (e) => {
+            const b = new Splat(brushes,this,'pops/brush4.png',this.cursor,1,0,4);
+            b.color.eqFrom(0.0,0.0,1.0,1.0);
+        });
     }
     stepSimulation(dt,t) {
         field.read(this.cursor);
+        
         if (this.res.io.pressed.has('Mouse0')) {
             this.sprite.target.eq(this.cursor);
             this.sprite.targetPower = 3000;
@@ -286,7 +308,7 @@ class DeeperEngine extends Engine {
         this.newColliders.push(collider);
     }
 }
-const e = new DeeperEngine(res,render,env,[sprites]);
+const e = new DeeperEngine(res,render,env,[sprites,brushes]);
 window.e = e;
 e.start();
 }).catch(

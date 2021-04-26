@@ -17,8 +17,8 @@ const ANIM_FRAME_FOLDER_REGEX = /^.*\//;
 // A layer of sprites, all of the same type.
 export class Sprites extends Quad {
     constructor(res,
-        shadername="sprite",
-        texturename="sprites",
+        shadername,
+        texturename,
         instances=1,
         configuration={}
         ) {
@@ -102,11 +102,13 @@ export class Sprite {
         // Low-level struct data - determined by high-level.
         this.translate = Vec2.Zero();
         this.transform = Mat2.Id();
+        this.color = Vec4.Zero();
+        this.color.w = 1.0; // alpha = 1
         // Acquire a struct from the sprite stack
         this.struct = sprites.inst.acquire();
         // Register for synchronization
         this.engine.register(this);
-        this.sync();
+        //this.sync();
     }
     setSprite(spritename) {
         this.spritename = spritename;
@@ -132,6 +134,7 @@ export class Sprite {
         // Translation
         this.translate.eqZero()
         this.translate.subEq(this.control.CoM.pos);
+        this.translate.transformEq(this.transform);
         this.translate.x *= this.facing;
         this.translate.addEq(this.pos);
         // Transformation
@@ -143,6 +146,7 @@ export class Sprite {
         this.struct.frame.eq(this.frame);
         this.struct.pos.eq(this.translate);
         this.struct.model.eqCompose(this.transform,this.model);
+        this.struct.color.eq(this.color);
     }    
 }
 
@@ -182,7 +186,7 @@ export class PhysicsSprite extends colliderMixin(Sprite) {
         this.field.read(this.pos);
         this.fieldForce.eqFrom(
             this.field.dfdx.dot(this.fieldSensitivity),
-           -this.field.dfdy.dot(this.fieldSensitivity)
+            this.field.dfdy.dot(this.fieldSensitivity)
         );
         this.fieldForce.mulEq(Settings.COLOR_FORCE_STRENGTH);
         this.fieldDamping = this.field.f.dot(this.fieldSensitivity) * Settings.COLOR_FORCE_DAMPING;
@@ -258,7 +262,12 @@ export class AnimatedSprite extends PhysicsSprite {
         this.nextAction = action;
     }
     // Update
-    update(t) {
+    update(t) {        
+        // Set color based on field sensitivity
+        this.color.x = Math.exp(-this.fieldSensitivity.x);
+        this.color.y = Math.exp(-this.fieldSensitivity.y);
+        this.color.z = Math.exp(-this.fieldSensitivity.z);
+        this.color.w = 1.0;
         // Start rotation if moving different direction from facing
         if (this.action !== 'rotate') {
             if (-this.tail.x * this.facing < 0) {
@@ -293,11 +302,6 @@ export class AnimatedSprite extends PhysicsSprite {
         this.action = this.nextAction;
         // Save frame name
         this.setSprite(this.frames[this.frameIndex]);
-        // Set color based on field sensitivity
-        this.struct.color.x = Math.exp(-this.fieldSensitivity.x);
-        this.struct.color.y = Math.exp(-this.fieldSensitivity.y);
-        this.struct.color.z = Math.exp(-this.fieldSensitivity.z);
-        this.struct.color.w = 1.0;
     }
     // Synchronize 
     sync() {
