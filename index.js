@@ -42,6 +42,14 @@ function escapeMonospaceHtml(unsafe) {
 }
 let failed = false;
 
+let tileMipSettings = {
+    minFilter: 'LINEAR_MIPMAP_LINEAR',
+    magFilter: 'LINEAR',
+    wrapS: 'REPEAT',
+    wrapT: 'REPEAT',
+    stretch: true,
+};
+
 load({
     canvas:document.querySelector("canvas"),
     shaders: {
@@ -64,6 +72,10 @@ load({
         level: new URL("image/testgauntlet.png", document.baseURI),
         sprites: new URL("image/texture.png", document.baseURI),
         brushes: new URL("image/brushes.png", document.baseURI),
+        pattern_yellow: new URL("image/pattern_yellow.png", document.baseURI),
+        pattern_pink: new URL("image/pattern_pink.png", document.baseURI),
+        pattern_blue: new URL("image/pattern_blue.png", document.baseURI),
+        pattern: new URL("image/pattern.png", document.baseURI),
     },
     imageSettings: {
         level: {
@@ -79,7 +91,11 @@ load({
             wrapS: 'CLAMP_TO_EDGE',
             wrapT: 'CLAMP_TO_EDGE',
             stretch: false,
-        }
+        },
+        pattern_yellow: tileMipSettings,
+        pattern_pink:   tileMipSettings,
+        pattern_blue:   tileMipSettings,
+        pattern:  tileMipSettings,
     },
     sounds: {
     },
@@ -189,7 +205,13 @@ const sequence = [
             bgPos:bgPos,
             time: time,
         },
-        samplers: {source: field.fb},
+        samplers: {
+            source: field.fb,
+            rPattern: res.images.pattern_yellow,
+            gPattern: res.images.pattern_pink,
+            bPattern: res.images.pattern_blue,
+            wPattern: res.images.pattern,
+        },
         draw: (gl) => bgLayer.draw(gl),
     }),
     SUM(DrawPass,{
