@@ -1,4 +1,4 @@
-import {
+ import {
     Vec1,Vec2,Vec3,Vec4,
     Vec1I,Vec2I,Vec3I,Vec4I,
     Mat2,Mat3,Mat4,
@@ -8,6 +8,7 @@ import * as Settings from "./settings.js";
 import {TargetSprite,PhysicsSprite} from './sprite.js'
 
 export class Player extends TargetSprite {
+    NAME = 'player'
     constructor(res,sprites,engine,field,pos=Vec2.Zero()) {
         super(
             sprites,
@@ -36,9 +37,15 @@ export class Player extends TargetSprite {
             this.target = this.pos;
         }
     }
+    collide(other) {
+        if (other.NAME === 'figment') {
+            other.destroy();
+        }
+    }
 }
 
 export class Figment extends TargetSprite {
+    NAME = 'figment'
     constructor(res,sprites,engine,pos=Vec2.Zero()) {
         super(
             sprites,
@@ -59,6 +66,7 @@ export class Figment extends TargetSprite {
             /*targetApproachAngle = */Math.random()*Math.PI*2,
         );
     }
+    collide(other) {}
     update(t) {
         super.update(t);
         // Check player distance
@@ -69,7 +77,6 @@ export class Figment extends TargetSprite {
             this.target = this.engine.player.pos;
         }
         if (r2 > Settings.ENTITY_VANISH_RADIUS2) {
-            console.log("Hi!");
             this.destroy();
         }
     }

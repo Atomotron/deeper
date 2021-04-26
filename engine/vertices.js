@@ -77,7 +77,7 @@ export class VertexBufferSchema {
         return class Struct {
             // Takes an array, and its number within the array.
             constructor(f32array,i) {
-                this.acquisitionIndex = 0; // Handle for VertexBufferBacking
+                this.index = i; // Handle for VertexBufferBacking
                 const base = structSize*i;
                 // Iterate through each struct field and add it to `this`
                 for (let i=0; i < names.length; i++) {
@@ -222,15 +222,19 @@ export class VertexBufferBacking {
         this.growTo(this.count + 1);
         this.count += 1;
         const struct = this.structs[index];
-        struct.acquisitionIndex = index;
         return struct;
     }
     swap(i,j) {
         this.structs[i].swap(this.structs[j]);
+        this.structs[i].index = j;
+        this.structs[j].index = i;
+        const aux = this.structs[i];
+        this.structs[i] = this.structs[j];
+        this.structs[j] = aux;
     }
     relenquish(struct) {
         if (this.count == 0) return; // Should never happen
-        const index = struct.acquisitionIndex;
+        const index = struct.index;
         // Make sure the struct being relenquished is on top of the stack
         if (index !== this.count-1) {
             this.swap(index,this.count-1);
