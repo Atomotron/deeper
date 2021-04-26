@@ -249,7 +249,6 @@ export class AnimatedSprite extends PhysicsSprite {
         // ANIMATION STATE
         this.oldPos = Vec2.Zero();
         this.tail = Vec2.Zero();
-        console.log(this.ANIM_MPF);
         this.setRandomOdometer = false;
         this.odometer = 0; // Will initialize in this.step
         this.nextAction = action;

@@ -4,9 +4,9 @@ import {
     Mat2,Mat3,Mat4,
 } from './engine/archimedes.js';
 export const DISPLAY_COLOR_MATRIX = Mat4.Id().composeFromEq(
-    255, 233,   0,  30,
-    216, 208, 154,  30,
-    255,  26, 255,  30,
+    255, 233,   0,  200,
+    216, 208, 154,  200,
+    255,  26, 255,  200,
     255, 255, 255, 255,
 ).mulEq(1/256);
 
@@ -41,10 +41,24 @@ export const COLOR_STATES = {
         splat: false,
         glyph: false,
     },
+    // No color setting at all
+    'none' : {
+        color            : Vec4.From(0.0,0.0,0.0,0.0),
+        fieldSensitivity : Vec4.From(0.0,0.0,0.0,0.0),
+        trail: false,
+        splat: false,
+        glyph: false,
+    }
 }
 
 // Camera settings
-export const CAMERA_SPEED = 0.5;
+export const CAMERA_SPEED = 2.0;
+export const CAMERA_ZOOM_SPEED = 10;
+export const MAX_ZOOM = 512;
+export const MIN_ZOOM = 256;
+export const START_ZOOM = (MIN_ZOOM + MAX_ZOOM)*0.5;
+export const ZOOM_SPEED = 0.26; 
+export const CAMERA_MAX_DISTANCE = MIN_ZOOM; // Max distance of camera from player
 
 // Entity physics
 export const PLAYER_DAMPING = 1;
@@ -55,10 +69,15 @@ export const GLYPH_DAMPING = 0.1;
 export const GLYPH_THRUST = 1000;
 
 // Glyphs
+export const GLYPH_PICKUP_RADIUS = 50; // Get this close to a glyph to pick it up
+export const GLYPH_HIT_RADIUS    = 1;  // Size of a glyph as far as shooting figments is concerned
 export const FIGMENT_GLYPH_REWARD = 3;
 export const FIGMENT_GLYPH_VELOCITY = 20;
-export const GLYPH_STARTING_OFFSET = 60;
+export const GLYPH_STARTING_OFFSET = 70;
 export const GLYPH_SHOT_KICK = 200;
+
+export const GLYPH_KICK_PERIOD = 2;
+export const GLYPH_KICK = 50;
 
 // AI
 const ENTITY_FOLLOW_RADIUS = 512;

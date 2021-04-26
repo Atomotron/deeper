@@ -140,10 +140,13 @@ res.streams.ambience.play();
 // CAMERA
 const camera = Mat2.Id();
 const cameraPos = Vec2.From(0,0);
-let cameraSize = 512;
+let cameraSize = Settings.START_ZOOM;
+let cameraSizeTarget = cameraSize;
 res.io.canvas.addEventListener('wheel',
     (e) => {
-        cameraSize *= Math.exp(Math.sign(event.deltaY));
+        cameraSizeTarget *= Math.exp(Settings.ZOOM_SPEED * Math.sign(event.deltaY));
+        if (cameraSizeTarget > Settings.MAX_ZOOM) cameraSizeTarget = Settings.MAX_ZOOM;
+        if (cameraSizeTarget < Settings.MIN_ZOOM) cameraSizeTarget = Settings.MIN_ZOOM;
     }
 );
 
@@ -268,16 +271,21 @@ class DeeperEngine extends Engine {
     }
     stepSimulation(dt,t) {
         field.read(this.cursor);
-        
 
         // Update camera pos
+        cameraSize += dt*Settings.CAMERA_ZOOM_SPEED*(cameraSizeTarget - cameraSize);
         cameraTarget.zeroEq();
         cameraTarget.addEq(this.player.target);
+        cameraTarget.subEq(this.player.pos);
+        cameraTarget.mulEq(0.5);
+        if (cameraTarget.mag() > Settings.CAMERA_MAX_DISTANCE) {
+            cameraTarget.normEq();
+            cameraTarget.mulEq(Settings.CAMERA_MAX_DISTANCE);
+        }
         cameraTarget.addEq(this.player.pos);
-        cameraTarget.mulEq(Settings.CAMERA_SPEED);
+        // Compute camera delta
         cameraTarget.subEq(cameraPos); // final minus initial
-        
-        cameraPos.scaledAddEq(cameraTarget,dt);
+        cameraPos.scaledAddEq(cameraTarget,dt*Settings.CAMERA_SPEED);
         // Step the rest of the simulation
         super.stepSimulation(dt,t);
     }

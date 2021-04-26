@@ -12,6 +12,8 @@ class Glyph extends TargetSprite {
     ANIM_MPF = 1000
     IDLE_VELOCITY = 30
     NAME = 'glyph'
+    PICKUP_COLLIDERS = [{pos:Vec2.Zero(),r:Settings.GLYPH_PICKUP_RADIUS}]
+    HIT_COLLIDERS = [{pos:Vec2.Zero(),r:Settings.GLYPH_HIT_RADIUS}]
     constructor(res,sprites,engine,pos=Vec2.Zero(),vel=Vec2.Zero(),colorState='neutral') {
         super(
             sprites,
@@ -31,10 +33,20 @@ class Glyph extends TargetSprite {
             /*targetPower = */Settings.GLYPH_THRUST,
             /*targetApproachAngle = */0,
         );
+        this.shot = false;
+        this.timeSinceKick = 0;
+    }
+    getColliders() {
+        if (this.shot) {
+            return this.HIT_COLLIDERS;
+        } else {
+            return this.PICKUP_COLLIDERS;
+        }
     }
     fire(at) {
         this.sends = true;
         this.receives = false;
+        this.shot = true;
         this.target = at.clone();
         this.target.subEq(this.pos);
         this.vel.eq(this.target);
@@ -52,6 +64,19 @@ class Glyph extends TargetSprite {
             this.sends = false;
             this.receives = false;
         }
+    }
+    step(dt,t) {
+        this.timeSinceKick += dt;
+        super.step(dt,t);
+    }
+    update(t) {
+        if (this.timeSinceKick > Math.random()*Settings.GLYPH_KICK_PERIOD) {
+            const theta = Math.random()*2*Math.PI;
+            const kick = Vec2.Polar(Settings.GLYPH_KICK,theta);
+            this.acc.addEq(kick);
+            this.timeSinceKick = 0;
+        }
+        super.update(t);
     }
 }
 
@@ -166,7 +191,7 @@ export class Figment extends TargetSprite {
                               this.engine,
                               pos,
                               vel,
-                              this.colorState,
+                              'none',
                     );
                 }
             }
