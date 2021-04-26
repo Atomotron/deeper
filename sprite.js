@@ -146,7 +146,7 @@ export class Sprite {
     sync() {
         // Update low-level transformation info
         // Translation
-        this.translate.eqZero()
+        this.translate.eqZero();
         this.translate.subEq(this.control.CoM.pos);
         //this.translate.transformEq(this.transform);
         this.translate.x *= this.facing;

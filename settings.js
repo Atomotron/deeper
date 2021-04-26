@@ -168,7 +168,6 @@ export const GLYPH_KICK = 60;
 // AI
 export const AI_TICK_PERIOD = 1.0; // On average, the AI updates every half this many seconds.
 export const AI_WANDER_PERIOD = 6.0;
-const ENTITY_FOLLOW_RADIUS = 512;
 const ENTITY_VANISH_RADIUS = MAX_ZOOM*4;
 const ENTITY_SLEEP_VELOCITY = 1; // Entities halt simulation when they go below this velocity.
 
@@ -178,7 +177,7 @@ export const COLOR_FORCE_DAMPING  = 0.02;
 
 // Splat/trail settings
 export const SPLAT_ALPHA = 1.0;
-export const TRAIL_ALPHA = 0.1;
+export const TRAIL_ALPHA = 1.0;
 export const SPLAT_SCALE = 4/3;
 export const TRAIL_SCALE = 4;
 
@@ -190,6 +189,5 @@ export const IDLE_VELOCITY = 24
 export const SPRITE_MODEL_PADDING = 1.4;
 
 // Squared constants
-export const ENTITY_FOLLOW_RADIUS2 = ENTITY_FOLLOW_RADIUS*ENTITY_FOLLOW_RADIUS;
 export const ENTITY_VANISH_RADIUS2 = ENTITY_VANISH_RADIUS * ENTITY_VANISH_RADIUS;
 export const ENTITY_SLEEP_VELOCITY2 = ENTITY_SLEEP_VELOCITY * ENTITY_SLEEP_VELOCITY;

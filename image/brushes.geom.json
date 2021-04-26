@@ -156,47 +156,10 @@
       "trimmed": true
     },
     "trails/smbrush1.png": {
-      "circles": {
-        "CoM": {
-          "cx": "80",
-          "cy": "342",
-          "r": "2"
-        }
-      },
+      "circles": {},
       "frame": {
-        "h": 69,
-        "w": 60,
-        "x": 1425,
-        "y": 1
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      },
-      "rotated": false,
-      "sourceSize": {
-        "h": 400,
-        "w": 400
-      },
-      "spriteSourceSize": {
-        "h": 69,
-        "w": 60,
-        "x": 52,
-        "y": 309
-      },
-      "trimmed": true
-    },
-    "trails/smbrush2.png": {
-      "circles": {
-        "CoM": {
-          "cx": "66",
-          "cy": "70",
-          "r": "2"
-        }
-      },
-      "frame": {
-        "h": 66,
-        "w": 76,
+        "h": 99,
+        "w": 100,
         "x": 1203,
         "y": 1
       },
@@ -206,171 +169,16 @@
       },
       "rotated": false,
       "sourceSize": {
-        "h": 400,
-        "w": 400
+        "h": 99,
+        "w": 100
       },
       "spriteSourceSize": {
-        "h": 66,
-        "w": 76,
-        "x": 30,
-        "y": 37
+        "h": 99,
+        "w": 100,
+        "x": 0,
+        "y": 0
       },
-      "trimmed": true
-    },
-    "trails/smbrush3.png": {
-      "circles": {
-        "CoM": {
-          "cx": "73",
-          "cy": "157",
-          "r": "2"
-        }
-      },
-      "frame": {
-        "h": 63,
-        "w": 70,
-        "x": 1281,
-        "y": 1
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      },
-      "rotated": false,
-      "sourceSize": {
-        "h": 400,
-        "w": 400
-      },
-      "spriteSourceSize": {
-        "h": 63,
-        "w": 70,
-        "x": 36,
-        "y": 125
-      },
-      "trimmed": true
-    },
-    "trails/smbrush4.png": {
-      "circles": {
-        "CoM": {
-          "cx": "72",
-          "cy": "255",
-          "r": "2"
-        }
-      },
-      "frame": {
-        "h": 54,
-        "w": 57,
-        "x": 1353,
-        "y": 58
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      },
-      "rotated": false,
-      "sourceSize": {
-        "h": 400,
-        "w": 400
-      },
-      "spriteSourceSize": {
-        "h": 54,
-        "w": 57,
-        "x": 44,
-        "y": 230
-      },
-      "trimmed": true
-    },
-    "trails/smbrush5.png": {
-      "circles": {
-        "CoM": {
-          "cx": "158",
-          "cy": "62",
-          "r": "2"
-        }
-      },
-      "frame": {
-        "h": 55,
-        "w": 54,
-        "x": 1203,
-        "y": 69
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      },
-      "rotated": false,
-      "sourceSize": {
-        "h": 400,
-        "w": 400
-      },
-      "spriteSourceSize": {
-        "h": 55,
-        "w": 54,
-        "x": 131,
-        "y": 36
-      },
-      "trimmed": true
-    },
-    "trails/smbrush6.png": {
-      "circles": {
-        "CoM": {
-          "cx": "159",
-          "cy": "153",
-          "r": "2"
-        }
-      },
-      "frame": {
-        "h": 55,
-        "w": 70,
-        "x": 1353,
-        "y": 1
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      },
-      "rotated": false,
-      "sourceSize": {
-        "h": 400,
-        "w": 400
-      },
-      "spriteSourceSize": {
-        "h": 55,
-        "w": 70,
-        "x": 126,
-        "y": 125
-      },
-      "trimmed": true
-    },
-    "trails/smbrush7.png": {
-      "circles": {
-        "CoM": {
-          "cx": "159",
-          "cy": "249",
-          "r": "2"
-        }
-      },
-      "frame": {
-        "h": 59,
-        "w": 55,
-        "x": 1281,
-        "y": 66
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      },
-      "rotated": false,
-      "sourceSize": {
-        "h": 400,
-        "w": 400
-      },
-      "spriteSourceSize": {
-        "h": 59,
-        "w": 55,
-        "x": 129,
-        "y": 221
-      },
-      "trimmed": true
+      "trimmed": false
     }
   },
   "meta": {
