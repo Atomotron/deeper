@@ -134,6 +134,11 @@ export const COLOR_STATES = {
     }
 }
 
+// UI
+export const MESSAGE_FADE = 0.5;
+export const MESSAGE_OPACITY_START = 3/MESSAGE_FADE;
+export const MESSAGE_OPACITY_EXTRA_PER_CHARACTER = (1/15)/MESSAGE_FADE;
+
 // Player
 export const PLAYER_START = Vec2.From(-80,-170*8);
 export const PLAYER_DAMPING = 1;

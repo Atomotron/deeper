@@ -279,8 +279,28 @@ class DeeperEngine extends Engine {
         this.nFigments = 0;
         this.figmentSpawnCountdown = 0;
         this.darkFigmentSpawnCountdown = 0;
+        this.messageSpan = document.getElementById('message');
+        this.messageOpacity = 1.0;
+    }
+    postMessage(message,color='yellow') {
+        this.messageOpacity = Settings.MESSAGE_OPACITY_START +
+            Settings.MESSAGE_OPACITY_EXTRA_PER_CHARACTER*message.length;
+        this.messageSpan.textContent = message;
+        // Compute color vector
+        const c = Settings.COLOR_STATES[color].color.clone();
+        c.transformEq(Settings.DISPLAY_COLOR_MATRIX);
+        c.mulEq(256);
+        this.messageSpan.style.color = 
+         `rgba(${c.x},${c.y},${c.z},${c.w})`;
     }
     stepSimulation(dt,t) {
+        // Manage message
+        let opacity = this.messageOpacity;
+        this.messageOpacity -= Settings.MESSAGE_FADE * dt;
+        if (opacity > 1) opacity = 1;
+        if (opacity < 0) opacity = 0;
+        this.messageSpan.style.opacity = opacity;
+        // Countdown spawn timers
         this.figmentSpawnCountdown -= dt;
         this.darkFigmentSpawnCountdown -= dt;
         field.read(this.cursor);

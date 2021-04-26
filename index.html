@@ -30,6 +30,20 @@ html, body {
     justify-content: center;
     flex-flow: column;
 }
+/*Ingame message overlay*/
+#messageOverlay {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    /* Flexbox for centering message */
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-flow: column;
+    overflow:visible;
+    pointer-events:none;
+    background:none !important;
+}
 #loader {
   color: #f0f0f0;
   padding: 3vw;
@@ -39,6 +53,12 @@ html, body {
     font-size: 1vw;
     max-width: 30vw;
     display: none;
+}
+#message {
+    background: rgba(1.0,1.0,1.0,0.3);
+    color: rgba(255,255,255,1.0);
+    font-size: 7vh;
+    margin-bottom: 5vh;
 }
 .instructions {
     display:block;
@@ -84,6 +104,12 @@ html, body {
 <body>
 
 <canvas id='canvas' width=512 height=512></canvas>
+
+<div id='messageOverlay'>
+<span id="message"> 
+    
+</span>
+</div>
 
 <div id='overlay'>
     <div id='loader'>
