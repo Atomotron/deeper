@@ -16,6 +16,7 @@ export class Engine {
         this.last_real_timestamp = null;
         this.sprites = new Set();
         this.streams = streams;
+        this.paused = false;
     }
     // Starts requestanimframe to this.runFrame
     start() {
@@ -25,14 +26,17 @@ export class Engine {
                 that.last_realtimestamp !== null) {
                 // Advance our target time, but not more than MAX_DT.
                 const real_dt = timestamp-that.last_realtimestamp;
-                if (real_dt < that.MAX_DT) {
-                    that.target_time += real_dt;
-                } else {    
-                    that.target_time += that.MAX_DT;
+                if (!that.paused) {
+                    if (real_dt < that.MAX_DT) {
+                        that.target_time += real_dt;
+                    } else {    
+                        that.target_time += that.MAX_DT;
+                    }
                 }
                 // Compute desired timestep based on target and lag.
-                const goal_dt = (that.target_time - that.time_reached)
+                let goal_dt = (that.target_time - that.time_reached)
                                     / that.frames_behind;
+                if (that.paused) goal_dt = 0.0;
                 const time_after_goal_dt = that.time_reached + goal_dt;
                 that.fps = 1/goal_dt;
                 that.runFrame(goal_dt,time_after_goal_dt);

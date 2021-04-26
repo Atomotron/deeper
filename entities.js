@@ -172,6 +172,8 @@ export class Figment extends TargetSprite {
             );
         }
         this.timeSinceAIUpdate = 0.0;
+        this.wanderUpdateCountdown = 0.0;
+        this.wandering = false;
     }
     destroy() {
         super.destroy();
@@ -210,7 +212,7 @@ export class Figment extends TargetSprite {
     }
     step(dt,t) {
         this.timeSinceAIUpdate += dt;
-        this.timeSinceWanderUpdate += dt;
+        this.wanderUpdateCountdown -= dt;
         super.step(dt,t);
     }
     // Measures how much we like the given point
@@ -220,10 +222,10 @@ export class Figment extends TargetSprite {
     }
     // Sets us to target a wander point
     wander() {
-        if (this.timeSinceWanderUpdate < Settings.AI_WANDER_PERIOD * Math.random()) {
+        if (this.wanderUpdateCountdown > 0) {
             return;
         } else {
-            this.timeSinceWanderUpdate = 0;
+            this.wanderUpdateCountdown = Settings.AI_WANDER_PERIOD * Math.random();
         }
         const state = Settings.COLOR_STATES[this.colorState];
         // Pick a prospective wandering point
@@ -246,6 +248,7 @@ export class Figment extends TargetSprite {
     }
     // Reacts to another entity according to the rule.
     aiReact(other,rule) {
+        this.wanderUpdateCountdown = 0;
         this.targetPower = rule.thrust;
         this.targetApproachAngle = rule.angle;
         this.target = other.pos;
@@ -301,8 +304,13 @@ export class Figment extends TargetSprite {
                 }
             }
             if (rule !== null) {
+                this.wandering = false;
                 this.aiReact(other,rule);
             } else {
+                if (!this.wandering) {
+                    this.target = this.pos;
+                    this.wandering = true;
+                }
                 this.wander();
             }
         }

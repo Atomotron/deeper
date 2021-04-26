@@ -21,7 +21,7 @@ attribute vec4 color;
 varying vec2 uv;
 varying vec2 lowerUV;
 varying vec2 upperUV;
-varying vec2 vertexTail;
+varying vec2 locationInRect;
 varying vec4 vertexChannel;
 varying vec4 vertexDisplayColor;
 
@@ -34,5 +34,6 @@ void main() {
     lowerUV = frame.xy + vec2(-1.0, 1.0)*frame.zw;
     upperUV = frame.xy + vec2(1.0, -1.0)*frame.zw;
     vec2 world_coordinate = mat2(model) * vertex + pos;
+    locationInRect = world_coordinate;
     gl_Position = vec4(cameraInv*(world_coordinate-cameraPos),0.5,1.0);
 }

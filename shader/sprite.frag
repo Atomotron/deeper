@@ -13,10 +13,12 @@ varying vec2 upperUV;
 
 varying vec4 vertexChannel;
 varying vec4 vertexDisplayColor;
-varying vec2 vertexTail;
+varying vec2 locationInRect;
 
 const vec2 DISTORTION = vec2(0.1,1.0)*0.02;
 const float DISTORTION_SPEED = 0.05;
+
+const float DISTORTION_SCALE = 0.01;
 
 vec4 clampedTexture2D(sampler2D sam, vec2 where) {
     return texture2D(sam, clamp(where,lowerUV,upperUV));
@@ -33,7 +35,7 @@ void main() {
     vec3 solidColor = vec3(solid) * (1.0-vertexChannel.w);
     vec4 baseColor = vec4(glowColor*(1.0-solid)+solidColor,baseAlpha);
     // Distorted sample
-    float noiseSample = dot(texture2D(noise, uv*10.0 + vec2(0.0,time*DISTORTION_SPEED)), vertexChannel) - 0.5;
+    float noiseSample = dot(texture2D(noise, DISTORTION_SCALE*locationInRect - vec2(0.0,time*DISTORTION_SPEED)), vertexChannel) - 0.5;
     vec2 distortion = DISTORTION*noiseSample;
     vec4 distortedSample = clampedTexture2D(source, uv + distortion);
     vec3 distortedGlow = vec3(distortedSample.y) * vertexDisplayColor.xyz;

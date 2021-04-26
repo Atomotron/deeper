@@ -39,17 +39,17 @@ export class IO {
             e.preventDefault();
             e.stopPropagation();
         });
-        canvas.addEventListener('keydown', 
-            (e) => this.pressed.add(e.code)
+        window.addEventListener('keydown', 
+            (e) => {this.pressed.add(e.code)}
         );
         window.addEventListener('keyup', 
-            (e) => this.pressed.delete(e.code)
+            (e) => {this.pressed.delete(e.code)}
         );
         canvas.addEventListener('mousedown', 
-            (e) => this.pressed.add(`Mouse${e.button}`)
+            (e) => {this.pressed.add(`Mouse${e.button}`)}
         );
         window.addEventListener('mouseup', 
-            (e) => this.pressed.delete(`Mouse${e.button}`)
+            (e) => {this.pressed.delete(`Mouse${e.button}`)}
         );
         // Size tracking
         this.onResize = new Set(); // functions to run when resizing
