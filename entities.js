@@ -43,10 +43,11 @@ class Glyph extends TargetSprite {
             return this.PICKUP_COLLIDERS;
         }
     }
-    fire(at) {
+    fire(from,at) {
         this.sends = true;
         this.receives = false;
         this.shot = true;
+        this.pos.eq(from);
         this.target = at.clone();
         this.target.subEq(this.pos);
         this.vel.eq(this.target);
@@ -115,7 +116,7 @@ export class Player extends TargetSprite {
             if (e.button !== 2) return;
             if (this.capturedGlyphs.length > 0) {
                 const g = this.capturedGlyphs.pop(); // FIFO
-                g.fire(this.engine.cursor);
+                g.fire(this.pos,this.engine.cursor);
             }
         });
     }

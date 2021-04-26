@@ -45,4 +45,6 @@ void main() {
     );
     vec4 distortedColor = vec4(distortedGlow,distortedAlpha);
     gl_FragColor = baseColor + distortedColor*(1.0-baseAlpha);
+    //gl_FragColor *= 0.0001;
+    //gl_FragColor += noiseTexture * vertexChannel;
 }
