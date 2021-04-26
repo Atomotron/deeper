@@ -36,8 +36,14 @@ html, body {
 }
 #clicktostart {
     color: #f0f0f0;
-    font-size: 3vw;
+    font-size: 1vw;
+    max-width: 30vw;
     display: none;
+}
+.instructions {
+    display:block;
+    color: #fff24a;
+    font-size: 2vw;
 }
 .bigmessage {
   font-size: 6vw;
@@ -53,8 +59,8 @@ html, body {
     padding-right: 0vw;
     background: #0f5c40;
     color: #0c0c0c;
-    width: 0%;
-}
+    width: 0%;}
+
 #vertex{        background: #f1e7ff;}
 #fragment{      background: #2b8cfd;}
 #spritesheet{   background: #fff24a;}
@@ -89,8 +95,31 @@ html, body {
         <span id='image' class='loader'>Images</span>
         <span id='sound' class='loader'>Sounds</span>
     </div>
-    <div id='clicktostart'>
-        Click anywhere to start.
+    <div id='clicktostart' class = "longform">
+        <p id='text'>
+            "At our last session we discussed trying hypnotherapy."<br><br>
+
+            "Yeah, I remember."<br><br>
+
+            "Would you like to try it today?"<br><br>
+
+            "I think so. Yeah."<br><br>
+
+            "Make sure you're comfortable, and relaxed. Imagine my voice is coming from a little light inside your mind. ...Are you imagining it?"<br><br>
+
+            "Yeah, sorry."<br><br>
+
+            "It's okay, I just wanted to make sure you weren't falling asleep on me."<br><br>
+
+            "I'll do my best. Not to, I mean."<br><br>
+
+            "Remember, all the memories in your mind are made of elements, and chemicals. When you become aware of them, you can control how you respond to them. Even the bad ones."<br><br>
+
+            "I hope so."<br><br>
+
+            "You'll get there. Now, tell me about the memories you're seeing."<br><br>
+        </p>
+        <span class='instructions'>Click anywhere to start.</span>
     </div>
     <div id='errordisplay'>
         An error occurred. We only tested on Chrome and Firefox. <br>

@@ -110,8 +110,8 @@ export const COLOR_STATES = {
                 pink:{
                     priority: 15,
                     r   : 400,
-                    thrust: 1000,
-                    angle : AVOID,
+                    thrust: 1100,
+                    angle : AVOID - 0.8*Math.PI/2,
                 },
             },
         },
