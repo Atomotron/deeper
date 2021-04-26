@@ -55,6 +55,7 @@ load({
     shaders: {
         vertex: {
             sprite: new URL("shader/sprite.vert", document.baseURI),
+            brush: new URL("shader/brush.vert", document.baseURI),
             background: new URL("shader/background.vert", document.baseURI),
             //query: new URL("shader/query.vert", document.baseURI),
         },
@@ -66,7 +67,7 @@ load({
         },
         programs: {
             sprite:['sprite','sprite'],
-            brush:['sprite','colorblit'],
+            brush:['brush','colorblit'],
             background:['background','background'],
         },
     },
@@ -225,6 +226,7 @@ const sequence = [
             cameraInv: cameraInv,
             cameraPos: cameraPos,  
             time: time, 
+            displayColorMatrix: Settings.DISPLAY_COLOR_MATRIX,
         },
         samplers: {
             source: sprites.texture,
@@ -256,6 +258,7 @@ class DeeperEngine extends Engine {
             const s = new Figment(
                 res,
                 sprites,
+                brushes,
                 this,
                 Vec2.From(Math.random()-0.5,Math.random()-0.5).mulEq(2048),
             );

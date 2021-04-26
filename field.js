@@ -10,6 +10,7 @@ import {
     Vec1I,Vec2I,Vec3I,Vec4I,
     Mat2,Mat3,Mat4,
 } from './engine/archimedes.js';
+import * as Settings from "./settings.js";
 import {Sprites,Sprite} from './sprite.js';
 
 function circularModuluo(x,m) {
@@ -35,12 +36,36 @@ export class Brushes extends Sprites {
         wrapX,
         ) {
         super(res,shadername,texturename,instances,configuration);
+        this.brushNames = Array.from(Object.keys(this.texture.sheet.frame));
+        this.splatNames = [];
+        this.trailNames = [];
+        for (const name of this.brushNames) {
+            if (name.startsWith('trails')) {
+                this.trailNames.push(name);
+            } else if (name.startsWith('pops')) {
+                this.splatNames.push(name);
+            }
+        }
         this.wrapX = wrapX;
+    }
+    randomSplatName() {
+        return this.splatNames[Math.floor(Math.random()*this.splatNames.length)];
+    }
+    randomTrailName() {
+        return this.trailNames[Math.floor(Math.random()*this.trailNames.length)];
     }
 }
 
 export class Brush extends Sprite {
-    constructor(sprites,engine,spritename,pos=Vec2.Zero(),facing=1,angle=0,scale=1) {
+    constructor(sprites,engine,pos=Vec2.Zero(),colorState='neutral',
+        spritename=null,
+        facing=Math.floor(Math.random()*2)*2-1, // -1 or 1
+        angle=Math.random()*Math.PI*2,
+        scale=Settings.TRAIL_SCALE,
+        ) {
+        if (spritename === null) {
+            spritename = sprites.randomTrailName();
+        }
         super(sprites,engine,spritename,pos,facing,angle,scale);
         this.struct2 = sprites.inst.acquire();
     }
@@ -50,6 +75,7 @@ export class Brush extends Sprite {
     }
     sync() {
         super.sync();
+        this.struct.color.w = Settings.TRAIL_ALPHA;
         this.struct2.model.eq(this.struct.model);
         this.struct2.frame.eq(this.struct.frame);
         this.struct2.color.eq(this.struct.color);
@@ -68,11 +94,15 @@ export class Brush extends Sprite {
 }
 
 export class Splat extends Brush {
-    constructor(sprites,engine,spritename,pos=Vec2.Zero(),
+    constructor(sprites,engine,pos=Vec2.Zero(),colorState='neutral',
+        spritename=null,
         facing=Math.floor(Math.random()*2)*2-1, // -1 or 1
         angle=Math.random()*Math.PI*2,
         scale=Settings.SPLAT_SCALE) {
-        super(sprites,engine,spritename,pos,facing,angle,scale);
+        if (spritename === null) {
+            spritename = sprites.randomSplatName();
+        }
+        super(sprites,engine,pos,colorState,spritename,facing,angle,scale,);
         this.seen = false;
     }
     update(t) {

@@ -856,7 +856,7 @@ class Mat4 extends AbstractMatMixin(Vec16) {
     }
     // Construct default instance - the identity
     static Default() {
-        const a = new (this.TYPE())(this.SIZE);
+        const a = new (this.TYPE())(this.SIZE());
         a[0] = 1.0;
         a[5] = 1.0;
         a[10] = 1.0;
@@ -874,25 +874,25 @@ class Mat4 extends AbstractMatMixin(Vec16) {
               a10=a[1],a11=a[5],a12=a[9], a13=a[13],
               a20=a[2],a21=a[6],a22=a[10],a23=a[14],
               a30=a[3],a31=a[7],a32=a[11],a33=a[15];
-        o00 = a00 * b00 + a01 * b10 + a02 * b20 + a03 * b30; //o00
-        o01 = a00 * b01 + a01 * b11 + a02 * b21 + a03 * b31; //o01
-        o02 = a00 * b02 + a01 * b12 + a02 * b22 + a03 * b32; //o02
-        o03 = a00 * b03 + a01 * b13 + a02 * b23 + a03 * b33; //o03
+        const o00 = a00 * b00 + a01 * b10 + a02 * b20 + a03 * b30; //o00
+        const o01 = a00 * b01 + a01 * b11 + a02 * b21 + a03 * b31; //o01
+        const o02 = a00 * b02 + a01 * b12 + a02 * b22 + a03 * b32; //o02
+        const o03 = a00 * b03 + a01 * b13 + a02 * b23 + a03 * b33; //o03
         
-        o10 = a10 * b00 + a11 * b10 + a12 * b20 + a13 * b30; //o10
-        o11 = a10 * b01 + a11 * b11 + a12 * b21 + a13 * b31; //o11
-        o12 = a10 * b02 + a11 * b12 + a12 * b22 + a13 * b32; //o12
-        o13 = a10 * b03 + a11 * b13 + a12 * b23 + a13 * b33; //o13
+        const o10 = a10 * b00 + a11 * b10 + a12 * b20 + a13 * b30; //o10
+        const o11 = a10 * b01 + a11 * b11 + a12 * b21 + a13 * b31; //o11
+        const o12 = a10 * b02 + a11 * b12 + a12 * b22 + a13 * b32; //o12
+        const o13 = a10 * b03 + a11 * b13 + a12 * b23 + a13 * b33; //o13
         
-        o20 = a20 * b00 + a21 * b10 + a22 * b20 + a23 * b30; //o20
-        o21 = a20 * b01 + a21 * b11 + a22 * b21 + a23 * b31; //o21
-        o22 = a20 * b02 + a21 * b12 + a22 * b22 + a23 * b32; //o22
-        o23 = a20 * b03 + a21 * b13 + a22 * b23 + a23 * b33; //o23
+        const o20 = a20 * b00 + a21 * b10 + a22 * b20 + a23 * b30; //o20
+        const o21 = a20 * b01 + a21 * b11 + a22 * b21 + a23 * b31; //o21
+        const o22 = a20 * b02 + a21 * b12 + a22 * b22 + a23 * b32; //o22
+        const o23 = a20 * b03 + a21 * b13 + a22 * b23 + a23 * b33; //o23
         
-        o30 = a30 * b00 + a31 * b10 + a32 * b20 + a33 * b30; //o30
-        o31 = a30 * b01 + a31 * b11 + a32 * b21 + a33 * b31; //o31
-        o32 = a30 * b02 + a31 * b12 + a32 * b22 + a33 * b32; //o32
-        o33 = a30 * b03 + a31 * b13 + a32 * b23 + a33 * b33; //o33
+        const o30 = a30 * b00 + a31 * b10 + a32 * b20 + a33 * b30; //o30
+        const o31 = a30 * b01 + a31 * b11 + a32 * b21 + a33 * b31; //o31
+        const o32 = a30 * b02 + a31 * b12 + a32 * b22 + a33 * b32; //o32
+        const o33 = a30 * b03 + a31 * b13 + a32 * b23 + a33 * b33; //o33
 
         o[0]=o00; o[4]=o01; o[8]=o02; o[12]=o03;
         o[1]=o10; o[5]=o11; o[9]=o12; o[13]=o13;
