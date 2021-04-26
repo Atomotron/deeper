@@ -322,6 +322,12 @@ class DeeperEngine extends Engine {
         cameraInv.eqInverse(camera);
         // Time
         time.eqFrom(t);
+        // Delete objects outside of range
+        for (const sprite of this.sprites) {
+            if (sprite.pos.distance2(cameraPos) > Settings.ENTITY_VANISH_RADIUS2) {
+                sprite.destroy();
+            }
+        }
         super.updateLogic(t);
     }
     addCollider(collider) {

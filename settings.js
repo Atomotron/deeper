@@ -151,8 +151,8 @@ export const CAMERA_MAX_DISTANCE = MIN_ZOOM; // Max distance of camera from play
 // Entity physics
 export const FIGMENT_DAMPING = 1;
 export const FIGMENT_THRUST = 1000;
-export const GLYPH_DAMPING = 0.1;
-export const GLYPH_THRUST = 1000;
+export const GLYPH_DAMPING = 0.4;
+export const GLYPH_THRUST = 2000;
 
 // Glyphs
 export const GLYPH_PICKUP_RADIUS = 50; // Get this close to a glyph to pick it up
@@ -162,8 +162,8 @@ export const FIGMENT_GLYPH_VELOCITY = 20;
 export const GLYPH_STARTING_OFFSET = 70;
 export const GLYPH_SHOT_KICK = 200;
 
-export const GLYPH_KICK_PERIOD = 2;
-export const GLYPH_KICK = 50;
+export const GLYPH_KICK_PERIOD = 6;
+export const GLYPH_KICK = 60;
 
 // AI
 export const AI_TICK_PERIOD = 1.0; // On average, the AI updates every half this many seconds.
