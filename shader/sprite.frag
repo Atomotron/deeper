@@ -35,7 +35,8 @@ void main() {
     vec3 solidColor = vec3(solid) * (1.0-vertexChannel.w);
     vec4 baseColor = vec4(glowColor*(1.0-solid)+solidColor,baseAlpha);
     // Distorted sample
-    float noiseSample = dot(texture2D(noise, DISTORTION_SCALE*locationInRect - vec2(0.0,time*DISTORTION_SPEED)), vertexChannel) - 0.5;
+    vec4 noiseTexture = texture2D(noise, DISTORTION_SCALE*locationInRect - vec2(0.0,time*DISTORTION_SPEED));
+    float noiseSample = dot(noiseTexture, vertexChannel);
     vec2 distortion = DISTORTION*noiseSample;
     vec4 distortedSample = clampedTexture2D(source, uv + distortion);
     vec3 distortedGlow = vec3(distortedSample.y) * vertexDisplayColor.xyz;
@@ -44,4 +45,6 @@ void main() {
     );
     vec4 distortedColor = vec4(distortedGlow,distortedAlpha);
     gl_FragColor = baseColor + distortedColor*(1.0-baseAlpha);
+    //gl_FragColor *= 0.0001;
+    //gl_FragColor += noiseTexture * vertexChannel;
 }
