@@ -160,6 +160,8 @@ export class Figment extends TargetSprite {
             /*targetApproachAngle = */0,
         );
         engine.figments.add(this);
+        if (colorState === 'neutral') this.engine.nDarkFigments += 1;
+        else this.engine.nFigments += 1;
         this.brushes = brushes;
         // Create a trail if needed
         this.hasTrail = Settings.COLOR_STATES[this.colorState].trail;
@@ -180,6 +182,8 @@ export class Figment extends TargetSprite {
         super.destroy();
         this.engine.figments.delete(this);
         if (this.hasTrail) this.trail.destroy();
+        if (this.colorState === 'neutral') this.engine.nDarkFigments -= 1;
+        else this.engine.nFigments -= 1;
     }
     collide(other) {
         if (other.NAME === 'glyph') {

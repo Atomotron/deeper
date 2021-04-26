@@ -140,6 +140,7 @@ export const PLAYER_DAMPING = 1;
 export const PLAYER_THRUST = 2000;
 
 // Spawning
+export const MAX_DARK_FIGMENTS = 3; // Dark figments will stop spawning once this many exist.
 export const DARK_FIGMENT_SPAWN_PERIOD = 15; // One spawns every this many seconds on average
 export const MAX_FIGMENTS = 40; // Figments will stop spawning once this many exist.
 export const FIGMENT_SPAWN_PERIOD = 15;

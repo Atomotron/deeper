@@ -279,6 +279,8 @@ class DeeperEngine extends Engine {
             );*/
         }
         this.field = field;
+        this.nDarkFigments = 0;
+        this.nFigments = 0;
         this.figmentSpawnCountdown = 0;
         this.darkFigmentSpawnCountdown = 0;
     }
@@ -327,7 +329,7 @@ class DeeperEngine extends Engine {
         // Time
         time.eqFrom(t);
         // Spawn new figments
-        if (this.figmentSpawnCountdown < 0) {
+        if (this.figmentSpawnCountdown < 0 && this.nFigments < Settings.MAX_FIGMENTS) {
             this.figmentSpawnCountdown = Settings.FIGMENT_SPAWN_PERIOD*2*Math.random();
             // Pick a point on the screen
             const point = Vec2.Polar(cameraSize*1.4,Math.random()*2*Math.PI);
@@ -355,7 +357,7 @@ class DeeperEngine extends Engine {
             );
         }
         // Spawn new dark figments
-        if (this.darkFigmentSpawnCountdown < 0) {
+        if (this.darkFigmentSpawnCountdown < 0 && this.nDarkFigments < Settings.MAX_DARK_FIGMENTS) {
             this.darkFigmentSpawnCountdown = Settings.DARK_FIGMENT_SPAWN_PERIOD*2*Math.random();
             const point = cameraPos.clone();
             point.y += cameraSize * 1.4;
