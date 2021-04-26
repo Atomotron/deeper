@@ -53,10 +53,11 @@ load({
         fragment:{
             blit: new URL("shader/blit.frag", document.baseURI),
             colorblit: new URL("shader/colorblit.frag", document.baseURI),
+            background: new URL("shader/background.frag", document.baseURI),
         },
         programs: {
             sprite:['sprite','colorblit'],
-            background:['background','blit'],
+            background:['background','background'],
         },
     },
     images: {
@@ -185,7 +186,8 @@ const sequence = [
             cameraPos:cameraPos,
             camera:camera,
             bgModelInv:bgModelInv,
-            bgPos:bgPos
+            bgPos:bgPos,
+            time: time,
         },
         samplers: {source: field.fb},
         draw: (gl) => bgLayer.draw(gl),

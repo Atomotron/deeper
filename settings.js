@@ -9,7 +9,8 @@ export const FIGMENT_THRUST = 1000;
 
 // AI
 const ENTITY_FOLLOW_RADIUS = 512;
-const ENTITY_SLEEP_VELOCITY = 1;
+const ENTITY_VANISH_RADIUS = 2048;
+const ENTITY_SLEEP_VELOCITY = 1; // Entities halt simulation when they go below this velocity.
 // Color physics
 export const COLOR_FORCE_STRENGTH = -30;
 export const COLOR_FORCE_DAMPING  = 0.02;
@@ -23,4 +24,5 @@ export const IDLE_VELOCITY = 24
 
 // Squared constants
 export const ENTITY_FOLLOW_RADIUS2 = ENTITY_FOLLOW_RADIUS*ENTITY_FOLLOW_RADIUS;
+export const ENTITY_VANISH_RADIUS2 = ENTITY_VANISH_RADIUS * ENTITY_VANISH_RADIUS;
 export const ENTITY_SLEEP_VELOCITY2 = ENTITY_SLEEP_VELOCITY * ENTITY_SLEEP_VELOCITY;

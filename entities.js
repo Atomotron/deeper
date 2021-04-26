@@ -65,11 +65,12 @@ export class Figment extends TargetSprite {
         const r2 = this.pos.distance2(this.engine.player.pos);
         if (r2 > Settings.ENTITY_FOLLOW_RADIUS2) {
             this.target = this.pos;
-            return;
         } else {
             this.target = this.engine.player.pos;
         }
-        this.sleeping = this.vel.mag2() < Settings.ENTITY_SLEEP_VELOCITY2 
-                        && this.target === this.pos;
+        if (r2 > Settings.ENTITY_VANISH_RADIUS2) {
+            console.log("Hi!");
+            this.destroy();
+        }
     }
 }  
