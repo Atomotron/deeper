@@ -1,16 +1,21 @@
 {
   "frames": {
-    "player/player1.png": {
+    "player/player0.png": {
       "circles": {
+        "CoM": {
+          "cx": "79.359",
+          "cy": "86.031",
+          "r": "1.2734999999999999"
+        },
         "Collision1": {
-          "cx": "31.375",
-          "cy": "31.313",
+          "cx": "79.375",
+          "cy": "86.312",
           "r": "24"
         }
       },
       "frame": {
-        "h": 64,
-        "w": 64,
+        "h": 73,
+        "w": 73,
         "x": 0,
         "y": 0
       },
@@ -20,16 +25,16 @@
       },
       "rotated": false,
       "sourceSize": {
-        "h": 64,
-        "w": 64
+        "h": 179,
+        "w": 161
       },
       "spriteSourceSize": {
-        "h": 64,
-        "w": 64,
-        "x": 0,
-        "y": 0
+        "h": 73,
+        "w": 73,
+        "x": 43,
+        "y": 50
       },
-      "trimmed": false
+      "trimmed": true
     }
   },
   "meta": {
@@ -38,8 +43,8 @@
     "image": "player.png",
     "scale": 1,
     "size": {
-      "h": 64,
-      "w": 64
+      "h": 128,
+      "w": 128
     },
     "version": "0.6.6"
   }
