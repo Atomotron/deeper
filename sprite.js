@@ -200,6 +200,10 @@ export class PhysicsSprite extends colliderMixin(Sprite) {
 		this.acc.eqZero();
 		super.step(dt,t);
     }
+    sync() {
+        super.sync();
+        this.collisionReady = true;
+    }
 }
 
 // One particular sprite

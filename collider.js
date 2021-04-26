@@ -13,6 +13,7 @@ export const colliderMixin = Base => class extends Base {
         this.sends = sends;
         this.receives = receives;
         this.removeFromColliders = false;
+        this.collisionReady = false; // Set to true after first sync
         
         this.ccAccs = [Vec2.From(0,0)];
         this.ccRadii2 = [0];
@@ -121,7 +122,8 @@ export function collisions(colliders,newColliders=[],remainingColliders=[]) {
                 // Check for collision
                 const canConnect = (collider.sends && otherCollider.receives)
                                  ||(otherCollider.sends && collider.receives);
-                if (canConnect && 
+                const ready = (collider.collisionReady && otherCollider.collisionReady);
+                if (canConnect && ready && 
                     otherCollider.checkCollision(collider)) {
                     otherCollider.collide(collider);
                     collider.collide(otherCollider);
