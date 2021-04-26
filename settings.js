@@ -52,13 +52,15 @@ export const FIGMENT_THRUST = 1000;
 const ENTITY_FOLLOW_RADIUS = 512;
 const ENTITY_VANISH_RADIUS = 2048;
 const ENTITY_SLEEP_VELOCITY = 1; // Entities halt simulation when they go below this velocity.
+
 // Color physics
 export const COLOR_FORCE_STRENGTH = -30;
 export const COLOR_FORCE_DAMPING  = 0.02;
 
 // Splat/trail settings
+export const TRAIL_ALPHA = 0.1;
 export const SPLAT_SCALE = 4;
-export const TRAIL_SCALE = 1;
+export const TRAIL_SCALE = 4;
 
 // Animation speed
 export const ANIM_MPF = 24

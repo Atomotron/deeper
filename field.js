@@ -37,13 +37,22 @@ export class Brushes extends Sprites {
         ) {
         super(res,shadername,texturename,instances,configuration);
         this.brushNames = Array.from(Object.keys(this.texture.sheet.frame));
+        this.splatNames = [];
+        this.trailNames = [];
+        for (const name of this.brushNames) {
+            if (name.startsWith('trails')) {
+                this.trailNames.push(name);
+            } else if (name.startsWith('pops')) {
+                this.splatNames.push(name);
+            }
+        }
         this.wrapX = wrapX;
     }
     randomSplatName() {
-        return this.brushNames[Math.floor(Math.random()*this.brushNames.length)];
+        return this.splatNames[Math.floor(Math.random()*this.splatNames.length)];
     }
     randomTrailName() {
-        return this.brushNames[Math.floor(Math.random()*this.brushNames.length)];
+        return this.trailNames[Math.floor(Math.random()*this.trailNames.length)];
     }
 }
 
@@ -66,6 +75,7 @@ export class Brush extends Sprite {
     }
     sync() {
         super.sync();
+        this.struct.color.w = Settings.TRAIL_ALPHA;
         this.struct2.model.eq(this.struct.model);
         this.struct2.frame.eq(this.struct.frame);
         this.struct2.color.eq(this.struct.color);
@@ -91,7 +101,6 @@ export class Splat extends Brush {
         scale=Settings.SPLAT_SCALE) {
         if (spritename === null) {
             spritename = sprites.randomSplatName();
-            console.log(spritename);
         }
         super(sprites,engine,pos,colorState,spritename,facing,angle,scale,);
         this.seen = false;
