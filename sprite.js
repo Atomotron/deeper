@@ -60,6 +60,9 @@ export class AnimatedSprites extends Sprites {
                 action = 'rotate';
             }
             const folder = name.match(ANIM_FRAME_FOLDER_REGEX)[0].slice(0,-1);
+            if (folder === "elements") {
+                continue;
+            }
             const actions = animations.get(folder) || new Map();
             const frames = actions.get(action) || new Map();
             frames.set(index,name);
