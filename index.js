@@ -132,6 +132,7 @@ document.getElementById('overlay').style.display = 'none';
 const gl = res.gl;
 
 // AMBIENCE
+res.streams.ambience.loop = true;
 const ambienceNode = res.io.adc.createMediaElementSource(res.streams.ambience);
 ambienceNode.connect(res.io.mixer);
 window.node = ambienceNode;

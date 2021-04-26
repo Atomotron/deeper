@@ -101,7 +101,7 @@ export const COLOR_STATES = {
                 any:{
                     priority: 10,
                     r   : 4000,
-                    thrust: 1000,
+                    thrust: 100,
                     angle : CHASE,
                 },
             },
@@ -141,7 +141,7 @@ export const PLAYER_THRUST = 2000;
 
 // Spawning
 export const MAX_DARK_FIGMENTS = 3; // Dark figments will stop spawning once this many exist.
-export const DARK_FIGMENT_SPAWN_PERIOD = 15; // One spawns every this many seconds on average
+export const DARK_FIGMENT_SPAWN_PERIOD = 60; // One spawns every this many seconds on average
 export const MAX_FIGMENTS = 40; // Figments will stop spawning once this many exist.
 export const FIGMENT_SPAWN_PERIOD = 15;
 
@@ -183,7 +183,7 @@ export const COLOR_FORCE_DAMPING  = 0.02;
 
 // Splat/trail settings
 export const SPLAT_ALPHA = 1.0;
-export const TRAIL_ALPHA = 1.0;
+export const TRAIL_ALPHA = 0.4;
 export const SPLAT_SCALE = 4/3;
 export const TRAIL_SCALE = 4;
 
