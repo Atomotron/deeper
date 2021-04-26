@@ -268,14 +268,14 @@ class DeeperEngine extends Engine {
         
         // Generate a bunch of sprites
         const names = Array.from(Object.keys(sprites.animations));
-        for (let i=0; i<1; i++) {
+        for (let i=0; i<200; i++) {
             const s = new Figment(
                 res,
                 sprites,
                 brushes,
                 this,
                 Vec2.From(Math.random()-0.5,-Math.random()).mulEq(4096),
-                'neutral',
+                //'neutral',
             );
         }
         this.field = field;
