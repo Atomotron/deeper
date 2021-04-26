@@ -249,6 +249,12 @@ class DeeperEngine extends Engine {
     constructor(res,render,env,streams) {
         super(res,render,env,streams);
         this.cursor = cursor;
+        // Pausing
+        window.addEventListener('keydown', (e) => {
+            if (e.code === "Space") {
+                this.paused = !this.paused;
+            }
+        });
         // Collider setup
         this.colliders = [];
         this.newColliders = [];
@@ -257,24 +263,25 @@ class DeeperEngine extends Engine {
         this.figments = new Set();
         
         // Sprite creation
-        this.player = new Player(res,sprites,this,field);
+        this.player = new Player(res,sprites,this,field,Settings.PLAYER_START.clone());
+        cameraPos.eq(this.player.pos);
         
         // Generate a bunch of sprites
         const names = Array.from(Object.keys(sprites.animations));
-        for (let i=0; i<20; i++) {
+        for (let i=0; i<1; i++) {
             const s = new Figment(
                 res,
                 sprites,
                 brushes,
                 this,
-                Vec2.From(Math.random()-0.5,Math.random()-0.5).mulEq(2048),
+                Vec2.From(Math.random()-0.5,-Math.random()).mulEq(4096),
+                'neutral',
             );
         }
         this.field = field;
     }
     stepSimulation(dt,t) {
         field.read(this.cursor);
-
         // Update camera pos
         cameraSize += dt*Settings.CAMERA_ZOOM_SPEED*(cameraSizeTarget - cameraSize);
         cameraTarget.zeroEq();
@@ -286,6 +293,9 @@ class DeeperEngine extends Engine {
             cameraTarget.mulEq(Settings.CAMERA_MAX_DISTANCE);
         }
         cameraTarget.addEq(this.player.pos);
+        if (cameraTarget.y + cameraSize > 0) {
+            cameraTarget.y =  - cameraSize;
+        }
         // Compute camera delta
         cameraTarget.subEq(cameraPos); // final minus initial
         cameraPos.scaledAddEq(cameraTarget,dt*Settings.CAMERA_SPEED);

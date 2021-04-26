@@ -29,8 +29,8 @@ export const COLOR_STATES = {
             player:{
                 any:{
                     priority: 10,
-                    r   : 200,
-                    thrust: 500,
+                    r   : 400,
+                    thrust: 700,
                     angle : AVOID,
                 },
             },
@@ -109,7 +109,7 @@ export const COLOR_STATES = {
             figment:{
                 pink:{
                     priority: 15,
-                    r   : 100,
+                    r   : 400,
                     thrust: 1000,
                     angle : AVOID,
                 },
@@ -134,6 +134,11 @@ export const COLOR_STATES = {
     }
 }
 
+// Player
+export const PLAYER_START = Vec2.From(0.0,-500);
+export const PLAYER_DAMPING = 1;
+export const PLAYER_THRUST = 2000;
+
 // Camera settings
 export const CAMERA_SPEED = 2.0;
 export const CAMERA_ZOOM_SPEED = 10;
@@ -144,8 +149,6 @@ export const ZOOM_SPEED = 0.26;
 export const CAMERA_MAX_DISTANCE = MIN_ZOOM; // Max distance of camera from player
 
 // Entity physics
-export const PLAYER_DAMPING = 1;
-export const PLAYER_THRUST = 2000;
 export const FIGMENT_DAMPING = 1;
 export const FIGMENT_THRUST = 1000;
 export const GLYPH_DAMPING = 0.1;
