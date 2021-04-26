@@ -68,7 +68,7 @@ class Glyph extends TargetSprite {
             this.receives = false;
             // Play pickup sound
             const source = this.res.io.adc.createBufferSource();
-            source.buffer = this.res.sounds.glyph_pickup;
+            source.buffer = this.res.sounds.element_pickup;
             source.connect(this.res.io.mixer);
             source.start();
         }
@@ -146,6 +146,7 @@ export class Player extends TargetSprite {
         super.step(dt,t);
         this.bounceGain.gain.value += Settings.BOUNCE_SOUND_SPEED*
             dt*(this.bounceGainTarget-this.bounceGain.gain.value);
+        if (this.bounceGain.gain.value > 1.0) this.bounceGain.gain.value = 1.0;
     }
     update(t) {
         super.update(t);
