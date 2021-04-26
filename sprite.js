@@ -358,9 +358,11 @@ export class TargetSprite extends AnimatedSprite {
     }
     step(dt,t) {
         this.targetDelta.eqSub(this.target,this.pos);
-        this.targetDelta.normEq();
-        this.targetDelta.rotateEq(this.targetApproachAngle);
-        this.acc.scaledAddEq(this.targetDelta,this.targetPower*dt);
+        if (this.targetDelta.mag2() > 10.0) {
+            this.targetDelta.normEq();
+            this.targetDelta.rotateEq(this.targetApproachAngle);
+            this.acc.scaledAddEq(this.targetDelta,this.targetPower*dt);
+        }
         if (this.field !== null) this.findFieldForce(this.field);
         super.step(dt,t);
     }

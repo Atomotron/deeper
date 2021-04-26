@@ -60,6 +60,7 @@ class Glyph extends TargetSprite {
             this.destroy();
         } else if (other.NAME === 'player') {
             other.capturedGlyphs.push(this);
+            this.scale = 1.5;
             this.target = other.pos;
             this.sends = false;
             this.receives = false;
@@ -67,6 +68,12 @@ class Glyph extends TargetSprite {
     }
     step(dt,t) {
         this.timeSinceKick += dt;
+        if (this.scale > 1) {
+            this.scale -= dt*1;
+        }
+        if (this.scale < 1) {
+            this.scale = 1;
+        }
         super.step(dt,t);
     }
     update(t) {
@@ -147,10 +154,11 @@ export class Figment extends TargetSprite {
             /*receives=*/true,
             /*vel=*/Vec2.Zero(),
             /*damping = */Settings.FIGMENT_DAMPING,
-            /*target = */engine.player.pos,
+            /*target = */pos,
             /*targetPower = */Settings.FIGMENT_THRUST,
-            /*targetApproachAngle = */Math.random()*Math.PI*2,
+            /*targetApproachAngle = */0,
         );
+        engine.figments.add(this);
         this.brushes = brushes;
         // Create a trail if needed
         this.hasTrail = Settings.COLOR_STATES[this.colorState].trail;
@@ -163,9 +171,11 @@ export class Figment extends TargetSprite {
                   this.colorState,
             );
         }
+        this.timeSinceAIUpdate = 0.0;
     }
     destroy() {
         super.destroy();
+        this.engine.figments.delete(this);
         if (this.hasTrail) this.trail.destroy();
     }
     collide(other) {
@@ -198,17 +208,103 @@ export class Figment extends TargetSprite {
             this.destroy();
         }
     }
+    step(dt,t) {
+        this.timeSinceAIUpdate += dt;
+        this.timeSinceWanderUpdate += dt;
+        super.step(dt,t);
+    }
+    // Measures how much we like the given point
+    affinity(pos) {
+        this.engine.field.read(pos);
+        return this.engine.field.f.dot(this.color);
+    }
+    // Sets us to target a wander point
+    wander() {
+        if (this.timeSinceWanderUpdate < Settings.AI_WANDER_PERIOD * Math.random()) {
+            return;
+        } else {
+            this.timeSinceWanderUpdate = 0;
+        }
+        const state = Settings.COLOR_STATES[this.colorState];
+        // Pick a prospective wandering point
+        const point = Vec2.Polar(
+            state.wanderLength*Math.random(),
+            Math.random()*Math.PI*2,
+        );
+        point.addEq(state.wanderDirection);
+        point.addEq(this.pos);
+        // Check to see if it's desirable
+        if (this.affinity(this.pos) < state.wanderAffinityBias
+                                      + this.affinity(point)) {
+            // Set our target
+            this.targetApproachAngle = 0;
+            this.targetPower = state.wanderPower;
+            this.target = point;
+            this.target.x += Settings.WANDER_OUTSIDE_CLOUD*Math.cos(Math.random()*Math.PI*2);
+            this.target.y += Settings.WANDER_OUTSIDE_CLOUD*Math.sin(Math.random()*Math.PI*2);
+        }
+    }
+    // Reacts to another entity according to the rule.
+    aiReact(other,rule) {
+        this.targetPower = rule.thrust;
+        this.targetApproachAngle = rule.angle;
+        this.target = other.pos;
+    }
+    // Returns the highest-priority rule
+    // that matches the color of other.
+    colorRule(rules,other) {
+        let rule = null;
+        if (!rules.any && !rules[other.colorState]) return null;
+        const r = Math.sqrt(other.pos.distance2(this.pos));
+        if (!!rules.any && r <= rules.any.r) {
+            rule = rules.any;
+        }
+        if (!!rules[other.colorState]) {
+            const specificRule = rules[other.colorState];
+            if (rule === null || specificRule.priority >= rule.priority) {
+                if (r <= specificRule.r) {
+                    rule = specificRule
+                }
+            }
+        }
+        return rule;
+    }
     update(t) {
         super.update(t);
         // Check player distance
-        const r2 = this.pos.distance2(this.engine.player.pos);
-        if (r2 > Settings.ENTITY_FOLLOW_RADIUS2) {
-            this.target = this.pos;
-        } else {
-            this.target = this.engine.player.pos;
-        }
-        if (r2 > Settings.ENTITY_VANISH_RADIUS2) {
-            this.destroy();
+        if (this.timeSinceAIUpdate > Settings.AI_TICK_PERIOD * Math.random()) {
+            this.timeSinceAIUpdate = 0;
+            // Resolve rules
+            const rules = Settings.COLOR_STATES[this.colorState].ai;
+            let other = null;
+            let rule = null;
+            // Check if they have an interest in the player
+            if (!!rules.player) {
+                const relevantRule = this.colorRule(rules.player,this.engine.player);
+                if (relevantRule !== null) {
+                    if (rule === null || rule.priority < relevantRule.priority) {
+                        rule = relevantRule;
+                        other = this.engine.player;
+                    }
+                }
+            }
+            // Check if they have an interest in other figments
+            if (!!rules.figment) {
+                for (const figment of this.engine.figments) {
+                    const relevantRule = this.colorRule(rules.figment,figment);
+                    if (relevantRule !== null) {
+                        if (rule === null || rule.priority < relevantRule.priority) {
+                            rule = relevantRule;
+                            other = figment;
+                        }
+                    }
+                }
+            }
+            if (rule !== null) {
+                this.aiReact(other,rule);
+            } else {
+                this.wander();
+            }
         }
     }
 }  

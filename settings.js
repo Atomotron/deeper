@@ -12,6 +12,12 @@ export const DISPLAY_COLOR_MATRIX = Mat4.Id().composeFromEq(
 
 // Color stuff
 export const COLORS = ['pink','yellow','blue','neutral'];
+const wanderLength = 300;
+export const WANDER_OUTSIDE_CLOUD = 200;
+const wanderPower = 400;
+const wanderAffinityBias = -0.1;
+const CHASE = 0;
+const AVOID = Math.PI;
 export const COLOR_STATES = {
     'pink' : {
         color            : Vec4.From(1.0,0.0,0.0,0.0),
@@ -19,6 +25,28 @@ export const COLOR_STATES = {
         trail: false,
         splat: true,
         glyph: true,
+        ai: {
+            player:{
+                any:{
+                    priority: 10,
+                    r   : 200,
+                    thrust: 500,
+                    angle : AVOID,
+                },
+            },
+            figment:{
+                neutral:{
+                    priority: 5,
+                    r   : 400,
+                    thrust: 1000,
+                    angle : CHASE,
+                },
+            },
+        },
+        wanderLength: wanderLength,
+        wanderPower: wanderPower, 
+        wanderAffinityBias: wanderAffinityBias,  
+        wanderDirection: Vec2.Zero(),     
     },
     'yellow' : {
         color            : Vec4.From(0.0,1.0,0.0,0.0),
@@ -26,6 +54,20 @@ export const COLOR_STATES = {
         trail: false,
         splat: true,
         glyph: true,
+        ai: {
+            figment:{
+                neutral:{
+                    priority: 5,
+                    r   : 100,
+                    thrust: 500,
+                    angle : AVOID,
+                },
+            },
+        },
+        wanderLength: wanderLength,
+        wanderPower: wanderPower, 
+        wanderAffinityBias: wanderAffinityBias,  
+        wanderDirection: Vec2.Zero(),     
     },
     'blue' : {
         color            : Vec4.From(0.0,0.0,1.0,0.0),
@@ -33,6 +75,20 @@ export const COLOR_STATES = {
         trail: false,
         splat: true,
         glyph: true,
+        ai: {
+            player:{
+                any:{
+                    priority: 10,
+                    r   : 400,
+                    thrust: 500,
+                    angle : CHASE,
+                },
+            },
+        },
+        wanderLength: wanderLength,
+        wanderPower: wanderPower,  
+        wanderAffinityBias: wanderAffinityBias,
+        wanderDirection: Vec2.Zero(),          
     },
     'neutral' : {
         color            : Vec4.From(0.0,0.0,0.0,1.0),
@@ -40,6 +96,29 @@ export const COLOR_STATES = {
         trail: true,
         splat: false,
         glyph: false,
+        ai: {
+            player:{
+                any:{
+                    priority: 10,
+                    r   : 4000,
+                    thrust: 1000,
+                    angle : CHASE,
+                },
+            },
+            // Avoid pink figments
+            figment:{
+                pink:{
+                    priority: 15,
+                    r   : 100,
+                    thrust: 1000,
+                    angle : AVOID,
+                },
+            },
+        },
+        wanderLength: 0,
+        wanderPower: wanderPower,   
+        wanderAffinityBias: wanderAffinityBias,   
+        wanderDirection: Vec2.From(0,0),      
     },
     // No color setting at all
     'none' : {
@@ -48,6 +127,10 @@ export const COLOR_STATES = {
         trail: false,
         splat: false,
         glyph: false,
+        ai: {},
+        wanderLength: 0,
+        wanderPower: 0,
+        wanderAffinityBias: 0,    
     }
 }
 
@@ -80,8 +163,10 @@ export const GLYPH_KICK_PERIOD = 2;
 export const GLYPH_KICK = 50;
 
 // AI
+export const AI_TICK_PERIOD = 1.0; // On average, the AI updates every half this many seconds.
+export const AI_WANDER_PERIOD = 6.0;
 const ENTITY_FOLLOW_RADIUS = 512;
-const ENTITY_VANISH_RADIUS = 2048;
+const ENTITY_VANISH_RADIUS = MAX_ZOOM*4;
 const ENTITY_SLEEP_VELOCITY = 1; // Entities halt simulation when they go below this velocity.
 
 // Color physics
@@ -99,7 +184,7 @@ export const ANIM_MPF = 24
 export const IDLE_VELOCITY = 24
 
 // Sprite effect padding
-export const SPRITE_MODEL_PADDING = 1.2;
+export const SPRITE_MODEL_PADDING = 1.3;
 
 // Squared constants
 export const ENTITY_FOLLOW_RADIUS2 = ENTITY_FOLLOW_RADIUS*ENTITY_FOLLOW_RADIUS;

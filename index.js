@@ -253,6 +253,8 @@ class DeeperEngine extends Engine {
         this.colliders = [];
         this.newColliders = [];
         this.colliderBackBuffer = [];
+        // Figment setup
+        this.figments = new Set();
         
         // Sprite creation
         this.player = new Player(res,sprites,this,field);
@@ -268,6 +270,7 @@ class DeeperEngine extends Engine {
                 Vec2.From(Math.random()-0.5,Math.random()-0.5).mulEq(2048),
             );
         }
+        this.field = field;
     }
     stepSimulation(dt,t) {
         field.read(this.cursor);
