@@ -139,6 +139,11 @@ export const PLAYER_START = Vec2.From(0.0,-500);
 export const PLAYER_DAMPING = 1;
 export const PLAYER_THRUST = 2000;
 
+// Spawning
+export const DARK_FIGMENT_SPAWN_PERIOD = 15; // One spawns every this many seconds on average
+export const MAX_FIGMENTS = 40; // Figments will stop spawning once this many exist.
+export const FIGMENT_SPAWN_PERIOD = 15;
+
 // Camera settings
 export const CAMERA_SPEED = 2.0;
 export const CAMERA_ZOOM_SPEED = 10;

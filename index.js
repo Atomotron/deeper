@@ -269,18 +269,22 @@ class DeeperEngine extends Engine {
         // Generate a bunch of sprites
         const names = Array.from(Object.keys(sprites.animations));
         for (let i=0; i<200; i++) {
-            const s = new Figment(
+            /*const s = new Figment(
                 res,
                 sprites,
                 brushes,
                 this,
                 Vec2.From(Math.random()-0.5,-Math.random()).mulEq(4096),
                 //'neutral',
-            );
+            );*/
         }
         this.field = field;
+        this.figmentSpawnCountdown = 0;
+        this.darkFigmentSpawnCountdown = 0;
     }
     stepSimulation(dt,t) {
+        this.figmentSpawnCountdown -= dt;
+        this.darkFigmentSpawnCountdown -= dt;
         field.read(this.cursor);
         // Update camera pos
         cameraSize += dt*Settings.CAMERA_ZOOM_SPEED*(cameraSizeTarget - cameraSize);
@@ -322,6 +326,50 @@ class DeeperEngine extends Engine {
         cameraInv.eqInverse(camera);
         // Time
         time.eqFrom(t);
+        // Spawn new figments
+        if (this.figmentSpawnCountdown < 0) {
+            this.figmentSpawnCountdown = Settings.FIGMENT_SPAWN_PERIOD*2*Math.random();
+            // Pick a point on the screen
+            const point = Vec2.Polar(cameraSize*1.4,Math.random()*2*Math.PI);
+            point.addEq(cameraPos);
+            // Get color
+            this.field.read(point);
+            const a = this.field.f.x;
+            const b = a + this.field.f.y;
+            const c = b + this.field.f.z;
+            const index = Math.random()*c;
+            let color = 'blue';
+            if (index < a) {
+                color = 'pink';
+            } else if (index < b) {
+                color = 'yellow';
+            }
+            // Spawn figment at point
+            new Figment(
+                res,
+                sprites,
+                brushes,
+                this,
+                point,
+                color,
+            );
+        }
+        // Spawn new dark figments
+        if (this.darkFigmentSpawnCountdown < 0) {
+            this.darkFigmentSpawnCountdown = Settings.DARK_FIGMENT_SPAWN_PERIOD*2*Math.random();
+            const point = cameraPos.clone();
+            point.y += cameraSize * 1.4;
+            point.x += (Math.random()*2-1) * cameraSize;
+            // Spawn figment at point
+            new Figment(
+                res,
+                sprites,
+                brushes,
+                this,
+                point,
+                'neutral',
+            );
+        }
         // Delete objects outside of range
         for (const sprite of this.sprites) {
             if (sprite.pos.distance2(cameraPos) > Settings.ENTITY_VANISH_RADIUS2) {
