@@ -174,6 +174,12 @@ bgModel.mulEq(8);
 const bgModelInv = bgModel.inverse();
 const bgPos = Vec2.From(0,-bgModel.a11);
 
+// COMPOSITED
+//const compositingLayer = new Quad(gl,
+//    res.shaders.composited.schema({vertex:{divisor:0,stream:false}}),
+//    1,
+//);
+
 // PHYSICS FIELD
 const field = new Field(res,res.images.level,bgModelInv,bgPos);
 
@@ -187,6 +193,9 @@ const sprites = new AnimatedSprites(res);
 // BRUSH LAYER
 const brushes = new Brushes(res,"brush",'brushes',1,{},bgModel.a00);
 
+// Fullscreen framebuffer
+//const frame = new Framebuffer(gl,512,512);
+//res.io.onResize.add( io => {frame.resize(gl,io.width,io.height),console.log('resize')} );
 
 // Make an instance
 /*
@@ -197,6 +206,8 @@ window.sprite.frame.eq(res.images.sprites.sheet.frame['floor.png']);
 layer.sync(res.gl);*/
 
 // Set up render sequence
+
+const IntermediatePass = {};//framebuffer: frame};
 
 const sequence = [    
     SUM(DrawPass,{
@@ -212,8 +223,8 @@ const sequence = [
         },
         draw: (gl) => brushes.draw(gl),
     }),
-    ClearPass,
-    SUM(DrawPass,{
+    SUM(ClearPass,IntermediatePass),
+    SUM(DrawPass,IntermediatePass,{
         name: "Draw Background",
         shader: res.shaders.background,
         uniforms: {
@@ -232,7 +243,7 @@ const sequence = [
         },
         draw: (gl) => bgLayer.draw(gl),
     }),
-    SUM(DrawPass,{
+    SUM(DrawPass,IntermediatePass,{
         name: "Draw Sprites",
         shader: sprites.shader,
         uniforms: {

@@ -88,6 +88,10 @@ export class IO {
         if (width !== this.width || height !== this.height) {
             this.canvas.width = width;
             this.canvas.height = height;
+            // Run resize triggers
+            for (const callback of this.onResize) {
+                callback(this);
+            }
         }
         this.width = width;
         this.height = height;
@@ -103,9 +107,5 @@ export class IO {
         const cursorGlX = 2.0*this.cursorX/width - 1.0;
         const cursorGlY = 1.0 - 2.0*this.cursorY/height;
         this.cursor.eqFrom(cursorGlX, cursorGlY);
-        // Run resize triggers
-        for (const callback of this.onResize) {
-            callback(this);
-        }
     }
 }
