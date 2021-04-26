@@ -12,7 +12,7 @@ for a in sys.argv[1:]:
     try:
         pad = int(a)
         continue
-    except TypeError:
+    except ValueError:
         pass
     if a.endswith('.svg'):
         name = os.path.basename(a)
@@ -54,7 +54,7 @@ for iname in manifests:
     with open(iname,'r') as src:
         data = json.loads(src.read())
     # Pad
-    for frame in data['frames']:
+    for k,frame in data['frames'].items():
         f = frame['frame']
         f['x'] -= pad
         f['y'] -= pad
