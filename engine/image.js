@@ -117,6 +117,8 @@ export class Texture {
         this.wrapT =     gl[settings.wrapT      || 'CLAMP_TO_EDGE'];
         this.stretch =   typeof settings.stretch === 'undefined' ?
                             true : settings.stretch;  
+        this.premultiply = typeof settings.premultiply === 'undefined' ?
+                            true : settings.premultiply;  
         // Figure out what we have, and what we need
         const mipmapsNeeded = !(this.minFilter === gl.NEAREST || 
                                 this.minFilter === gl.LINEAR);
@@ -155,7 +157,7 @@ export class Texture {
         // Now, create the texture.
         this.texture = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
-        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, this.premultiply);
         gl.texImage2D(
             gl.TEXTURE_2D,
             0, // start at mip 0

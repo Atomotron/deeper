@@ -35,6 +35,10 @@ export class IO {
         this.pressed = new Set(); // The set of pressed keys.
         // Add button event listeners.
         // Note that down-events are on the canvas, but up-events are on the window.
+        canvas.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+        });
         canvas.addEventListener('keydown', 
             (e) => this.pressed.add(e.code)
         );

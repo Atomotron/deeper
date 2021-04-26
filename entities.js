@@ -8,9 +8,56 @@ import * as Settings from "./settings.js";
 import {TargetSprite,PhysicsSprite} from './sprite.js'
 import {Brush,Splat} from './field.js';
 
+class Glyph extends TargetSprite {
+    ANIM_MPF = 1000
+    IDLE_VELOCITY = 30
+    NAME = 'glyph'
+    constructor(res,sprites,engine,pos=Vec2.Zero(),vel=Vec2.Zero(),colorState='neutral') {
+        super(
+            sprites,
+            engine,
+            /*field=*/null,
+            'elements','move',
+            /*pos=*/pos,
+            /*facing=*/1,
+            /*angle=*/0,
+            /*scale=*/1,
+            /*colorState=*/colorState,
+            /*sends=*/false,
+            /*receives=*/true,
+            /*vel=*/vel,
+            /*damping = */Settings.GLYPH_DAMPING,
+            /*target = */pos,
+            /*targetPower = */Settings.GLYPH_THRUST,
+            /*targetApproachAngle = */0,
+        );
+    }
+    fire(at) {
+        this.sends = true;
+        this.receives = false;
+        this.target = at.clone();
+        this.target.subEq(this.pos);
+        this.vel.eq(this.target);
+        this.vel.normEq();
+        this.vel.mulEq(Settings.GLYPH_SHOT_KICK);
+        this.target.mulEq(999999);
+        this.target.addEq(this.pos);
+    }
+    collide(other) {
+        if (other.NAME === 'figment') {
+            this.destroy();
+        } else if (other.NAME === 'player') {
+            other.capturedGlyphs.push(this);
+            this.target = other.pos;
+            this.sends = false;
+            this.receives = false;
+        }
+    }
+}
+
 export class Player extends TargetSprite {
     NAME = 'player'
-    constructor(res,sprites,engine,field,pos=Vec2.Zero(),colorState='neutral') {
+    constructor(res,sprites,engine,field,pos=Vec2.Zero(),vel=Vec2.Zero(),colorState='neutral') {
         super(
             sprites,
             engine,
@@ -30,6 +77,15 @@ export class Player extends TargetSprite {
             /*targetApproachAngle = */0,
         );
         this.io = res.io;
+        this.capturedGlyphs = [];
+        // Fire!
+        this.io.canvas.addEventListener('mousedown', (e) => {
+            if (e.button !== 2) return;
+            if (this.capturedGlyphs.length > 0) {
+                const g = this.capturedGlyphs.pop(); // FIFO
+                g.fire(this.engine.cursor);
+            }
+        });
     }
     update(t) {
         super.update(t);
@@ -55,7 +111,7 @@ export class Figment extends TargetSprite {
             sprites,
             engine,
             /*field=*/null, // No field
-            /*folder=*/sprites.folders[Math.floor(Math.random()*sprites.folders.length)],
+            /*folder=*/sprites.figmentFolders[Math.floor(Math.random()*sprites.figmentFolders.length)],
             /*action=*/'move',
             /*pos=*/pos,
             /*facing=*/1,
@@ -88,13 +144,31 @@ export class Figment extends TargetSprite {
         if (this.hasTrail) this.trail.destroy();
     }
     collide(other) {
-        if (other.NAME === 'player') {
+        if (other.NAME === 'glyph') {
             if (Settings.COLOR_STATES[this.colorState].splat) {
                 new Splat(this.brushes,
                           this.engine,
                           this.pos,
                           this.colorState,
                 );
+            }
+            this.destroy();
+        } else if (other.NAME === 'player') {
+            if (Settings.COLOR_STATES[this.colorState].glyph) {
+                for (let i=0; i<Settings.FIGMENT_GLYPH_REWARD; i++) {
+                    const theta = Math.random()*2*Math.PI;
+                    const vel = Vec2.Polar(Settings.FIGMENT_GLYPH_VELOCITY,theta);
+                    const pos = this.pos.clone();
+                    pos.scaledAddEq(vel,Settings.GLYPH_STARTING_OFFSET/Settings.FIGMENT_GLYPH_VELOCITY);
+                    vel.addEq(this.vel);
+                    new Glyph(this.res,
+                              this.sprites,
+                              this.engine,
+                              pos,
+                              vel,
+                              this.colorState,
+                    );
+                }
             }
             this.destroy();
         }

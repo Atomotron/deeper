@@ -50,6 +50,7 @@ export class AnimatedSprites extends Sprites {
         super(res,shadername,texturename,instances,configuration);
         // Load animations
         const animations = new Map();
+        this.figmentFolders = [];
         for (name in this.texture.sheet.frame) {
             const result = name.match(NUMBER_POSTFIX_REGEX);
             if (result.length === 0) continue;
@@ -60,9 +61,7 @@ export class AnimatedSprites extends Sprites {
                 action = 'rotate';
             }
             const folder = name.match(ANIM_FRAME_FOLDER_REGEX)[0].slice(0,-1);
-            if (folder === "elements") {
-                continue;
-            }
+            if (folder !== 'elements') this.figmentFolders.push(folder);
             const actions = animations.get(folder) || new Map();
             const frames = actions.get(action) || new Map();
             frames.set(index,name);
@@ -149,7 +148,7 @@ export class Sprite {
         // Translation
         this.translate.eqZero()
         this.translate.subEq(this.control.CoM.pos);
-        this.translate.transformEq(this.transform);
+        //this.translate.transformEq(this.transform);
         this.translate.x *= this.facing;
         this.translate.addEq(this.pos);
         // Transformation
@@ -161,6 +160,7 @@ export class Sprite {
         this.struct.frame.eq(this.frame);
         this.struct.pos.eq(this.translate);
         this.struct.model.eqCompose(this.transform,this.model);
+        this.struct.model.mulEq(Settings.SPRITE_MODEL_PADDING);
         this.struct.color.eq(this.color);
     }    
 }
@@ -225,6 +225,8 @@ export class PhysicsSprite extends colliderMixin(Sprite) {
 
 // One particular sprite
 export class AnimatedSprite extends PhysicsSprite {
+    ANIM_MPF = Settings.ANIM_MPF
+    IDLE_VELOCITY = Settings.IDLE_VELOCITY
     constructor(
         sprites,
         engine,
@@ -247,10 +249,12 @@ export class AnimatedSprite extends PhysicsSprite {
         // ANIMATION STATE
         this.oldPos = Vec2.Zero();
         this.tail = Vec2.Zero();
-        this.odometer = Math.random()*Settings.ANIM_MPF;
+        console.log(this.ANIM_MPF);
+        this.setRandomOdometer = false;
+        this.odometer = 0; // Will initialize in this.step
         this.nextAction = action;
-        this.frameIndex = 0;
-        this.frames = [];
+        this.frames = this.sprites.animations[this.folder][this.action];
+        this.frameIndex = Math.floor(Math.random()*this.frames.length);
         this.trueFrameIndex = 0;
         this.frameDirection = 1;
         // Set up animation frames
@@ -264,7 +268,12 @@ export class AnimatedSprite extends PhysicsSprite {
         // Tail, physics, odometer
         this.tail.eqSub(this.pos,this.oldPos);
         this.oldPos.eq(this.pos);
-        this.odometer += this.tail.mag() + dt*Settings.IDLE_VELOCITY;
+        if (!this.setRandomOdometer) {
+            this.odometer = Math.random()*this.ANIM_MPF;
+            this.setRandomOdometer = true;
+        }
+            
+        this.odometer += this.tail.mag() + dt*this.IDLE_VELOCITY;
     }
     startAction(action) {
         this.frameIndex = 0; // Frame 0 is the connection point
@@ -274,13 +283,13 @@ export class AnimatedSprite extends PhysicsSprite {
     // Update
     update(t) {
         // Start rotation if moving different direction from facing
-        if (this.action !== 'rotate') {
+        if (this.action !== 'rotate' && this.sprites.animations[this.folder]['rotate']) {
             if (-this.tail.x * this.facing < 0) {
                 // Moving in a direction we aren't facing
                 this.startAction('rotate');
             }
         }
-        if (this.odometer < Settings.ANIM_MPF) {
+        if (this.odometer < this.ANIM_MPF) {
             return;
         } else {
             this.odometer = 0;
@@ -299,8 +308,10 @@ export class AnimatedSprite extends PhysicsSprite {
         // Update frame index
         this.frameIndex += this.frameDirection;
         if (this.frameIndex >= nframes-1) {
+            this.frameIndex = nframes-1;
             this.frameDirection = -1;
         } else if (this.frameIndex <= 0) {
+            this.frameIndex = 0;
             this.frameDirection = 1;
         }
         // Set up next action

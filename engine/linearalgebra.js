@@ -320,7 +320,7 @@ class Vec2 extends AbstractVecN {
         return this;
     }
     // Polar coordinate setter
-    eqPolar(self,r,theta) {
+    eqPolar(r,theta) {
         this.a[0] = r*Math.cos(theta);
         this.a[1] = r*Math.sin(theta);
         return this;

@@ -8,26 +8,36 @@ uniform sampler2D noise;
 uniform float time;
 
 varying vec2 uv;
+varying vec2 lowerUV;
+varying vec2 upperUV;
+
 varying vec4 vertexChannel;
 varying vec4 vertexDisplayColor;
 varying vec2 vertexTail;
 
+const vec2 DISTORTION = vec2(0.1,1.0)*0.02;
+const float DISTORTION_SPEED = 0.05;
+
+vec4 clampedTexture2D(sampler2D sam, vec2 where) {
+    return texture2D(sam, clamp(where,lowerUV,upperUV));
+}
 
 void main() {
+    // Configure distortion
     // Base sample
-    vec4 tex = texture2D(source, uv);
+    vec4 tex = clampedTexture2D(source, uv);
     float solid = tex.x;
     float glow = tex.y;
-    float alpha = tex.w * vertexDisplayColor.w;
+    float baseAlpha = tex.w * vertexDisplayColor.w;
     vec3 glowColor = vec3(glow) * vertexDisplayColor.xyz;
-    vec3 solidColor = vec3(solid);
-    vec4 baseColor = vec4(glowColor+solidColor,alpha);
+    vec3 solidColor = vec3(solid) * max(max(vertexChannel.x,vertexChannel.y),vertexChannel.z);
+    vec4 baseColor = vec4(glowColor*(1.0-solid)+solidColor,baseAlpha);
     // Distorted sample
-    vec4 noiseSample = texture2D(noise, uv*10.0 + vec2(0.0,time*0.1));
-    vec2 distortion = noiseSample.xy * 0.01;
-    vec4 distortedSample = texture2D(source, uv + distortion);
+    float noiseSample = dot(texture2D(noise, uv*10.0 + vec2(0.0,time*DISTORTION_SPEED)), vertexChannel) - 0.5;
+    vec2 distortion = DISTORTION*noiseSample;
+    vec4 distortedSample = clampedTexture2D(source, uv + distortion);
     vec3 distortedGlow = vec3(distortedSample.y) * vertexDisplayColor.xyz;
     float distortedAlpha = distortedSample.w;
     vec4 distortedColor = vec4(distortedGlow,distortedAlpha);
-    gl_FragColor = baseColor + distortedColor;
+    gl_FragColor = baseColor*baseAlpha + distortedColor*(1.0-baseAlpha);
 }

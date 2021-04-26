@@ -48,6 +48,7 @@ let tileMipSettings = {
     wrapS: 'REPEAT',
     wrapT: 'REPEAT',
     stretch: true,
+    premultiply: false,
 };
 
 load({
@@ -169,6 +170,7 @@ const field = new Field(res,res.images.level,bgModelInv,bgPos);
 const time = Vec1.From(0);
 
 // SPRITE LAYER
+const spriteModelPadding = Vec1.From(Settings.SPRITE_MODEL_PADDING);
 const sprites = new AnimatedSprites(res);
 
 // BRUSH LAYER
@@ -227,6 +229,7 @@ const sequence = [
             cameraPos: cameraPos,  
             time: time, 
             displayColorMatrix: Settings.DISPLAY_COLOR_MATRIX,
+            spriteModelPadding: spriteModelPadding,
         },
         samplers: {
             source: sprites.texture,
@@ -250,7 +253,6 @@ class DeeperEngine extends Engine {
         
         // Sprite creation
         this.player = new Player(res,sprites,this,field);
-        this.player.fieldSensitivity.z = 0.0;
         
         // Generate a bunch of sprites
         const names = Array.from(Object.keys(sprites.animations));
@@ -263,12 +265,6 @@ class DeeperEngine extends Engine {
                 Vec2.From(Math.random()-0.5,Math.random()-0.5).mulEq(2048),
             );
         }
-        // Draw splats
-        this.res.io.canvas.addEventListener('mousedown', (e) => {
-            if (e.button !== 2) return;
-            const b = new Splat(brushes,this,'pops/brush4.png',this.cursor,1,0,4);
-            b.color.eqFrom(0.0,0.0,1.0,1.0);
-        });
     }
     stepSimulation(dt,t) {
         field.read(this.cursor);
