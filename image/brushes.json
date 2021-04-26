@@ -26,12 +26,12 @@
     },
     "pops/brush1.png": {
       "frame": {
-        "x": 0,
-        "y": 400,
+        "x": 400,
+        "y": 0,
         "w": 400,
         "h": 387
       },
-      "rotated": true,
+      "rotated": false,
       "trimmed": true,
       "spriteSourceSize": {
         "x": 0,
@@ -50,8 +50,8 @@
     },
     "pops/brush3.png": {
       "frame": {
-        "x": 0,
-        "y": 800,
+        "x": 800,
+        "y": 0,
         "w": 396,
         "h": 397
       },
@@ -74,12 +74,12 @@
     },
     "pops/brush2.png": {
       "frame": {
-        "x": 387,
-        "y": 400,
+        "x": 400,
+        "y": 387,
         "w": 382,
         "h": 364
       },
-      "rotated": true,
+      "rotated": false,
       "trimmed": true,
       "spriteSourceSize": {
         "x": 9,
@@ -98,8 +98,8 @@
     },
     "pops/brush5.png": {
       "frame": {
-        "x": 400,
-        "y": 0,
+        "x": 0,
+        "y": 400,
         "w": 371,
         "h": 378
       },
@@ -119,6 +119,174 @@
         "x": 0.5,
         "y": 0.5
       }
+    },
+    "trails/smbrush2.png": {
+      "frame": {
+        "x": 1196,
+        "y": 0,
+        "w": 76,
+        "h": 66
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 30,
+        "y": 37,
+        "w": 76,
+        "h": 66
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 400
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "trails/smbrush3.png": {
+      "frame": {
+        "x": 1272,
+        "y": 0,
+        "w": 70,
+        "h": 63
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 36,
+        "y": 125,
+        "w": 70,
+        "h": 63
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 400
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "trails/smbrush6.png": {
+      "frame": {
+        "x": 1342,
+        "y": 0,
+        "w": 70,
+        "h": 55
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 126,
+        "y": 125,
+        "w": 70,
+        "h": 55
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 400
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "trails/smbrush1.png": {
+      "frame": {
+        "x": 1412,
+        "y": 0,
+        "w": 60,
+        "h": 69
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 52,
+        "y": 309,
+        "w": 60,
+        "h": 69
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 400
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "trails/smbrush4.png": {
+      "frame": {
+        "x": 1342,
+        "y": 55,
+        "w": 57,
+        "h": 54
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 44,
+        "y": 230,
+        "w": 57,
+        "h": 54
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 400
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "trails/smbrush7.png": {
+      "frame": {
+        "x": 1272,
+        "y": 63,
+        "w": 55,
+        "h": 59
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 129,
+        "y": 221,
+        "w": 55,
+        "h": 59
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 400
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "trails/smbrush5.png": {
+      "frame": {
+        "x": 1196,
+        "y": 66,
+        "w": 54,
+        "h": 55
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 131,
+        "y": 36,
+        "w": 54,
+        "h": 55
+      },
+      "sourceSize": {
+        "w": 400,
+        "h": 400
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
     }
   },
   "meta": {
@@ -127,8 +295,8 @@
     "image": "brushes.png",
     "format": "RGBA8888",
     "size": {
-      "w": 771,
-      "h": 1197
+      "w": 1472,
+      "h": 778
     },
     "scale": 1
   }
