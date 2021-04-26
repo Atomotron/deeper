@@ -2,10 +2,15 @@
   <defs>
     <style>
       .cls-1 {
+        fill: blue;
+      }
+
+      .cls-2 {
         fill: lime;
         fill-rule: evenodd;
       }
     </style>
   </defs>
-  <path class="cls-1" d="M31.36,29.737a1.293,1.293,0,1,1-1.28,1.293A1.286,1.286,0,0,1,31.36,29.737Z"/>
+  <circle id="Collision1" class="cls-1" cx="31.375" cy="31.313" r="24"/>
+  <path id="CoM" class="cls-2" d="M31.36,29.737a1.293,1.293,0,1,1-1.28,1.293A1.286,1.286,0,0,1,31.36,29.737Z"/>
 </svg>
