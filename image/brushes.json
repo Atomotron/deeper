@@ -120,168 +120,24 @@
         "y": 0.5
       }
     },
-    "trails/smbrush2.png": {
-      "frame": {
-        "x": 1203,
-        "y": 1,
-        "w": 76,
-        "h": 66
-      },
-      "rotated": false,
-      "trimmed": true,
-      "spriteSourceSize": {
-        "x": 30,
-        "y": 37,
-        "w": 76,
-        "h": 66
-      },
-      "sourceSize": {
-        "w": 400,
-        "h": 400
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    "trails/smbrush3.png": {
-      "frame": {
-        "x": 1281,
-        "y": 1,
-        "w": 70,
-        "h": 63
-      },
-      "rotated": false,
-      "trimmed": true,
-      "spriteSourceSize": {
-        "x": 36,
-        "y": 125,
-        "w": 70,
-        "h": 63
-      },
-      "sourceSize": {
-        "w": 400,
-        "h": 400
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    "trails/smbrush6.png": {
-      "frame": {
-        "x": 1353,
-        "y": 1,
-        "w": 70,
-        "h": 55
-      },
-      "rotated": false,
-      "trimmed": true,
-      "spriteSourceSize": {
-        "x": 126,
-        "y": 125,
-        "w": 70,
-        "h": 55
-      },
-      "sourceSize": {
-        "w": 400,
-        "h": 400
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
     "trails/smbrush1.png": {
       "frame": {
-        "x": 1425,
-        "y": 1,
-        "w": 60,
-        "h": 69
-      },
-      "rotated": false,
-      "trimmed": true,
-      "spriteSourceSize": {
-        "x": 52,
-        "y": 309,
-        "w": 60,
-        "h": 69
-      },
-      "sourceSize": {
-        "w": 400,
-        "h": 400
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    "trails/smbrush4.png": {
-      "frame": {
-        "x": 1353,
-        "y": 58,
-        "w": 57,
-        "h": 54
-      },
-      "rotated": false,
-      "trimmed": true,
-      "spriteSourceSize": {
-        "x": 44,
-        "y": 230,
-        "w": 57,
-        "h": 54
-      },
-      "sourceSize": {
-        "w": 400,
-        "h": 400
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    "trails/smbrush7.png": {
-      "frame": {
-        "x": 1281,
-        "y": 66,
-        "w": 55,
-        "h": 59
-      },
-      "rotated": false,
-      "trimmed": true,
-      "spriteSourceSize": {
-        "x": 129,
-        "y": 221,
-        "w": 55,
-        "h": 59
-      },
-      "sourceSize": {
-        "w": 400,
-        "h": 400
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    "trails/smbrush5.png": {
-      "frame": {
         "x": 1203,
-        "y": 69,
-        "w": 54,
-        "h": 55
+        "y": 1,
+        "w": 100,
+        "h": 99
       },
       "rotated": false,
-      "trimmed": true,
+      "trimmed": false,
       "spriteSourceSize": {
-        "x": 131,
-        "y": 36,
-        "w": 54,
-        "h": 55
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 99
       },
       "sourceSize": {
-        "w": 400,
-        "h": 400
+        "w": 100,
+        "h": 99
       },
       "pivot": {
         "x": 0.5,
