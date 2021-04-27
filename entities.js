@@ -5,7 +5,7 @@
 } from './engine/archimedes.js';
 
 import * as Settings from "./settings.js";
-import {TargetSprite,PhysicsSprite} from './sprite.js'
+import {TargetSprite,PhysicsSprite,Distortion} from './sprite.js'
 import {Brush,Splat} from './field.js';
 
 class Glyph extends TargetSprite {
@@ -216,6 +216,9 @@ export class Figment extends TargetSprite {
         else this.engine.nFigments -= 1;
     }
     collide(other) {
+        // Play figment touch sound
+        const messages = Settings.MESSAGES[this.colorState];
+        new Distortion(this.engine.distortions,this.engine,this.pos.clone());
         if (other.NAME === 'glyph') {
             // Play figment death sound
             const source = this.res.io.adc.createBufferSource();
@@ -231,12 +234,6 @@ export class Figment extends TargetSprite {
             }
             this.destroy();
         } else if (other.NAME === 'player') {
-            // Play figment touch sound
-            const messages = Settings.MESSAGES[this.colorState];
-            this.engine.postMessage(
-                messages[Math.floor(Math.random()*messages.length)],
-                this.colorState,
-            );
             const source = this.res.io.adc.createBufferSource();
             source.buffer = this.res.sounds.chemical_absorb;
             source.connect(this.res.io.mixer);
@@ -257,6 +254,10 @@ export class Figment extends TargetSprite {
                     );
                 }
             }
+            this.engine.postMessage(
+                messages[Math.floor(Math.random()*messages.length)],
+                this.colorState,
+            );
             this.destroy();
         }
     }

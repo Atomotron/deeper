@@ -60,6 +60,17 @@ html, body {
     font-size: 7vh;
     margin-bottom: 5vh;
 }
+.therapist {
+    display:block;
+    margin-bottom: 1.5vh;
+    color: #f0f0f0;
+    
+}
+.patient {
+    display:block;
+    margin-bottom: 1.5vh;
+    color: #30adff;
+}
 .instructions {
     display:block;
     color: #fff24a;
@@ -123,29 +134,31 @@ html, body {
     </div>
     <div id='clicktostart' class = "longform">
         <p id='text'>
-            "At our last session we discussed trying hypnotherapy."<br><br>
+            <span class='therapist'>At our last session, we discussed trying hypnotherapy.</span>
 
-            "Yeah, I remember."<br><br>
+            <span class='patient'>Yeah, I remember.</span>
 
-            "Would you like to try it today?"<br><br>
+            <span class='therapist'>Would you like to try it today?</span>
 
-            "I think so. Yeah."<br><br>
+            <span class='patient'>I think so. Yeah.</span>
 
-            "Make sure you're comfortable, and relaxed. Imagine my voice is coming from a little light inside your mind. ...Are you imagining it?"<br><br>
+            <span class='therapist'>Make sure you're comfortable and relaxed. Imagine my voice is coming from a little light inside your mind...</span>
+            
+            <span class='therapist'>Are you imagining it?</span>
 
-            "Yeah, sorry."<br><br>
+            <span class='patient'>Yeah, sorry.</span>
 
-            "It's okay, I just wanted to make sure you weren't falling asleep on me."<br><br>
+            <span class='therapist'>It's okay, I just wanted to make sure you weren't falling asleep on me.</span>
 
-            "I'll do my best. Not to, I mean."<br><br>
+            <span class='patient'>I'll do my best. Not to, I mean.</span>
 
-            "Remember, all the memories in your mind are made of elements, and chemicals. When you become aware of them, you can control how you respond to them. Even the bad ones."<br><br>
+            <span class='therapist'>All the memories in your mind are made of symbols and chemicals. When you become aware of them, you can control how you respond to them. Even the bad ones.</span>
 
-            "I hope so."<br><br>
+            <span class='patient'>I hope so.</span>
 
-            "You'll get there. Now, tell me about the memories you're seeing."<br><br>
+            <span class='therapist'>You'll get there. Now, tell me about the memories you're seeing.</span>
         </p>
-        <span class='instructions'>Click anywhere to start.</span>
+        <span class='instructions' id='instructions'>Click anywhere to start.</span>
     </div>
     <div id='errordisplay'>
         An error occurred. We only tested on Chrome and Firefox. <br>
