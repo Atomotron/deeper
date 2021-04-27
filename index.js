@@ -332,7 +332,7 @@ class DeeperEngine extends Engine {
         this.cursor = cursor;
         // Pausing
         window.addEventListener('keydown', (e) => {
-            if (e.code === "Space") {
+            if (e.code === "KeyP") {
                 this.paused = !this.paused;
             }
         });

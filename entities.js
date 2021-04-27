@@ -111,7 +111,7 @@ export class Player extends TargetSprite {
             /*receives=*/false,
             /*vel=*/Vec2.Zero(),
             /*damping = */Settings.PLAYER_DAMPING,
-            /*target = */pos,
+            /*target = */pos.clone(),
             /*targetPower = */Settings.PLAYER_THRUST,
             /*targetApproachAngle = */0,
         );
@@ -119,8 +119,7 @@ export class Player extends TargetSprite {
         this.io = res.io;
         this.capturedGlyphs = [];
         // Fire!
-        this.io.canvas.addEventListener('mousedown', (e) => {
-            if (e.button !== 2) return;
+        const shoot = (e) => {
             if (this.capturedGlyphs.length > 0) {
                 const g = this.capturedGlyphs.pop(); // FIFO
                 g.fire(this.pos,this.engine.cursor);
@@ -130,7 +129,9 @@ export class Player extends TargetSprite {
                 source.connect(this.res.io.mixer);
                 source.start();
             }
-        });
+        }
+        this.io.canvas.addEventListener('mousedown', (e) => {if (e.button === 2) shoot(e)});
+        window.addEventListener('keydown', (e) => {if (e.code === "Space") shoot(e)});
         this.bounceGain = res.io.adc.createGain();
         this.bounceGain.gain.value = 0;
         this.bounceGain.connect(res.io.mixer);
@@ -150,10 +151,23 @@ export class Player extends TargetSprite {
     }
     update(t) {
         super.update(t);
+        this.target.eq(this.pos);
         if (this.io.pressed.has('Mouse0')) {
-            this.target = this.engine.cursor;
+            this.target.eq(this.engine.cursor);
         } else {
-            this.target = this.pos;
+            let moving = false;
+            if (this.io.pressed.has('KeyW') || this.io.pressed.has('ArrowUp')) {
+                this.target.y += 10;
+            }
+            if (this.io.pressed.has('KeyS') || this.io.pressed.has('ArrowDown')) {
+                this.target.y -= 10;
+            }    
+            if (this.io.pressed.has('KeyD') || this.io.pressed.has('ArrowLeft')) {
+                this.target.x += 10;
+            }
+            if (this.io.pressed.has('KeyA') || this.io.pressed.has('ArrowRight')) {
+                this.target.x -= 10;
+            }
         }
         this.bounceGainTarget = Math.exp(this.fieldForce.mag()/256)-1;
     }
