@@ -165,6 +165,12 @@ export class Sprite {
     }    
 }
 
+export class Distortion extends Sprite {
+    constructor(distortions,engine,pos=Vec2.Zero(),scale=1,spritename='trails/smbrush1.png',facing=1,angle=0,colorState='neutral') {
+        super(distortions,engine,spritename,pos,facing,angle,scale,colorState);    
+    }
+}
+
 export class PhysicsSprite extends colliderMixin(Sprite) {
     constructor(
         sprites,

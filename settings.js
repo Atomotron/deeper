@@ -135,6 +135,7 @@ export const COLOR_STATES = {
 }
 
 // UI
+export const SCREEN_FADE_SPEED = 1/3;
 export const MESSAGE_FADE = 0.5;
 export const MESSAGE_OPACITY_START = 3/MESSAGE_FADE;
 export const MESSAGE_OPACITY_EXTRA_PER_CHARACTER = (1/15)/MESSAGE_FADE;

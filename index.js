@@ -58,18 +58,23 @@ load({
             sprite: new URL("shader/sprite.vert", document.baseURI),
             brush: new URL("shader/brush.vert", document.baseURI),
             background: new URL("shader/background.vert", document.baseURI),
-            //query: new URL("shader/query.vert", document.baseURI),
+            postprocess: new URL("shader/postprocess.vert", document.baseURI),
+            distortion: new URL("shader/distortion.vert", document.baseURI),
         },
         fragment:{
             blit: new URL("shader/blit.frag", document.baseURI),
             sprite: new URL("shader/sprite.frag", document.baseURI),
             colorblit: new URL("shader/colorblit.frag", document.baseURI),
             background: new URL("shader/background.frag", document.baseURI),
+            postprocess: new URL("shader/postprocess.frag", document.baseURI),
+            distortion: new URL("shader/distortion.frag", document.baseURI),
         },
         programs: {
             sprite:['sprite','sprite'],
             brush:['brush','colorblit'],
             background:['background','background'],
+            postprocess:['postprocess','postprocess'],
+            distortion:['distortion','distortion'],
         },
     },
     images: {
@@ -183,11 +188,12 @@ bgModel.mulEq(8);
 const bgModelInv = bgModel.inverse();
 const bgPos = Vec2.From(0,-bgModel.a11);
 
-// COMPOSITED
-//const compositingLayer = new Quad(gl,
-//    res.shaders.composited.schema({vertex:{divisor:0,stream:false}}),
-//    1,
-//);
+// POSTPROCESSING
+const screenFade = Vec1.From(0.0);
+const postprocessingLayer = new Quad(gl,
+    res.shaders.postprocess.schema({vertex:{divisor:0,stream:false}}),
+    1,
+);
 
 // PHYSICS FIELD
 const field = new Field(res,res.images.level,bgModelInv,bgPos);
@@ -205,9 +211,14 @@ const playerSprites = new AnimatedSprites(res,"sprite","player");
 // BRUSH LAYER
 const brushes = new Brushes(res,"brush",'brushes',1,{},bgModel.a00);
 
-// Fullscreen framebuffer
-//const frame = new Framebuffer(gl,512,512);
-//res.io.onResize.add( io => {frame.resize(gl,io.width,io.height),console.log('resize')} );
+// DISTORTION LAYER
+const distortions = new Sprites(res,"distortion",'brushes',1,{});
+
+// Fullscreen framebuffers
+const frame = new Framebuffer(gl,res.io.width,res.io.height);
+res.io.onResize.add( io => {frame.resize(gl,io.width,io.height)} );
+const distortion = new Framebuffer(gl,res.io.width,res.io.height);
+res.io.onResize.add( io => {distortion.resize(gl,io.width,io.height)} );
 
 // Make an instance
 /*
@@ -219,7 +230,7 @@ layer.sync(res.gl);*/
 
 // Set up render sequence
 
-const IntermediatePass = {};//framebuffer: frame};
+const IntermediatePass = {framebuffer: frame};
 
 const SpritePass = SUM(DrawPass,IntermediatePass,{
     shader: sprites.shader,
@@ -235,7 +246,8 @@ const SpritePass = SUM(DrawPass,IntermediatePass,{
     },
 });
 
-const sequence = [    
+const sequence = [
+    //Draw on background    
     SUM(DrawPass,{
         framebuffer: field.fb,
         name: "Paint on Field",
@@ -248,6 +260,18 @@ const sequence = [
             source: brushes.texture
         },
         draw: (gl) => brushes.draw(gl),
+    }),
+    SUM(ClearPass,{framebuffer: distortion}),
+    SUM(DrawPass,{
+        framebuffer: distortion,
+        name: "Paint on distortion",
+        shader: res.shaders.distortion,
+        uniforms: {
+            cameraInv: cameraInv,
+            cameraPos: cameraPos,  
+        },
+        samplers: {},
+        draw: (gl) => distortions.draw(gl),
     }),
     SUM(ClearPass,IntermediatePass),
     SUM(DrawPass,IntermediatePass,{
@@ -283,6 +307,20 @@ const sequence = [
             source: playerSprites.texture,
         }
     }),
+    // Render from postprocessing to canvas
+    SUM(DrawPass,{
+        name: "Postprocessing",
+        shader: res.shaders.postprocess,
+        uniforms: {
+            cameraInv: cameraInv,
+            screenFade: screenFade,
+        },
+        samplers: {
+            source: frame,
+            distortion: distortion,
+        },
+        draw: (gl) => postprocessingLayer.draw(gl),
+    }),
 ];
 const [render,env] = compileRenderer(sequence);
 
@@ -310,12 +348,15 @@ class DeeperEngine extends Engine {
         cameraPos.eq(this.player.pos);
         
         this.field = field;
+        this.distortions = distortions;
         this.nDarkFigments = 0;
         this.nFigments = 0;
         this.figmentSpawnCountdown = 0;
         this.darkFigmentSpawnCountdown = 0;
         this.messageSpan = document.getElementById('message');
         this.messageOpacity = 1.0;
+        this.fadeDirection = 1;
+        this.won = false;
     }
     postMessage(message,color='yellow') {
         this.messageOpacity = Settings.MESSAGE_OPACITY_START +
@@ -329,6 +370,10 @@ class DeeperEngine extends Engine {
          `rgba(${c.x},${c.y},${c.z},${c.w})`;
     }
     stepSimulation(dt,t) {
+        // Fadein
+        screenFade.x += dt*Settings.SCREEN_FADE_SPEED*this.fadeDirection;
+        if (screenFade.x > 1.0) screenFade.x = 1;
+        if (screenFade.x < 0.0) screenFade.x = 0;
         // Manage message
         let opacity = this.messageOpacity;
         this.messageOpacity -= Settings.MESSAGE_FADE * dt;
@@ -426,8 +471,30 @@ class DeeperEngine extends Engine {
         // Delete objects outside of range
         for (const sprite of this.sprites) {
             if (sprite.pos.distance2(cameraPos) > Settings.ENTITY_VANISH_RADIUS2) {
-                sprite.destroy();
+                if (sprite.NAME !== 'player') sprite.destroy();
             }
+        }
+        // Win condition
+        if (this.player.pos.y < -1024*8) {
+            this.fadeDirection = -0.3;
+        } else {
+            this.fadeDirection = 1;
+        }
+        if (this.fadeDirection < 0 && screenFade.x <= 0 && !this.won) {
+            console.log('You win!');
+            document.getElementById('overlay').style.display = 'flex';
+            document.getElementById('text').innerHTML = `
+<span class='patient'>I can see it now.</span>
+
+<span class='therapist'>Can you describe it for me?</span>
+
+<span class='patient'>Well, it's a feeling, really. Like I'm not as scared anymore.</span>
+
+<span class='therapist'>That's wonderful.</span>      
+`
+            document.getElementById('instructions').textContent = "You're a good therapist.";
+            this.paused = true;
+            this.won = true;
         }
         super.updateLogic(t);
     }
@@ -435,7 +502,7 @@ class DeeperEngine extends Engine {
         this.newColliders.push(collider);
     }
 }
-const e = new DeeperEngine(res,render,env,[sprites,brushes,playerSprites]);
+const e = new DeeperEngine(res,render,env,[sprites,brushes,playerSprites,distortions]);
 window.e = e;
 e.start();
 }).catch(
