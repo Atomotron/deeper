@@ -1,26 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="593" height="249" viewBox="0 0 593 249">
+<svg id="Group_1_copy_4" data-name="Group 1 copy 4" xmlns="http://www.w3.org/2000/svg" width="593" height="249" viewBox="0 0 593 249">
   <defs>
     <style>
       .cls-1 {
         fill: blue;
       }
 
-      .cls-1, .cls-2, .cls-3 {
-        fill-rule: evenodd;
-      }
-
       .cls-2 {
-        fill: lime;
+        fill: red;
       }
 
       .cls-3 {
-        fill: red;
+        fill: lime;
       }
     </style>
   </defs>
-  <path id="Collision1" class="cls-1" d="M117.75,134.716c19.286,0,34.921,19.728,34.921,44.064s-15.635,44.064-34.921,44.064S82.828,203.116,82.828,178.78,98.463,134.716,117.75,134.716Z"/>
-  <path id="Collision2" class="cls-1" d="M111.1,62.175c21.511,0,38.95,22.01,38.95,49.16S132.61,160.5,111.1,160.5s-38.95-22.01-38.95-49.16S89.588,62.175,111.1,62.175Z"/>
-  <path id="Collision3" class="cls-1" d="M97.816,31c9.974,0,18.06,10.2,18.06,22.782s-8.086,22.781-18.06,22.781-18.06-10.2-18.06-22.781S87.842,31,97.816,31Z"/>
-  <path id="CoM" class="cls-2" d="M107.783,132.917a1.848,1.848,0,1,1-1.424,1.8A1.645,1.645,0,0,1,107.783,132.917Z"/>
-  <path id="Head" class="cls-3" d="M98.284,42.99c5.515,0,9.986,5.637,9.986,12.59S103.8,68.17,98.284,68.17,88.3,62.533,88.3,55.58,92.769,42.99,98.284,42.99Z"/>
+  <circle id="Collision1" class="cls-1" cx="114" cy="188" r="41"/>
+  <circle id="Collision2" class="cls-1" cx="105.5" cy="114.5" r="44.5"/>
+  <circle id="Collision3" class="cls-1" cx="97.5" cy="54.5" r="19.5"/>
+  <circle id="Head" class="cls-2" cx="98.5" cy="57.5" r="12.5"/>
+  <circle id="CoM" class="cls-3" cx="106.5" cy="126.5" r="2.5"/>
 </svg>
