@@ -20,8 +20,8 @@ varying vec2 worldCoordinate;
 varying vec2 uv;
 
 void main() {
-    uv = (frame.xy + (vertex * frame.zw));
-    worldCoordinate = mat2(model) * vertex;
+    uv = vertex+0.000001*(frame.xy + (vertex * frame.zw));
+    worldCoordinate = 2.0*mat2(model) * vertex;
     gl_Position = vec4(cameraInv*(worldCoordinate + pos-cameraPos),0.5,1.0);
     gl_Position += 0.0000001*frame + 0.0000001*color;
 }

@@ -19,8 +19,13 @@ vec4 encodeDistortion(vec2 distortion) {
     return encoded / DISTORTION_SCALE; 
 }
 
+float gd(float x) {
+    return x*exp(-x*x);
+}
+
+const float DIS = -20.0;
 void main() {
-    vec2 rhat = normalize(worldCoordinate);
-    float d = length(worldCoordinate);
-    gl_FragColor = encodeDistortion(rhat/(d*d));
+    float clamper = -smoothstep(-1.0,0.0,-length(uv));
+    vec2 dis = vec2(gd(uv.x),gd(uv.y));
+    gl_FragColor = encodeDistortion(clamper*DIS*dis);
 }
