@@ -727,7 +727,33 @@
       "trimmed": true
     },
     "businessman/businessman1.png": {
-      "circles": {},
+      "circles": {
+        "CoM": {
+          "cx": "106.5",
+          "cy": "126.5",
+          "r": "2.5"
+        },
+        "Collision1": {
+          "cx": "114",
+          "cy": "188",
+          "r": "41"
+        },
+        "Collision2": {
+          "cx": "105.5",
+          "cy": "114.5",
+          "r": "44.5"
+        },
+        "Collision3": {
+          "cx": "97.5",
+          "cy": "54.5",
+          "r": "19.5"
+        },
+        "Head": {
+          "cx": "98.5",
+          "cy": "57.5",
+          "r": "12.5"
+        }
+      },
       "frame": {
         "h": 218,
         "w": 89,
@@ -752,7 +778,33 @@
       "trimmed": true
     },
     "businessman/businessman2.png": {
-      "circles": {},
+      "circles": {
+        "CoM": {
+          "cx": "106.5",
+          "cy": "126.5",
+          "r": "2.5"
+        },
+        "Collision1": {
+          "cx": "114",
+          "cy": "188",
+          "r": "41"
+        },
+        "Collision2": {
+          "cx": "105.5",
+          "cy": "114.5",
+          "r": "44.5"
+        },
+        "Collision3": {
+          "cx": "97.5",
+          "cy": "54.5",
+          "r": "19.5"
+        },
+        "Head": {
+          "cx": "98.5",
+          "cy": "57.5",
+          "r": "12.5"
+        }
+      },
       "frame": {
         "h": 219,
         "w": 86,
@@ -777,7 +829,33 @@
       "trimmed": true
     },
     "businessman/businessman3.png": {
-      "circles": {},
+      "circles": {
+        "CoM": {
+          "cx": "106.5",
+          "cy": "126.5",
+          "r": "2.5"
+        },
+        "Collision1": {
+          "cx": "114",
+          "cy": "188",
+          "r": "41"
+        },
+        "Collision2": {
+          "cx": "105.5",
+          "cy": "114.5",
+          "r": "44.5"
+        },
+        "Collision3": {
+          "cx": "97.5",
+          "cy": "54.5",
+          "r": "19.5"
+        },
+        "Head": {
+          "cx": "98.5",
+          "cy": "57.5",
+          "r": "12.5"
+        }
+      },
       "frame": {
         "h": 223,
         "w": 91,
@@ -802,7 +880,33 @@
       "trimmed": true
     },
     "businessman/businessman4.png": {
-      "circles": {},
+      "circles": {
+        "CoM": {
+          "cx": "106.5",
+          "cy": "126.5",
+          "r": "2.5"
+        },
+        "Collision1": {
+          "cx": "114",
+          "cy": "188",
+          "r": "41"
+        },
+        "Collision2": {
+          "cx": "105.5",
+          "cy": "114.5",
+          "r": "44.5"
+        },
+        "Collision3": {
+          "cx": "97.5",
+          "cy": "54.5",
+          "r": "19.5"
+        },
+        "Head": {
+          "cx": "98.5",
+          "cy": "57.5",
+          "r": "12.5"
+        }
+      },
       "frame": {
         "h": 218,
         "w": 107,
@@ -827,7 +931,33 @@
       "trimmed": true
     },
     "businessman/businessman5.png": {
-      "circles": {},
+      "circles": {
+        "CoM": {
+          "cx": "106.5",
+          "cy": "126.5",
+          "r": "2.5"
+        },
+        "Collision1": {
+          "cx": "114",
+          "cy": "188",
+          "r": "41"
+        },
+        "Collision2": {
+          "cx": "105.5",
+          "cy": "114.5",
+          "r": "44.5"
+        },
+        "Collision3": {
+          "cx": "97.5",
+          "cy": "54.5",
+          "r": "19.5"
+        },
+        "Head": {
+          "cx": "98.5",
+          "cy": "57.5",
+          "r": "12.5"
+        }
+      },
       "frame": {
         "h": 222,
         "w": 121,
@@ -852,7 +982,33 @@
       "trimmed": true
     },
     "businessman/businessmanrotate1.png": {
-      "circles": {},
+      "circles": {
+        "CoM": {
+          "cx": "106.5",
+          "cy": "126.5",
+          "r": "2.5"
+        },
+        "Collision1": {
+          "cx": "114",
+          "cy": "188",
+          "r": "41"
+        },
+        "Collision2": {
+          "cx": "105.5",
+          "cy": "114.5",
+          "r": "44.5"
+        },
+        "Collision3": {
+          "cx": "97.5",
+          "cy": "54.5",
+          "r": "19.5"
+        },
+        "Head": {
+          "cx": "98.5",
+          "cy": "57.5",
+          "r": "12.5"
+        }
+      },
       "frame": {
         "h": 218,
         "w": 87,
@@ -877,7 +1033,33 @@
       "trimmed": true
     },
     "businessman/businessmanrotate2.png": {
-      "circles": {},
+      "circles": {
+        "CoM": {
+          "cx": "106.5",
+          "cy": "126.5",
+          "r": "2.5"
+        },
+        "Collision1": {
+          "cx": "114",
+          "cy": "188",
+          "r": "41"
+        },
+        "Collision2": {
+          "cx": "105.5",
+          "cy": "114.5",
+          "r": "44.5"
+        },
+        "Collision3": {
+          "cx": "97.5",
+          "cy": "54.5",
+          "r": "19.5"
+        },
+        "Head": {
+          "cx": "98.5",
+          "cy": "57.5",
+          "r": "12.5"
+        }
+      },
       "frame": {
         "h": 216,
         "w": 75,
@@ -902,7 +1084,33 @@
       "trimmed": true
     },
     "businessman/businessmanrotate3.png": {
-      "circles": {},
+      "circles": {
+        "CoM": {
+          "cx": "106.5",
+          "cy": "126.5",
+          "r": "2.5"
+        },
+        "Collision1": {
+          "cx": "114",
+          "cy": "188",
+          "r": "41"
+        },
+        "Collision2": {
+          "cx": "105.5",
+          "cy": "114.5",
+          "r": "44.5"
+        },
+        "Collision3": {
+          "cx": "97.5",
+          "cy": "54.5",
+          "r": "19.5"
+        },
+        "Head": {
+          "cx": "98.5",
+          "cy": "57.5",
+          "r": "12.5"
+        }
+      },
       "frame": {
         "h": 215,
         "w": 70,
