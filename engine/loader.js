@@ -235,7 +235,7 @@ export async function load(settings,customProgressCallbacks={}) {
     });
     window.aud = aud;
     const unstickEvents = [
-        'mousedown','keydown',
+        'mousedown',
     ];
     let alreadyUnstuck = false;
     function asyncEvent(type) {

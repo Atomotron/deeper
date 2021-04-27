@@ -218,7 +218,8 @@ export class Figment extends TargetSprite {
     collide(other) {
         // Play figment touch sound
         const messages = Settings.MESSAGES[this.colorState];
-        new Distortion(this.engine.distortions,this.engine,this.pos.clone());
+        const n = new Distortion(this.engine.distortions,this.engine,this.pos.clone());
+        
         if (other.NAME === 'glyph') {
             // Play figment death sound
             const source = this.res.io.adc.createBufferSource();

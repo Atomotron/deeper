@@ -167,7 +167,13 @@ export class Sprite {
 
 export class Distortion extends Sprite {
     constructor(distortions,engine,pos=Vec2.Zero(),scale=1,spritename='trails/smbrush1.png',facing=1,angle=0,colorState='neutral') {
-        super(distortions,engine,spritename,pos,facing,angle,scale,colorState);    
+        super(distortions,engine,spritename,pos,facing,angle,scale,colorState);
+        this.model = Mat4.From(1.0/Settings.SPRITE_MODEL_PADDING,0.0,0.0,1.0/Settings.SPRITE_MODEL_PADDING);  
+    }
+    step(dt,t) {
+        this.scale += 1.0*dt;
+        if (this.scale > 10.0) this.destroy();
+        super.step(dt,t);
     }
 }
 

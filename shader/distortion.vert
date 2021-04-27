@@ -18,10 +18,12 @@ attribute vec4 color;
 // Texture coordinate
 varying vec2 worldCoordinate;
 varying vec2 uv;
+varying float size;
 
 void main() {
     uv = vertex+0.000001*(frame.xy + (vertex * frame.zw));
-    worldCoordinate = 2.0*mat2(model) * vertex;
+    worldCoordinate = 200.0*mat2(model) * vertex;
+    size = model.x;
     gl_Position = vec4(cameraInv*(worldCoordinate + pos-cameraPos),0.5,1.0);
     gl_Position += 0.0000001*frame + 0.0000001*color;
 }

@@ -5,6 +5,7 @@ precision highp float;
 
 varying vec2 worldCoordinate;
 varying vec2 uv;
+varying float size;
 
 const float DISTORTION_SCALE = 32.0/256.0;
 
@@ -23,9 +24,11 @@ float gd(float x) {
     return x*exp(-x*x);
 }
 
-const float DIS = -20.0;
+const float DIS = -10.0;
 void main() {
-    float clamper = -smoothstep(-1.0,0.0,-length(uv));
+    float dsize = size;
+    float clamper = -smoothstep(-1.0,-0.9,-length(uv));
     vec2 dis = vec2(gd(uv.x),gd(uv.y));
+    dis *= 1.0/(dsize*dsize) * (-smoothstep(-10.0,-9.0,-dsize)) * smoothstep(1.0,1.1,dsize);
     gl_FragColor = encodeDistortion(clamper*DIS*dis);
 }
