@@ -4,7 +4,7 @@ export class Engine {
     // res : Resources as provided by load
     // frames_behind: keep this many frames behind real time to
     //                smooth out fps variations
-    MAX_DT = 1/15; // Don't take steps bigger than 1/15th of a second.
+    MAX_DT = 1/8; // Don't take steps bigger than 1/8th of a second.
     constructor(res,render,env,streams,frames_behind=10) {
         this.res = res;
         this.render = render;
