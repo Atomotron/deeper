@@ -9,8 +9,4 @@ https://ldjam.com/events/ludum-dare/48/inner-pieces
 
 ## Running from Source
 
-Due to cross-origin rules, you will need to start a local webserver. I like to use, after `cd`ing into the source directory.
-
-`python -m http.server`
-
-but any local webserver will suffice. The above will host at `localhost:8000`. Simply open up `index.html`.
+Due to cross-origin rules, you will need to start a local webserver. I like to use `python -m http.server` , after `cd`ing into the source directory, but any local webserver will suffice. This will host the server at at `localhost:8000`. Simply open up `index.html`.
