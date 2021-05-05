@@ -36,7 +36,6 @@ export class Engine {
                 // Compute desired timestep based on target and lag.
                 let goal_dt = (that.target_time - that.time_reached)
                                     / that.frames_behind;
-                console.log(real_dt,goal_dt);
                 if (that.paused) goal_dt = 0.0;
                 const time_after_goal_dt = that.time_reached + goal_dt;
                 that.fps = 1/goal_dt;
