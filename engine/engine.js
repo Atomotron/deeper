@@ -25,7 +25,7 @@ export class Engine {
             if (timestamp !== null &&
                 that.last_realtimestamp !== null) {
                 // Advance our target time, but not more than MAX_DT.
-                const real_dt = timestamp-that.last_realtimestamp;
+                const real_dt = timestamp-that.last_real_timestamp;
                 if (!that.paused) {
                     if (real_dt < that.MAX_DT) {
                         that.target_time += real_dt;
