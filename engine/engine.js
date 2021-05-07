@@ -44,7 +44,7 @@ export class Engine {
                 that.time_reached = time_after_goal_dt;
             }
             if (timestamp !== null) {
-                that.last_real_timestamp = timestamp;
+                that.last_real_timestamp = timestamp * 0.001;
             }
             window.requestAnimationFrame(innerTick);
         })(null);
