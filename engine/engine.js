@@ -5,6 +5,7 @@ export class Engine {
     // frames_behind: keep this many frames behind real time to
     //                smooth out fps variations
     MAX_DT = 1/8; // Don't take steps bigger than 1/8th of a second.
+    TIME_SPEED = 1.0; // Accelerate time by this factor.
     constructor(res,render,env,streams,frames_behind=10) {
         this.res = res;
         this.render = render;
@@ -22,17 +23,16 @@ export class Engine {
     start() {
         const that = this; // Closure trick
         (function innerTick(timestamp=null) {
-            timestamp = timestamp * 0.001; // ms to sec
+            timestamp = timestamp * 0.001 * that.TIME_SPEED; // ms to sec
             if (timestamp !== null &&
                 that.last_real_timestamp !== null) {
                 // Advance our target time, but not more than MAX_DT.
                 const real_dt = timestamp-that.last_real_timestamp;
-                console.log(real_dt,that.MAX_DT);
                 if (!that.paused) {
-                    if (real_dt < that.MAX_DT) {
+                    if (real_dt < that.MAX_DT * that.TIME_SPEED) {
                         that.target_time += real_dt;
                     } else {    
-                        that.target_time += that.MAX_DT;
+                        that.target_time += that.MAX_DT * that.TIME_SPEED;
                     }
                 }
                 // Compute desired timestep based on target and lag.
