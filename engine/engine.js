@@ -22,6 +22,7 @@ export class Engine {
     start() {
         const that = this; // Closure trick
         (function innerTick(timestamp=null) {
+            timestamp = timestamp * 0.001; // ms to sec
             if (timestamp !== null &&
                 that.last_real_timestamp !== null) {
                 // Advance our target time, but not more than MAX_DT.
@@ -44,7 +45,7 @@ export class Engine {
                 that.time_reached = time_after_goal_dt;
             }
             if (timestamp !== null) {
-                that.last_real_timestamp = timestamp * 0.001;
+                that.last_real_timestamp = timestamp;
             }
             window.requestAnimationFrame(innerTick);
         })(null);
