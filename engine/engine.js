@@ -23,9 +23,10 @@ export class Engine {
         const that = this; // Closure trick
         (function innerTick(timestamp=null) {
             if (timestamp !== null &&
-                that.last_realtimestamp !== null) {
+                that.last_real_timestamp !== null) {
                 // Advance our target time, but not more than MAX_DT.
                 const real_dt = timestamp-that.last_real_timestamp;
+                console.log(real_dt,that.MAX_DT);
                 if (!that.paused) {
                     if (real_dt < that.MAX_DT) {
                         that.target_time += real_dt;
