@@ -327,6 +327,7 @@ const [render,env] = compileRenderer(sequence);
 
 const CAM_VEL = 3.0;
 class DeeperEngine extends Engine {
+    TIME_SPEED = 10.0;
     constructor(res,render,env,streams) {
         super(res,render,env,streams);
         this.cursor = cursor;
