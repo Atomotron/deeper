@@ -4,8 +4,9 @@ export class Engine {
     // res : Resources as provided by load
     // frames_behind: keep this many frames behind real time to
     //                smooth out fps variations
-    MAX_DT = 1/8; // Don't take steps bigger than 1/8th of a second.
+    MAX_DT = 1/24; // Don't take steps bigger than 1/12th of a second.
     TIME_SPEED = 1.0; // Accelerate time by this factor.
+    REPORTING_PERIOD = 10.0; // Time in seconds between reports
     constructor(res,render,env,streams,frames_behind=10) {
         this.res = res;
         this.render = render;
@@ -17,22 +18,23 @@ export class Engine {
         this.last_real_timestamp = null;
         this.sprites = new Set();
         this.streams = streams;
+        this.report_timer = 0;
         this.paused = false;
     }
     // Starts requestanimframe to this.runFrame
     start() {
         const that = this; // Closure trick
         (function innerTick(timestamp=null) {
-            timestamp = timestamp * 0.001 * that.TIME_SPEED; // ms to sec
+            timestamp = timestamp * 0.001; // ms to sec
             if (timestamp !== null &&
                 that.last_real_timestamp !== null) {
                 // Advance our target time, but not more than MAX_DT.
                 const real_dt = timestamp-that.last_real_timestamp;
                 if (!that.paused) {
-                    if (real_dt < that.MAX_DT * that.TIME_SPEED) {
+                    if (real_dt < that.MAX_DT) {
                         that.target_time += real_dt;
                     } else {    
-                        that.target_time += that.MAX_DT * that.TIME_SPEED;
+                        that.target_time += that.MAX_DT;
                     }
                 }
                 // Compute desired timestep based on target and lag.
@@ -41,7 +43,18 @@ export class Engine {
                 if (that.paused) goal_dt = 0.0;
                 const time_after_goal_dt = that.time_reached + goal_dt;
                 that.fps = 1/goal_dt;
-                that.runFrame(goal_dt,time_after_goal_dt);
+                // Print FPS report
+                if (that.report_timer < 0 && false) {
+                    that.report_timer = that.REPORTING_PERIOD;
+                    console.log(
+                        'fps:',1/real_dt,
+                        'smoothed fps:',1/goal_dt,
+                        'timestep',goal_dt,
+                        'multiplied timestep',goal_dt * that.TIME_SPEED,
+                    );
+                }
+                that.report_timer -= real_dt;
+                that.runFrame(goal_dt * that.TIME_SPEED,time_after_goal_dt * that.TIME_SPEED);
                 that.time_reached = time_after_goal_dt;
             }
             if (timestamp !== null) {
